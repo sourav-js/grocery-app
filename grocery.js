@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv");
 var express				=require("express"),
 	app                 =express(),
 passport 				=require("passport"),
