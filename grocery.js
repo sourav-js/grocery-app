@@ -1078,7 +1078,7 @@ app.post("/allbuy/:pid/:id",function(req,res){
 						                               
 						
 						
-					                        <a href="http://localhost:2000/Orders"<button style=color:green>Check Your Order</button></a>						
+					                        <a href="https://grocery-ji.herokuapp.com/Orders"<button style=color:green>Check Your Order</button></a>						
 						                                  
 						                                  </form>
 						                                     `
@@ -1273,7 +1273,7 @@ app.post("/buy/:pid/:lid",function(req,res){
 						                               
 						
 						
-					                        <a href="http://localhost:2000/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>						
+					                        <a href="https://grocery-ji.herokuapp.com/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>						
 						                                  
 						                                  </form>
 						                                     `
@@ -1348,7 +1348,7 @@ app.post("/buy/:pid/:lid",function(req,res){
 						                               
 						
 						
-					                        <a href="http://localhost:2000/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>						
+					                        <a href="https://grocery-ji.herokuapp.com/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>						
 						                                  
 						                                  </form>
 						                                     `
@@ -1609,7 +1609,7 @@ app.post("/cancel/:id",function(req,res){
 						                               
 						
 						
-					                        <a href="http://localhost:2000/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>						
+					                        <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>						
 						                                  
 						                                  </form>`
 						            } 
@@ -1699,7 +1699,7 @@ app.post("/cancel/:id",function(req,res){
 						                               
 						
 						
-					                        <a href="http://localhost:2000/Orders/${orders._id}"<button style=color:green>Check Your Order</button></a>						
+					                        <a href="https://grocery-ji.herokuapp.com/Orders/${orders._id}"<button style=color:green>Check Your Order</button></a>						
 						                                  
 						                                  </form>`
 						            } 
@@ -1985,7 +1985,7 @@ app.get("/increaseStock/:id/:stock",function(req,res){
 						                               
 						
 						
-					                        <a href="http://localhost:2000/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>						
+					                        <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>						
 						                                  
 						                                  </form>`
 			}
@@ -2301,7 +2301,7 @@ user.findOne({username:req.body.username},function(err,user){
 				bcc:`${req.body.username}`,
 				subject:"GroceryJi",
 				html:`Hi,${user.first},welcome to GroceryJi<br>Reset Your Password<br>
-						<a href="http://localhost:2000/set/${user._id}">Change Password</a>
+						<a href="https://grocery-ji.herokuapp.com/set/${user._id}">Change Password</a>
 						
 						
 						</form>
@@ -2513,7 +2513,7 @@ app.get("/statusChange/:id/:key",function(req,res){
 						                               
 						
 						
-					                        <a href="http://localhost:2000/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>						
+					                        <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>						
 						                                  
 						                                  </form>`
 			}
