@@ -422,7 +422,6 @@ app.get("/wishlist/:id",isLoggedin,function(req,res){
 
 
 app.get("/allProduct",function(req,res){
- wishlist.find({username:req.user.username},function(err,wishs){ 
   if (!req.query.query){
    product.find({},function(err,prod){
    	  	res.render("products.ejs",{prod:prod,wishs:wishs})
@@ -481,7 +480,7 @@ app.get("/allProduct",function(req,res){
    
  }
 
-  })
+ 
   
 })
 
