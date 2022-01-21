@@ -595,9 +595,19 @@ app.get("/cart",isLoggedin,function(req,res){
 
 	user.findById(req.user._id).populate("cart").exec(function(err,users){
 
-       		if(users.cart.length>0){
-       		 res.render("cart.ejs",{users:users})
-       		}
+       		
+            if(users.cart.length>0){
+       		  var sum=0
+              for (var i=0;i<users.cart.length;i++){
+
+                 sum=sum+users.cart[i].Price
+              } 
+              
+              users.sum=sum
+              users.save() 
+              res.render("cart.ejs",{users:users})
+       		
+            }
        		else{
 
        			res.render("nocart.ejs")
@@ -691,10 +701,12 @@ app.post("/cart/:id",isLoggedin,function(req,res){
     var pr=0
      // req.session.sum=0
      
+     
      if (!req.user.sum){
 
-     	users.sum=0
-     	users.save()
+     	console.log("sum nei too")
+        users.sum=0
+     	
      }  
   
      if (Number(req.body.qty)<=prod.stock.length){ 
@@ -711,9 +723,6 @@ app.post("/cart/:id",isLoggedin,function(req,res){
      		  users.cart[i].qty=users.cart[i].qty+Number(req.body.qty)
      		  // req.user.sum=req.user.sum+(req.body.qty*prod.Price)
      		   
-     		   users.updateOne({sum:req.user.sum+(req.body.qty*prod.Price)},function(err,info){
-
-     	        })
 
 
      		  console.log(users.cart[i].qty)
@@ -727,50 +736,8 @@ app.post("/cart/:id",isLoggedin,function(req,res){
               //     users.updateOne({sum:prod.stock.length*prod.Price},function(err,info){
 
      	        // })
-                       users.sum=prod.stock.length*prod.Price
-                       users.save()
-                 for (var p=1;p<users.cart.length;p++){
-
-                 	if (users.cart[i+p] && users.cart[i-p]){
-
-                 	                    // req.user.sum=req.user.sum+users.cart[i+p].Price+users.cart[i-p].Price
-	                       //  users.updateOne({sum:req.user.sum+},function(err,info){
-
-     	                  // })
-                 	      users.sum=users.sum+users.cart[i+p].Price+users.cart[i-p].Price
-                 	      users.save()
-                 	
-                 	}
-                    else if (users.cart[i+p]){
-                     
                        
-
-                           // req.user.sum=
-                         
-                        //   users.updateOne({sum:req.user.sum+users.cart[i+p].Price},function(err,info){
-
-     	                  // })
-
-                           users.sum=users.sum+users.cart[i+p].Price
-                           users.save()
-                          }
-                       
-                    else if (users.cart[i-p]){
-                     
-                       
-
-
-                        //   users.updateOne({sum:req.user.sum+users.cart[i-p].Price},function(err,info){
-
-     	                  // })
-                         
-                            users.sum=users.sum+users.cart[i-p].Price
-                            users.save()
-                          }  
-                       
-
-                       }
-
+                
                         
              })
                   
@@ -806,11 +773,9 @@ app.post("/cart/:id",isLoggedin,function(req,res){
       carts.create({image:prod.image,Name:prod.Name,Price:Number(req.body.qty)*prod.Price,offer:prod.offer,key:prod.key,pid:prod._id,off:prod.off,qty:Number(req.body.qty),urls:prod.urls,leters:prod.leters},function(err,onecart){
 
       	    users.cart.push(onecart)
-      	    users.save()
 
-                          users.updateOne({sum:req.user.sum+(Number(req.body.qty)*prod.Price)},function(err,info){
-
-     	                  })
+            users.sum=users.sum+(Number(req.body.qty)*prod.Price)
+            users.save()
             req.flash("success","product added to the cart")
             res.redirect("/moreinfo/"+prod._id)
       })
