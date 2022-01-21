@@ -410,7 +410,9 @@ product.findById(req.params.aid,function(err,prod){
             	wishlist.findByIdAndDelete(wishs[i]._id,function(err,wishs){
 
 			 	})
-			 }
+		       
+                    break
+                     }
 		}
 	})
  
