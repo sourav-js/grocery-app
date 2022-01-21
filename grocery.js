@@ -984,7 +984,7 @@ app.post("/allbuy/:pid/:id",function(req,res){
 	                                                        pro.stocking=pro.stocking-orders.qty
 
 	                                                          pro.date=Date.now()
-	                                         	             pro.save()  
+	                                         	              
 	                                                        for(var p=0;p<orders.qty;p++){
 	                                                           console.log("here inside") 
 	                                        	               stocks.deleteOne({id:orders.pid},function(err,info){
@@ -1003,8 +1003,9 @@ app.post("/allbuy/:pid/:id",function(req,res){
 		                           	                  pro.empty=true
 		                           	                  pro.stocking=0
 		                           	                   pro.date=Date.now()
-		                                         	 pro.save()
+		                                         	 
 		                                          }
+                                                  pro.save()
 
 	                           })
 	                 })
@@ -1033,7 +1034,6 @@ app.post("/allbuy/:pid/:id",function(req,res){
 	                                                        pro.stocking=pro.stocking-orders.qty
 
 	                                                          pro.date=Date.now()
-	                                         	             pro.save()  
 	                                                        for(var p=0;p<orders.qty;p++){
 	                                                           console.log("here inside") 
 	                                        	               stocks.deleteOne({id:orders.pid},function(err,info){
@@ -1052,9 +1052,10 @@ app.post("/allbuy/:pid/:id",function(req,res){
 		                           	                  pro.empty=true
 		                           	                  pro.stocking=0
 		                           	                   pro.date=Date.now()
-		                                         	 pro.save()
+		                                         	
 		                                          }
-                     
+                                                  pro.save()
+
 	                           })
 	                 })
 	  	 }
