@@ -188,12 +188,10 @@ form .form-row .textarea{
     
       <th scope="row"><i class="fas fa-hand-point-right"></i></th>
      <%if (data.urls=="URL"){%>
-      <%=data.urls%>
-      <%=data.image%>
+      
       <td class="btn btn-sm"><b style="word-break:break-word;"><i><a href="/moreinfo/<%=data.pid%>"><img src="<%=data.image%>" style="width:50px"></a></i></b></td>
       <%}else{%>
-        <%=data.urls%>
-        <%=data.image%>
+        
     <td class="btn btn-sm"><b style="word-break:break-word;"><i><a href="/moreinfo/<%=data.pid%>"><img src="/<%=data.image%>" style="width:50px"></a></i></b></td>
 
       <%}%>
