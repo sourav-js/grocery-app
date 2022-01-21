@@ -424,7 +424,7 @@ app.get("/wishlist/:id",isLoggedin,function(req,res){
 app.get("/allProduct",function(req,res){
   if (!req.query.query){
    product.find({},function(err,prod){
-   	  	res.render("products.ejs",{prod:prod,wishs:wishs})
+   	  	res.render("products.ejs",{prod:prod})
 
    })
  }
@@ -457,7 +457,7 @@ app.get("/allProduct",function(req,res){
              	C.push(0)
                 product.find({key:{$regex:produ[p].key,$options:"$i"}},function(err,prod){
                          
-                         res.render("products.ejs",{prod:prod,wishs:wishs})
+                         res.render("products.ejs",{prod:prod})
                     
                    }) 
                 var produ=[]
