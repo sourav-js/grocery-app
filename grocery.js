@@ -42,7 +42,7 @@ app.use(session({
 	secret:"Grocery",
 	resave:false,
 	saveUninitialized:false,
-        store:mongoStore,
+        
 	cookie:{maxAge:1800*600*1000}
 }));
 app.use(passport.initialize());
