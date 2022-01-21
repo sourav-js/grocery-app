@@ -16,7 +16,6 @@ nodemailer              =require("nodemailer"),
 path					=require("path"),
 fs                      =require("fs"),
 // fetch					=require("node-fetch"),			
-// MongoStore            =require("connect-mongo")(session);
 request                 =require("request"),
 cheerio                 =require("cheerio"),
 secret_key="sk_test_51HYDa6DEQHowOc9K5x2DAfrJ2a2hDQn4NbzTg0TdIfw4put9bnK8D4Lz3MESPLuKzMBbWmwOI76qm3up59H9t9Y500VIrk1GAI",
@@ -37,15 +36,12 @@ app.use(flash());
 // app.use(flashs());
 
 app.use(express.static("./public"));
-// let mongoStore =new MongoStore({
-// 	mongooseConnection:mongoose.connection,
-// 	collection:"sessions"
-// });
+
 app.use(session({
 	secret:"Grocery",
 	resave:false,
 	saveUninitialized:false,
-	 store:mongoStore, //new mongoDbStore({ mongooseConnection:mongoose.connection,collection:"sessions"}),
+	  //new mongoDbStore({ mongooseConnection:mongoose.connection,collection:"sessions"}),
 	cookie:{maxAge:1800*600*1000}
 }));
 app.use(passport.initialize());
