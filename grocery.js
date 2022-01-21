@@ -16,7 +16,6 @@ nodemailer              =require("nodemailer"),
 path					=require("path"),
 fs                      =require("fs"),
 // fetch					=require("node-fetch"),			
-      
 request                 =require("request"),
 cheerio                 =require("cheerio"),
 secret_key="sk_test_51HYDa6DEQHowOc9K5x2DAfrJ2a2hDQn4NbzTg0TdIfw4put9bnK8D4Lz3MESPLuKzMBbWmwOI76qm3up59H9t9Y500VIrk1GAI",
@@ -42,7 +41,7 @@ app.use(session({
 	secret:"Grocery",
 	resave:false,
 	saveUninitialized:false,
-        
+	  //new mongoDbStore({ mongooseConnection:mongoose.connection,collection:"sessions"}),
 	cookie:{maxAge:1800*600*1000}
 }));
 app.use(passport.initialize());
@@ -1060,14 +1059,14 @@ app.post("/allbuy/:pid/:id",function(req,res){
                               var transport=nodemailer.createTransport({
 			                                  service:"gmail",
 			                                  auth:{
-				                               user:"oop.gupta12345@gmail.com",
+				                               user:"grocery.ofc@gmail.com",
 				                               pass:process.env.password
 			                                  }
 		                                       });	
 
 
 			                             var mailoptions={
-				                           from:"oop.gupta12345@gmail.com",
+				                           from:"grocery.ofc@gmail.com",
 				                           bcc:`${req.user.username}`,
 				                           subject:"GroceryJi",
 				                           html:`Hi,${req.body.first},welcome to GroceryjI<br>
@@ -1255,14 +1254,14 @@ app.post("/buy/:pid/:lid",function(req,res){
                                          var transport=nodemailer.createTransport({
 			                                  service:"gmail",
 			                                  auth:{
-				                               user:"oop.gupta12345@gmail.com",
+				                               user:"grocery.ofc@gmail.com",
 				                               pass:process.env.password
 			                                  }
 		                                       });	
 
 
 			                             var mailoptions={
-				                           from:"oop.gupta12345@gmail.com",
+				                           from:"grocery.ofc@gmail.com",
 				                           bcc:`${req.user.username}`,
 				                           subject:"GroceryjI",
 				                           html:`Hi,${req.user.first},welcome to GroceryjI<br>
@@ -1330,14 +1329,14 @@ app.post("/buy/:pid/:lid",function(req,res){
                                          var transport=nodemailer.createTransport({
 			                                  service:"gmail",
 			                                  auth:{
-				                               user:"oop.gupta12345@gmail.com",
+				                               user:"grocery.ofc@gmail.com",
 				                               pass:process.env.password
 			                                  }
 		                                       });	
 
 
 			                             var mailoptions={
-				                           from:"oop.gupta12345@gmail.com",
+				                           from:"grocery.ofc@gmail.com",
 				                           bcc:`${req.user.username}`,
 				                           subject:"GroceryJi",
 				                           html:`Hi,${req.user.first},welcome to GroceryJi<br>
@@ -1592,13 +1591,13 @@ app.post("/cancel/:id",function(req,res){
                     var transport=nodemailer.createTransport({
 			                                  service:"gmail",
 			                                  auth:{
-				                               user:"oop.gupta12345@gmail.com",
+				                               user:"grocery.ofc@gmail.com",
 				                               pass:process.env.password
 			                                  }
 		                                       });	
 
 			                             var mailoptions={
-				                           from:"oop.gupta12345@gmail.com",
+				                           from:"grocery.ofc@gmail.com",
 				                           bcc:`${prods.notify[n].username}`,
 				                           subject:"GroceryJi",
 				                           html:`Hi,welcome to GroceryJi<br>
@@ -1610,7 +1609,7 @@ app.post("/cancel/:id",function(req,res){
 						                               
 						
 						
-					                        <a href="localhost:2000/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>						
+					                        <a href="http://localhost:2000/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>						
 						                                  
 						                                  </form>`
 						            } 
@@ -1682,13 +1681,13 @@ app.post("/cancel/:id",function(req,res){
             var transport=nodemailer.createTransport({
 			                                  service:"gmail",
 			                                  auth:{
-				                               user:"oop.gupta12345@gmail.com",
+				                               user:"grocery.ofc@gmail.com",
 				                               pass:process.env.password
 			                                  }
 		                                       });	
 
 			                             var mailoptions={
-				                           from:"oop.gupta12345@gmail.com",
+				                           from:"grocery.ofc@gmail.com",
 				                           bcc:`${req.user.username}`,
 				                           subject:"GroceryJi",
 				                           html:`Hi,${req.user.first},welcome to GroceryJi<br>
@@ -1700,7 +1699,7 @@ app.post("/cancel/:id",function(req,res){
 						                               
 						
 						
-					                        <a href="localhost:2000/Orders/${orders._id}"<button style=color:green>Check Your Order</button></a>						
+					                        <a href="http://localhost:2000/Orders/${orders._id}"<button style=color:green>Check Your Order</button></a>						
 						                                  
 						                                  </form>`
 						            } 
@@ -1967,14 +1966,14 @@ app.get("/increaseStock/:id/:stock",function(req,res){
          	  var transport=nodemailer.createTransport({
 			service:"gmail",
 			auth:{
-				user:"oop.gupta12345@gmail.com",
+				user:"grocery.ofc@gmail.com",
 				pass:process.env.password
 			}
 		});	
 
 
 			var mailoptions={
-				from:"oop.gupta12345@gmail.com",
+				from:"grocery.ofc@gmail.com",
 				bcc:`${prods.notify[i].username}`,
 				subject:"GroceryJi",
 				html:`Hi,welcome to GroceryJi<br>
@@ -2242,14 +2241,14 @@ app.post("/registering",function(req,res){
     var transport=nodemailer.createTransport({
 			service:"gmail",
 			auth:{
-				user:"oop.gupta12345@gmail.com",
+				user:"grocery.ofc@gmail.com",
 				pass:process.env.password
 			}
 		});	
 
 
 			var mailoptions={
-				from:"oop.gupta12345@gmail.com",
+				from:"grocery.ofc@gmail.com",
 				bcc:`${req.body.username}`,
 				subject:"GroceryJi",
 				html:`Hi,${req.body.first},welcome to GroceryJi<br>please activate your account<br>
@@ -2292,13 +2291,13 @@ user.findOne({username:req.body.username},function(err,user){
 	var transport=nodemailer.createTransport({
 		service:"gmail",
 		auth:{
-			user:"oop.gupta12345@gmail.com",
-			pass:"e1c2l3i4p5s6e7"
+			user:"grocery.ofc@gmail.com",
+			pass:process.env.password
 		}
 	})
  
     var mailoptions={
-				from:"oop.gupta12345@gmail.com",
+				from:"grocery.ofc@gmail.com",
 				bcc:`${req.body.username}`,
 				subject:"GroceryJi",
 				html:`Hi,${user.first},welcome to GroceryJi<br>Reset Your Password<br>
@@ -2495,14 +2494,14 @@ app.get("/statusChange/:id/:key",function(req,res){
                       var transport=nodemailer.createTransport({
 			           service:"gmail",
 		           	  auth:{
-				         user:"oop.gupta12345@gmail.com",
+				         user:"grocery.ofc@gmail.com",
 				         pass:process.env.password
 		         	}
 		     });	
 
 
 			var mailoptions={
-				from:"oop.gupta12345@gmail.com",
+				from:"grocery.ofc@gmail.com",
 				bcc:`${prods.notify[i].username}`,
 				subject:"GroceryJi",
 				html:`Hi,welcome to GroceryJi<br>
@@ -2565,14 +2564,14 @@ app.get("/statusChange/:id/:key",function(req,res){
                      var transport=nodemailer.createTransport({
 			                                  service:"gmail",
 			                                  auth:{
-				                               user:"oop.gupta12345@gmail.com",
+				                               user:"grocery.ofc@gmail.com",
 				                               pass:process.env.password
 			                                  }
 		                                       });	
 
 
 			                             var mailoptions={
-				                           from:"oop.gupta12345@gmail.com",
+				                           from:"grocery.ofc@gmail.com",
 				                           bcc:`${orders.author.username}`,
 				                           subject:"GroceryJi",
 				                           html:`Hi,we have canceled your order for ${orders.productD}<br>
