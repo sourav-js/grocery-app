@@ -411,13 +411,15 @@ product.findById(req.params.aid,function(err,prod){
 
 			 	})
 		       
-                    break
-                     }
-		}
+                   req.flash("success","Items is deleted from wishList")
+	           res.redirect("/moreinfo/"+prod._id) 
+	            
+	           break
+                }
+	     }
 	})
  
-	  req.flash("success","Items is deleted from wishList")
-	  res.redirect("/moreinfo/"+prod._id) 
+	 
 
 })
 }
