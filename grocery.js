@@ -391,7 +391,9 @@ app.get("/deleteWish/:id/:aid",function(req,res){
 if(req.params.aid=="off"){
 	wishlist.findByIdAndDelete(req.params.id,function(err,wishs){
 
-        
+		  req.flash("success","Items is deleted from wishList")
+		  res.redirect("/wishlist")
+             
 		
 	})
 }
@@ -411,10 +413,13 @@ product.findById(req.params.aid,function(err,prod){
 			 }
 		}
 	})
+ 
+	  req.flash("success","Items is deleted from wishList")
+	  res.redirect("/moreinfo/"+prod._id) 
+
 })
 }
-        req.flash("success","Items is deleted from wishList")
-		res.redirect("back")
+        
 
 })
 app.get("/wishlist/:id",isLoggedin,function(req,res){
