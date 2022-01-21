@@ -308,7 +308,21 @@ passport.serializeUser(user.serializeUser());
 passport.deserializeUser(user.deserializeUser());
 
 app.use(function(req,res,next){
-	res.locals.error=req.flash("error")
+user.findById(req.user._id).populate("cart").exec(function(err,users){
+
+              var sum=0
+              var i=0
+              while (i<users.cart.length){
+
+                 sum=sum+users.cart[i].Price
+                 i=i+1
+              } 
+ 
+               users.sum=sum 
+               users.save()
+
+})
+    res.locals.error=req.flash("error")
 	res.locals.success=req.flash("success")
     res.locals.currentUser=req.user
     if (req.user){
@@ -593,18 +607,15 @@ app.get("/notify/:id",isLoggedin,function(req,res){
 
 app.get("/cart",isLoggedin,function(req,res){
 
-	user.findById(req.user._id).populate("cart").exec(function(err,users){
+	
+    user.findById(req.user._id).populate("cart").exec(function(err,users){
+           
+            
 
-       		
+       	 	
             if(users.cart.length>0){
-       		  var sum=0
-              for (var i=0;i<users.cart.length;i++){
-
-                 sum=sum+users.cart[i].Price
-              } 
-              
-              users.sum=sum
-              users.save() 
+       		 
+               
               res.render("cart.ejs",{users:users})
        		
             }
@@ -613,7 +624,9 @@ app.get("/cart",isLoggedin,function(req,res){
        			res.render("nocart.ejs")
        		}
 	
-	})
+	
+    
+    })
 }) 
 
 
@@ -727,7 +740,6 @@ app.post("/cart/:id",isLoggedin,function(req,res){
 
      		  console.log(users.cart[i].qty)
      		  
-     		  pr=users.cart[i].qty
      		  if( users.cart[i].qty>prod.stock.length){
                 cartp.updateOne({qty:prod.stock.length,Price:prod.stock.length*prod.Price},function(err,info){ 
                  
@@ -787,6 +799,7 @@ app.post("/cart/:id",isLoggedin,function(req,res){
   	res.redirect("back")
   } 
   
+            
  })
 })
 })
