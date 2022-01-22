@@ -346,6 +346,36 @@ app.get("/",function(req,res){
   res.render("landingPage.ejs")
 })
 
+app.get("/api",function(req,res)
+	{
+  var array = [];
+  var array2 = [];
+  for (var i=0; i<50000; i++)
+  {
+    array.push("Item >>> "+i);
+    
+  }
+  array2 = array;
+
+  const finalRes = { status: true, arrayData: array, arrayData2: array2, arrayData3: array, arrayData4: array2, arrayData5: array, arrayData6: array2,
+    arrayData7: array, arrayData8: array2, arrayData9: array, arrayData10: array2, arrayData11: array, arrayData12: array2,
+    arrayData8: array, arrayData9: array2, arrayData10: array, arrayData11: array2, arrayData12: array, arrayData13: array2,
+    arrayData14: array, arrayData15: array2, arrayData16: array, arrayData17: array2, arrayData18: array, arrayData19: array2,
+    arrayData20: array, arrayData21: array2, arrayData22: array, arrayData23: array2, arrayData24: array, arrayData25: array2,
+    arrayData26: array, arrayData27: array2, arrayData28: array, arrayData29: array2, arrayData30: array, arrayData31: array2,
+
+    arrayData32: array, arrayData33: array2, arrayData34: array, arrayData35: array2, arrayData36: array, arrayData37: array2,
+    arrayData38: array, arrayData39: array2, arrayData40: array, arrayData41: array2, arrayData42: array, arrayData43: array2,
+    arrayData44: array, arrayData45: array2, arrayData46: array, arrayData47: array2, arrayData48: array, arrayData49: array2,
+    arrayData50: array, arrayData51: array2, arrayData52: array, arrayData53: array2, arrayData54: array, arrayData55: array2,
+    arrayData56: array, arrayData57: array2, arrayData58: array, arrayData59: array2, arrayData60: array, arrayData61: array2,
+    arrayData62: array
+    //, arrayData63: array2, arrayData64: array, arrayData65: array2, arrayData66: array, arrayData67: array2
+
+
+  };
+  res.json(finalRes);
+});
 
 app.get("/product",function(req,res){
 
