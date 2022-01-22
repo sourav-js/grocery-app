@@ -332,7 +332,7 @@ user.findById(req.user._id).populate("cart").exec(function(err,users){
 })
 app.get("/time",function(req,res){
 
-    console.log(Date.now())
+    res.send(Date.now())
 })
 app.get("/login",function(req,res){
 
