@@ -330,7 +330,10 @@ user.findById(req.user._id).populate("cart").exec(function(err,users){
     }
     next()
 })
+app.get("/time",function(req,res){
 
+    console.log(Date.now())
+})
 app.get("/login",function(req,res){
 
 	res.render("login.ejs")
