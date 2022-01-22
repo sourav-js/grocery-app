@@ -308,7 +308,8 @@ passport.serializeUser(user.serializeUser());
 passport.deserializeUser(user.deserializeUser());
 
 app.use(function(req,res,next){
-user.findById(req.user._id).populate("cart").exec(function(err,users){
+ if(req.user) {   
+  user.findById(req.user._id).populate("cart").exec(function(err,users){
 
               var sum=0
               var i=0
@@ -320,8 +321,9 @@ user.findById(req.user._id).populate("cart").exec(function(err,users){
  
                users.sum=sum 
                users.save()
-
-})
+  
+ })
+}
     res.locals.error=req.flash("error")
 	res.locals.success=req.flash("success")
     res.locals.currentUser=req.user
