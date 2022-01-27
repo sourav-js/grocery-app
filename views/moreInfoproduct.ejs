@@ -387,10 +387,12 @@ footer .boxh3{
              </div>
                </div>            
           <%}else{%>
+            <%if(currentUser){%> 
              <button class="btn btn-outline-danger" type="button">
                <em id="qty">Out-Of-Stock</em>
 
               </button>
+             <%}%> 
           <%}%>
 
         <div style="transform:translateY(200px)">
@@ -414,12 +416,13 @@ footer .boxh3{
                         </form>
  
                    <%}else{%>
+                           <%if (currentUser){%> 
                             <%if(mark=="not"){%>
                              <a href="/notify/<%=prod._id%>"><button class="btn btn-md btn-warning">Notify-Me</button></a>
                             <%}else{%>
                                 <a href=""><button class="btn btn-md btn-danger" disabled="true">You will be notified</button></a>
                             <%}%>
-
+                          <%}%>
                    <%}%>
                      
 

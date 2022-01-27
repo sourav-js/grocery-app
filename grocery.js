@@ -591,6 +591,7 @@ app.get("/moreinfo/:id",function(req,res){
       // prods.push(prods)      
       // console.log(prods)
 
+            if(req.user){ 
              for(var i=0;i<prod.notify.length;i++){
 
              	 if(prod.notify[i].username==req.user.username){
@@ -600,6 +601,7 @@ app.get("/moreinfo/:id",function(req,res){
              	 	  break
              	 }
              }
+            } 
              if(flag==true){
 
              	   mark="not"
