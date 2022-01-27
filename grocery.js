@@ -2038,6 +2038,9 @@ app.post("/updateData/:id/:data",function(req,res){
            	     res.redirect("/groceryProduct")
 
              })
+            
+           
+       
        }
 	  else{
 
@@ -2054,8 +2057,22 @@ app.post("/updateData/:id/:data",function(req,res){
            	 res.redirect("/groceryProduct")
 
            })
+      
+      pop.find({id:prods._id},function(err,pups){
 
-	 }
+         for (var i=0;i<pups.length;i++){
+
+             pop.findById(pups[i]._id,function(err,pup){
+
+                 pup.updateOne({text:req.body.name},function(err,info){
+
+
+                 })
+             })
+         }
+      })  
+	 
+     }
 	 else if(req.params.data=="offer"){
 
 	 	 if(prods.Price<req.body.offer){
@@ -2210,17 +2227,16 @@ app.get("/deleteProduct/:id",function(req,res){
 
     
 
-   pop.find({},function(err,pups){
+   pop.find({id:req.params.id},function(err,pups){
 
       for (var i=0;i<pups.length;i++){
 
-         if(pups[i].id==req.params.id){
 
              pop.findByIdAndDelete(pups[i]._id,function(err,info){
 
 
              })
-         }
+         
       }
    })
 
