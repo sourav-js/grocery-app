@@ -135,21 +135,88 @@ footer .boxh3{
           
         <%}%>
         
+      
       </li>
+     
+
       <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"></a>
+
+                               
+
+         <i class="fas fa-bell nav-link" style="font-size:40px;color:white;cursor:pointer" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"></i>
+
       </li>
     </ul>
+     
     <form class="form-inline my-2 my-lg-0" action="/allProduct" method="GET">
       <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
     </form>
   </div>
 </nav>
+<div class="modal-dialog modal-dialog-scrollable">
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Notifications</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+<%if(currentUser){%>        
+ <%if(users.pops.length>0){%> 
+ 
+ <table class="table">
+  <thead>
+   
+  </thead>
+  <tbody>
+
+<%users.pops.forEach(function(pup){%>
+     
+    <tr style="">
+      
+     <%if(pup.urls=="URL"){%> 
+     <th scope="row"> <a href="/moreinfo/<%=pup.id%>"><img src="<%=pup.image%>" style="width:45px"></a></th>
+     <%}else{%>
+      <th scope="row"> <a href="/moreinfo/<%=pup.id%>"><img src="/<%=pup.image%>" style="width:45px"></a></th>
+
+     <%}%> 
+     <td><b style="font-size:14px;word-break:break-word"><%=pup.text%></b></td></a>
+      <td><b style="color:green;font-size:10px">In-Stock-Now</b></td>
+     
+      
+
+    </tr>
 
 
+ <%})%>
+
+  </tbody>
+ </table>
+
+<%}else{%>
+
+        <div align="center"><b><em style="color:black;font-size:20px;">NO Notifications Yet!</em></b></div>
 
 
+ <%}%>   
+<%}else{%>
+        <div align="center"><b><em style="color:black;font-size:20px;">You Have Logged Out!</em></b></div>
+
+<%}%>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 <title><%=prod.Name%></title>
 <div class="modal-dialog modal-dialog-scrollable">
 <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -232,6 +299,8 @@ footer .boxh3{
   </div>
 </div>
 </div>
+
+
 <div class="container">
 <% if(error && error.length>0){%>
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
