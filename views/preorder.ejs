@@ -134,10 +134,93 @@ body{
              
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
     <li id="cashs"><a class="dropdown-item" href="#">Cash-On-Delivery</a></li>
-    <li id="ons"><a class="dropdown-item" href="#" >Online</a></li>
+    <li id="ons"><a class="dropdown-item" href="#" >Stripe</a></li>
+    <li id="onstwo"><a class="dropdown-item" href="#" >Razor-Pay</a></li>
+
   </ul>
 </div>
 </head>
+
+<div style="padding-left:20px;padding-top:20px" id="butstwo" class="but">  
+
+<div style="padding-top:50px;padding-left:30px;padding-bottom:100px">
+  <div class="container">
+  <div class="row">
+    
+  
+     <%preord.forEach(function(data){%>
+           
+
+     
+          <div class="col-lg-4 col-sm-12 image" ><div style="width:300px;padding-top:25px"><div style="box-shadow:1px 2px  7px black;border-radius:10px" class="img-thumbnail"  align="center">
+              <div style="padding-bottom:20px;"><b class="btn btn-warning btn-block">Use-This-Adress   <a href="/updateOrders/<%=data._id%>" style="padding-left:10px"><i class="fas fa-edit" style="color:black;"></i> </a></b></div>
+        <div align="center">
+       <b "><b class="btn btn-sm btn-success">Full-Name </b><br><%=data.name%></b>
+        <hr>
+        <b><b class="btn btn-sm btn-success">City </b><br><%=data.city%></b>
+        <hr>
+        <b><b class="btn btn-sm btn-success">Locality </b><br><%=data.locality%></b>
+        <hr>
+        <b><b class="btn btn-sm btn-success">Road-Number </b><br><%=data.roadNumber%></b>
+         <hr>
+        <b><b class="btn btn-sm btn-success">landMark </b><br><%=data.landmark%></b>
+         <hr>
+        <b><b class="btn btn-sm btn-success">Phone </b><br><%=data.phone%></b>
+      
+        <form action="/razor/<%=prod._id%>/<%=data._id%>" method="POST">
+    
+                           <input type="hidden" name="qty"   value="<%=qty%>" required>
+                  <input type="hidden" name="first" value=<%=data.first%> required>
+
+                 <input type="hidden" name="last" value=<%=data.last%> required>
+
+                 <input type="hidden" name="landmark" value="<%=data.landmark%>" required>
+
+                 <input type="hidden" name="road" value="<%=data.roadNumber%>" required>
+
+                 <input type="hidden" name="locality"  value="<%=data.locality%>" required>
+
+                 <input type="hidden" name="city" value="<%=data.city%>" required>
+
+                 <input type="hidden" name="phone"  value=<%=data.phone%> required>
+                                 <input type="hidden" class="method" name="method" required>
+
+              <div style="transform:translateY(20px)">  
+              <button class="btn btn-block btn-info">Pay-Now</button>
+              </div>
+        </form>
+
+       
+
+
+       </div>
+        
+
+
+        </div>
+       
+       </div>
+
+       </div>
+<%})%>
+
+    </div>
+    
+   
+  </div>
+</div>
+
+
+    
+   
+</div>
+
+
+
+
+
+
+
 
 <div style="padding-left:20px;padding-top:20px" id="butsone" class="but">  
 
@@ -383,18 +466,33 @@ body{
   $("#cashs").click(function(){
      $("#butsone").removeClass("but")
     $("#buts").addClass("but")
+    $("#butstwo").addClass("but")
+
     $(".method").val("Cash-On-Delivery")
     $("#dropdownMenuButton1").text("Cash-On-Delivery")
   })
   $("#ons").click(function(){
      $("#butsone").addClass("but")
     $("#buts").removeClass("but")
-    $(".method").val("Online")
-    $("#dropdownMenuButton1").text("Online")
+     $("#butstwo").addClass("but")
+
+    $(".method").val("Stripe")
+    $("#dropdownMenuButton1").text("Stripe")
 
 
   })
-</script>]
+
+ $("#onstwo").click(function(){
+     $("#butsone").addClass("but")
+    $("#buts").addClass("but")
+    $("#butstwo").removeClass("but")
+
+    $(".method").val("razorpay")
+    $("#dropdownMenuButton1").text("Razor-Pay")
+
+
+  })
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>

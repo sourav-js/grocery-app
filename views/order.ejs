@@ -173,7 +173,9 @@ form .form-row .textarea{
              
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
     <li id="cashs"><a class="dropdown-item" href="#">Cash-On-Delivery</a></li>
-    <li id="ons"><a class="dropdown-item" href="#" >Online</a></li>
+    <li id="ons"><a class="dropdown-item" href="#" >Stripe</a></li>
+    <li id="onstwo"><a class="dropdown-item" href="#" >Razor-Pay</a></li>
+
   </ul>
 </div>
    </head>
@@ -230,7 +232,7 @@ form .form-row .textarea{
            <div class="form-row">
               <div class="input-data textarea">
                   <input type="hidden" name="qty"   value="<%=qty%>" required>
-                                   <input type="hidden" id="method" name="method" required>
+                                   <input type="hidden" id="methodone" name="method" required>
  
 
  
@@ -242,7 +244,7 @@ form .form-row .textarea{
                    src="//checkout.stripe.com/v2/checkout.js"
                    class="stripe-button"
                    data-key="<%= key %>"
-                   data-amount="<%=currentUser.sum%>"
+                   data-amount="<%=amount%>"
                    data-currency="inr" 
                    data-name="<%=currentUser.name%>"
                    data-description="<%=prod.Name%>"
@@ -305,7 +307,7 @@ form .form-row .textarea{
            <div class="form-row">
               <div class="input-data textarea">
                   <input type="hidden" name="qty"  value="<%=qty%>" required>
-                                   <input type="hidden" id="method" name="method" required>
+                                   <input type="hidden" id="methodtwo" name="method" required>
  
 
  
@@ -324,9 +326,85 @@ form .form-row .textarea{
               
                  </div>
               </div>
-           </div>
         </form>
+           </div>
+       
      
+     
+
+<div class="container but"  id="butstwo">
+        <div class="text but"><%=prod.Name%></div>
+        <form action="/razor/<%=prod._id%>/1www33ee" method="POST">
+           <div class="form-row">
+              <div class="input-data">
+                 <input type="text" name="first" required>
+                 <div class="underline"></div>
+                 <label for="">First Name</label>
+              </div>
+              <div class="input-data">
+                 <input type="text" name="last" required>
+                 <div class="underline"></div>
+                 <label for="">Last Name</label>
+              </div>
+           </div>
+           <div class="form-row">
+              <div class="input-data">
+                 <input type="text" name="landmark" required>
+                 <div class="underline"></div>
+                 <label for="">Landmark</label>
+              </div>
+              <div class="input-data">
+                 <input type="number" name="road" required>
+                 <div class="underline"></div>
+                 <label for="">Road-Number</label>
+              </div>
+            <div class="input-data">
+                 <input type="text" name="locality"required>
+                 <div class="underline"></div>
+                 <label for="">Locality</label>
+              </div>
+            <div class="input-data">
+                 
+                 <input type="text" name="city" required>
+
+                 <div class="underline"></div>
+                 <label for="">City</label>
+              </div>
+            <div class="input-data">
+                 
+                 <input type="number" name="phone" required>
+
+                 <div class="underline"></div>
+                 <label for="">Phone-Number</label>
+              </div>
+           </div>
+           <div class="form-row">
+              <div class="input-data textarea">
+                  <input type="hidden" name="qty"  value="<%=qty%>" required>
+                                   <input type="hidden" id="methods" name="method" required>
+ 
+
+ 
+                 
+                <br>  
+                <div >
+
+                 <div class="form-row submit-btn">
+                    <div class="input-data" >
+                       <div class="inner"></div>
+                       
+                       <input type="submit" value="Pay-Now">
+                    </div>
+                 </div>
+         </div>
+              
+                 </div>
+              </div>
+        </form>
+           </div>
+
+
+
      </div>
     
 
@@ -340,17 +418,32 @@ form .form-row .textarea{
   $("#cashs").click(function(){
     $("#butsone").removeClass("but")
     $("#buts").addClass("but")
-    $("#method").val("Cash-On-Delivery")
+    $("#butstwo").addClass("but")
+
+    $("#methodtwo").val("Cash-On-Delivery")
     $("#dropdownMenuButton1").text("Cash-On-Delivery")
   })
   $("#ons").click(function(){
     $("#butsone").addClass("but")
+        $("#butstwo").addClass("but")
+
     $("#buts").removeClass("but")
-    $("#method").val("Online")
-    $("#dropdownMenuButton1").text("Online")
+    $("#methodone").val("Stripe")
+    $("#dropdownMenuButton1").text("Stripe")
 
 
   })
+  $("#onstwo").click(function(){
+    $("#butsone").addClass("but")
+    $("#butstwo").removeClass("but")
+        $("#buts").addClass("but")
+
+    $("#methods").val("razorpay")
+    $("#dropdownMenuButton1").text("Razor-Pay")
+
+
+  })
+
 </script>
    </body>
     

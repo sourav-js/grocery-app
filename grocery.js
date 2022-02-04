@@ -9,20 +9,32 @@ mongoose 	            =require("mongoose"),
 body                    =require("body-parser"),
 session                 =require("express-session"),
 method                  =require("method-override"),
+https = require("https"),
+qs = require("querystring"),
+
+
+
 flash                   =require("connect-flash"),
 // flashs                  =require("express-flash"),
 nodemailer              =require("nodemailer"),
  upload                 =require("express-fileupload"),
 path					=require("path"),
 fs                      =require("fs"),
+
 // fetch					=require("node-fetch"),			
 request                 =require("request"),
 cheerio                 =require("cheerio"),
+checksum_lib            =require("./Paytm/checksum"),
+Razorpay                =require("razorpay"),
+crypto                  = require("crypto"),
+
+config                  =require("./Paytm/config"),
 secret_key="sk_test_51HYDa6DEQHowOc9K5x2DAfrJ2a2hDQn4NbzTg0TdIfw4put9bnK8D4Lz3MESPLuKzMBbWmwOI76qm3up59H9t9Y500VIrk1GAI",
 public_key="pk_test_51HYDa6DEQHowOc9KWUatQJTsMzgOTdRLgxsglppcuXrLpaXH6ZAeewv2MCn0ZpdD08e3YH2mUZMFrJs6BQTnc6AX00FsXjmk2E",
 stripe=require("stripe")(secret_key),
 
 port=process.env.PORT || 2000;
+
 path.parse("D:/Backup/web-server/shop/public");
 mongoose.connect("mongodb+srv://localGrocery:TV8mAWGwGFJDyqhU@mongodb-tutorial.wvkvs.mongodb.net/Grocery?retryWrites=true&w=majority");
 var marker="cant"
@@ -31,6 +43,7 @@ app.use(body.urlencoded({extended:true}));
 // app.use(body.json()); 
 
 app.use(express.json());
+
 app.use(upload());
 app.use(flash());
 // app.use(flashs());
@@ -58,7 +71,10 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
+let instance = new Razorpay({
+  key_id: 'rzp_test_fEiizHFA6gj75D', // your `KEY_ID`
+  key_secret: 'S7HnMrnoaUOMcqqgQTTSt4mf' // your `KEY_SECRET`
+});
  var cartSchema=new mongoose.Schema({
 	Name:String,
 	image:String,
@@ -958,12 +974,12 @@ app.get("/allbuy",function(req,res){
 })
 
 
-app.post("/allbuy/:pid/:id",function(req,res){
+app.post("/allbuy/:id",function(req,res){
 
   location.findById(req.params.id,function(err,loc){ 
    user.findById(req.user._id).populate("cart").exec(function(err,users){
   
-   if (req.body.method=="Online"){
+   if (req.body.method=="Stripe"){
 
 
   	 stripe.customers.create({ 
@@ -1003,18 +1019,26 @@ app.post("/allbuy/:pid/:id",function(req,res){
   }	
   
    
-    if (req.body.method=="Online"){
+                        if(req.body.method=="Stripe"){
 
-    	 var pay="Paid"
+                              var pay="Paid"
+                           }
+                           
+                           
+                          else if(req.body.method=="razorpay"){
 
-   } 
-   else{
+                            var pay="Paid"
+                          }  
 
-         	 var pay="Cash-On-Delivery"
 
-        
-   }  	  
+                           else if (req.body.method=="Cash-On-Delivery"){
+ 
+                                 var pay="Cash-On-Delivery"
 
+
+          
+
+                           }
     	 var author={
     	 	username:req.user.username,
     	 	id:req.user._id
@@ -1034,7 +1058,7 @@ app.post("/allbuy/:pid/:id",function(req,res){
                                                                     
                                                                  	 for (var i=0;i<users.cart.length;i++){
     
-                                                               
+                                                                      
                                                                            
                                                                            order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:users.cart[i].Price,returnId:"",author:author,productD:users.cart[i].Name,qty:users.cart[i].qty,locality:req.body.locality,pay:pay,image:users.cart[i].image,returnQ:0,pid:users.cart[i].pid,ifsc:"",account:"",cartId:users.cart[i]._id,ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,lid:loc._id,mainuser:req.user.username,urls:users.cart[i].urls,leters:users.cart[i].leters},function(err,orders){
 	 
@@ -1096,9 +1120,9 @@ app.post("/allbuy/:pid/:id",function(req,res){
  
                                                 for (var j=0;j<users.cart.length;j++){
 
-
+                                                   
                                        
-	                                               order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:users.cart[j].Price,returnId:"",author:author,productD:users.cart[j].Name,qty:users.cart[j].qty,locality:req.body.locality,pay:pay,image:users.cart[j].image,returnQ:0,pid:users.cart[j].pid,ifsc:"",account:"",cartId:users.cart[j]._id,ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,lid:loca._id,mainuser:req.user.username,urls:users.cart[i].urls,leters:users.cart[i].leters},function(err,orders){
+	                                               order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:users.cart[j].Price,returnId:"",author:author,productD:users.cart[j].Name,qty:users.cart[j].qty,locality:req.body.locality,pay:pay,image:users.cart[j].image,returnQ:0,pid:users.cart[j].pid,ifsc:"",account:"",cartId:users.cart[j]._id,ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,lid:loca._id,mainuser:req.user.username,urls:users.cart[j].urls,leters:users.cart[j].leters},function(err,orders){
 	 
 	                                                   product.findById(orders.pid).populate("stock").exec(function(err,pro){                                
 	                                                        pro.stocking=pro.stocking-orders.qty
@@ -1195,6 +1219,79 @@ app.post("/allbuy/:pid/:id",function(req,res){
 })
 
 
+
+app.post("/razor/:pid/:lid",function(req,res){
+  location.findById(req.params.lid,function(err,loc){ 
+
+        product.findById(req.params.pid).populate("stock").exec(function(err,prod){
+    if (loc){
+ 
+        res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:loc._id,prod:prod,amount:req.body.qty*prod.Price})
+
+ 
+ }      
+ else{
+
+    res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:"tttt",prod:prod,amount:req.body.qty*prod.Price})
+
+
+
+ } 
+     
+    
+ 
+
+
+
+})
+})
+
+})
+
+
+app.post("/razorcart/:lid",function(req,res){
+  location.findById(req.params.lid,function(err,loc){ 
+
+    if (loc){
+ 
+        res.render("razorcart.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:loc._id,amount:req.user.sum})
+
+ 
+ }      
+ else{
+
+    res.render("razorcart.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:"tttt",amount:req.user.sum})
+
+
+
+ } 
+     
+    
+ 
+
+
+
+
+})
+
+})
+
+
+app.post("/api/payment/order",(req,res)=>{
+params=req.body;
+instance.orders.create(params).then((data) => {
+       res.send({"sub":data,"status":"success"});
+}).catch((error) => {
+       res.send({"sub":error,"status":"failed"});
+})
+});
+
+
+
+
+
+
+
 app.post("/buy/:pid/:lid",function(req,res){
  location.findById(req.params.lid,function(err,loc){ 
    user.findById(req.user._id).populate("cart").populate("pops").exec(function(err,users){
@@ -1237,6 +1334,14 @@ app.post("/buy/:pid/:lid",function(req,res){
 }
                            
       
+
+
+
+
+
+
+
+
                            var flag=true 
                            for(var i=0;i<users.cart.length;i++){
                                  
@@ -1301,11 +1406,12 @@ app.post("/buy/:pid/:lid",function(req,res){
                            	 prod.stocking=0
                            	 prod.date=Date.now()
                            
-                             pop.find({},function(err,pup){
+                             pop.find({pid:prod._id},function(err,pup){
 
                                 for (var i=0;i<pup.length;i++){
 
                                    if (pup[i].id==prod._id){
+
 
                                             pop.findByIdAndDelete(pup[i]._id,function(err,info){
 
@@ -1317,11 +1423,19 @@ app.post("/buy/:pid/:lid",function(req,res){
                            }
                            prod.save()
                            
-                           if(req.body.method=="Online"){
+                           if(req.body.method=="Stripe"){
 
                            	  var pay="Paid"
                            }
-                           else{
+                           
+                           
+                          else if(req.body.method=="razorpay"){
+
+                            var pay="Paid"
+                          }  
+
+
+                           else if (req.body.method=="Cash-On-Delivery"){
  
                                  var pay="Cash-On-Delivery"
 
