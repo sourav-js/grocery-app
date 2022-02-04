@@ -922,13 +922,13 @@ app.get("/buy/:pid",isLoggedin,function(req,res){
          else{
             
 
-         res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key})
+         res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:req.query.qty*prod.Price})
        }
      })
    }
    else{
-
-   	          res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key})
+              console.log(req.query.qty*prod.Price)
+   	          res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:req.query.qty*prod.Price})
 
    }
    }
@@ -1299,7 +1299,7 @@ app.post("/buy/:pid/:lid",function(req,res){
         product.findById(req.params.pid).populate("stock").exec(function(err,prod){
         
         if (req.body.qty<=prod.stock.length){
-        	if (req.body.method=="Online"){ 
+        	if (req.body.method=="Stripe"){ 
         	stripe.customers.create({ 
 					        email: req.body.stripeEmail, 
 					        source: req.body.stripeToken, 
