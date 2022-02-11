@@ -398,7 +398,7 @@ app.get("/time",function(req,res){
 
 cron.schedule("*/1 * * * *",function(){
 
-    request("http://localhost:2000/checking",function(error,response,data){
+    request("https://grocery-ji.herokuapp.com/checking",function(error,response,data){
 
 
     })
@@ -406,7 +406,7 @@ cron.schedule("*/1 * * * *",function(){
 
 cron.schedule("*/1 * * * *",function(){
 
-    request("http://localhost:2000/autoremove",function(error,response,data){
+    request("https://grocery-ji.herokuapp.com/autoremove",function(error,response,data){
 
 
     })
