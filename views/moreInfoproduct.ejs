@@ -180,14 +180,33 @@ footer .boxh3{
     <tr style="">
       
      <%if(pup.urls=="URL"){%> 
-     <th scope="row"> <a href="/moreinfo/<%=pup.id%>"><img src="<%=pup.image%>" style="width:45px"></a></th>
-     <%}else{%>
-      <th scope="row"> <a href="/moreinfo/<%=pup.id%>"><img src="/<%=pup.image%>" style="width:45px"></a></th>
+      <%if(pup.api=="cart"){%>
+        <th scope="row"> <a href="/cart"><i class="fab fa-opencart" style="color:black"></i></a></th>
+      <%}else{%>
+       
+        <th scope="row"> <a href="/moreinfo/<%=pup.id%>"><img src="<%=pup.image%>" style="width:45px"></a></th>
+         
 
+      <%}%>
+     <%}else{%>
+      <%if(pup.api=="cart"){%>
+        
+         <th scope="row"> <a href="/cart"><i class="fab fa-opencart" style="color:black"></i></a></th>
+         
+
+      <%}else{%>
+         <th scope="row"> <a href="/moreinfo/<%=pup.id%>"><img src="/<%=pup.image%>" style="width:45px"></a></th>
+
+      <%}%> 
      <%}%> 
      <td><b style="font-size:14px;word-break:break-word"><%=pup.text%></b></td></a>
-      <td><b style="color:green;font-size:10px">In-Stock-Now</b></td>
-     
+     <%if(pup.api=="cart"){%>
+
+       <td><b style="color:yellow;font-size:10px">Go-To-Cart</b></td>
+     <%}else{%>
+       <td><b style="color:green;font-size:10px">In-Stock-Now</b></td>
+
+     <%}%>
       
 
     </tr>
@@ -270,13 +289,23 @@ footer .boxh3{
         <div style="transform:translateY(45px)">
         <div style="transform:translateY(-150%);padding-left:1px;">
          
+        <%if(!actualPrice && !calc){%>
             <button class="btn btn-sm btn-outline-info"><i class="fas fa-rupee-sign"><%=prod.Price%></i></button>
                        <button class="btn btn-sm btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=prod.offer%></i></button> 
                               
                 <%if (prod.off){%>
                  <button class="btn btn-sm btn-success"><%=prod.off%></button>      
                 <%}%>
-       
+       <%}else{%>
+
+              <button class="btn btn-sm btn-outline-info"><i class="fas fa-rupee-sign"><%=actualPrice%></i></button>
+                       <button class="btn btn-sm btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=prod.offer%></i></button> 
+                              
+                <%if (prod.off){%>
+                 <button class="btn btn-sm btn-success"><%=calc%></button>      
+                <%}%>
+
+       <%}%>
                <%if(prod.leters){%>
                     
                     <button class="btn btn-sm btn-info"><%=prod.leters%></button>
@@ -410,10 +439,17 @@ footer .boxh3{
                         </form>
                      <%if(prod.stock.length>0){%>
  
+                     <%if(cart=="no"){%>
+
                         <form action="/cart/<%=prod._id%>" method="POST" display:inline>       
                             <input type="hidden" id="inputs" name="qty">
                             <button class="btn btn-md btn-success"><i class="fas fa-shopping-cart"> Add-To-Cart</i></button>
                         </form>
+                     <%}else if(cart=="yes"){%>
+                      <form action="/cart" method="GET" display:inline>       
+                            <button class="btn btn-md btn-warning"><i class="fas fa-shopping-cart"> Go-To-Cart</i></button>
+                        </form>
+                     <%}%>   
  
                    <%}else{%>
                            <%if (currentUser){%> 
@@ -442,6 +478,11 @@ footer .boxh3{
 
             <%}%>
         <%}%>
+        
+
+
+
+
         </div>
         
         </div>
@@ -454,7 +495,26 @@ footer .boxh3{
     
    
   </div>
+
+
 </div>
+
+<%if(added=="no"){%>
+ <div   class="btn btn-block btn-outline-success" style="transform:translateY(-50px)">
+ <a href="/selection/<%=prod._id%>" style="text-decoration:none;color:black" id="quote">Select This For Future Add</a>
+ </div>
+<%}else if(added=="yes"){%>
+
+<div   class="btn btn-block btn-warning" style="transform:translateY(-50px)">
+ <a  href="/deleteselection/<%=prod._id%>" style="text-decoration:none;color:black" id="quote">Remove From Future Add</a>
+ </div>
+
+
+<%}%>
+
+ 
+
+
 <%=prod.stock.length%>
 <div class="half">
 
@@ -487,8 +547,12 @@ footer .boxh3{
          
         <a href="/moreinfo/<%=data._id%>"<button class="btn btn-md btn-success">More-Info</button></a>
             
-            <button class="btn btn-md btn-outline-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
-                       <button class="btn btn-md btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=data.offer%></i></button>
+            <%if(currentUser.offerHold==false){%>
+              <button class="btn btn-md btn-outline-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
+            <%}else if(currentUser.offerHold==true){%>           
+               <button class="btn btn-md btn-outline-info"><i class="fas fa-rupee-sign" class="texts"><%=data.Price-20%></i></button>
+               
+            <%}%>                        <button class="btn btn-md btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=data.offer%></i></button>
                     
               <%if(data.leters){%>
                     
@@ -571,6 +635,7 @@ footer .boxh3{
     </footer>
 
 <script type="text/javascript">
+  
 
 $("#inputs").val(1)
 $("#inputb").val(1)

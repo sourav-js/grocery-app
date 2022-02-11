@@ -244,14 +244,15 @@ footer .boxh3{
   <div class="container">
   <div class="row">
    <%users.cart.forEach(function(data){%> 
-    
+                                          
+
     <div class="col-lg-3 col-sm-12 image" ><div style="box-shadow:1px 2px  3px grey;padding-top:50px" class="img-thumbnail"  align="center">
 
       <%if(data.urls=="URL"){%> 
         <a href="/moreinfo/<%=data.pid%>"><img src="<%=data.image%>" style="width:150px;height:50%;padding-bottom:80px;cursor:pointer;"></a>
      
       <%}else{%>
-
+          <b style="color:black;font-size:5px">Added By Groceryji</b>
            <a href="/moreinfo/<%=data.pid%>"><img src="/<%=data.image%>" style="width:150px;height:50%;padding-bottom:80px;cursor:pointer;"></a>
 
 
@@ -271,16 +272,19 @@ footer .boxh3{
         </div>
              
                    <%if(data.qty>1){%>  
-                    <a href="/carti/<%=data._id%>/<%=data.pid%>"<button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button></a>
-                    <a href="/cartd/<%=data._id%>/<%=data.pid%>"<button class="btn btn-sm btn-success"><i class="fas fa-minus"></i></button></a>
+                    <a href="/carti/<%=data._id%>/<%=data.pid%>"><button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button></a>
+                    <a href="/cartd/<%=data._id%>/<%=data.pid%>"><button class="btn btn-sm btn-success"><i class="fas fa-minus"></i></button></a>
 
                     <%}else{%>
-                    <a href="/carti/<%=data._id%>/<%=data.pid%>"<button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button></a>
+                    <a href="/carti/<%=data._id%>/<%=data.pid%>"><button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button></a>
 
-                    <a href="/cartd/<%=data._id%>/<%=data.pid%>"<button class="btn btn-md btn-danger"><i class="far fa-trash-alt"></i></button></a>
+                    <a href="/cartd/<%=data._id%>/<%=data.pid%>"><button class="btn btn-md btn-danger"><i class="far fa-trash-alt"></i></button></a>
  
                     <%}%>
 
+                            <%if(data.author){%>
+                              <b style="color:green;font-size:10px;">Added By Groceryji</b> 
+                            <%}%>
 
         </div>
        </div>
