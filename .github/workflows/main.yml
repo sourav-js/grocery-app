@@ -25,6 +25,6 @@ jobs:
         key: bjasjd567376@355@#$
         port: 8080
         script: |
-          cd ~/home/sourav/groceryji/grocery-app
+          cd groceryji/grocery-app
           git pull origin master
           git status
