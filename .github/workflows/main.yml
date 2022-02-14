@@ -22,7 +22,7 @@ jobs:
       with:
         host: ssh.sanchyan.tech
         username: sourav
-        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDIVmfiPTtdwDAFnL4mfMwnGifyP13qyGe+y76VmKbX+WwwOqw+n3PMjfy8qbTTMW8ya/jn3meFZVG2+ycDdLyTPYCYl9iwJ4Ubin7ElPhw+VbwL>"
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 8080
         script: |
           cd groceryji/grocery-app
