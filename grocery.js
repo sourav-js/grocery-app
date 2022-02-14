@@ -3704,5 +3704,5 @@ function isLoggedin(req,res,next){
 
 app.listen(port,function(){
 
-	console.log("server 1 has started")
+	console.log("server 2 has started")
 })
