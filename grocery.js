@@ -421,7 +421,11 @@ app.use(function(req,res,next){
    })
 
 } 
-  
+ else{
+       	 
+	      res.locals.allnoti=0
+
+ }
 
 
     res.locals.error=req.flash("error")
