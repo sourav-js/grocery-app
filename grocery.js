@@ -454,7 +454,7 @@ cron.schedule("*/1 * * * *",function(){
 })
 app.get("/autoremove",function(req,res){
 
-     console.log("autoremove hitted")
+     console.log("autoremove hitting")
      user.find({},function(err,users){
 
           for(var i=0;i<users.length;i++){
