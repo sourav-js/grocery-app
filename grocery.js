@@ -1551,7 +1551,7 @@ app.get("/moreMonth/:id/:mon",function(req,res){
      
 })
 
-app.get("/updateCustomerStatus/:id/:mon",function(req,res){
+app.get("/updateCustomersStatus/:id/:mon",function(req,res){
  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
                             var date=new Date()
  user.findById(req.params.id).populate("pops").exec(function(err,users){
@@ -1565,7 +1565,14 @@ app.get("/updateCustomerStatus/:id/:mon",function(req,res){
 
          users.save() 
            
-     var transport=nodemailer.createTransport({
+              
+ 
+ })         
+        
+      req.flash("success",users.name + " is now VIP Customer")
+      res.redirect("back")  
+   
+ var transport=nodemailer.createTransport({
                                               service:"gmail",
                                               auth:{
                                                user:"grocery.ofc@gmail.com",
@@ -1575,20 +1582,19 @@ app.get("/updateCustomerStatus/:id/:mon",function(req,res){
 
                                          var mailoptions={
                                            from:"grocery.ofc@gmail.com",
-                                           bcc:`$.username}`,
+                                           bcc:`${users.username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,welcome to GroceryJi<br>
-                                           Your requested  product ${prods.Name}, Price: ${prods.Price} is available
-                                           in stock..
+                                           Hi,${users.name},You Are A VIP Customer Of ${req.params.mon}... 
                                            <br>
-                                           
+                                           <b>Congratulations</b>
                                             <br>
                                                        
                         
                         
-                                            <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                            <a href="https://grocery-ji.herokuapp.com/"><button style=color:green>GroceryJi</button></a>                       
                                                           
-                                                          </form>`
+                                                        `
                                     } 
                               
                              
@@ -1609,12 +1615,8 @@ app.get("/updateCustomerStatus/:id/:mon",function(req,res){
                                         }
 
 
-                                })           
- 
- })         
-        
-      req.flash("success",users.name + " is now VIP Customer")
-      res.redirect("back")  
+                                })  
+
      }
    else{
 
