@@ -87,11 +87,28 @@ let instance = new Razorpay({
     qty:Number,
     urls:String,
     leters:String,
-    author:String
+    author:String,
+    mainuser:String
 
 })
  var carts=mongoose.model("carts",cartSchema)
+var stockCSchema=new mongoose.Schema({
+    Name:String,
+    image:String,
+    Price:Number,
+    offer:Number,
+    key:String,
+    pid:String,
+    ratings:String,
+    off:String,
+    qty:Number,
+    urls:String,
+    leters:String,
+    author:String,
+    mainuser:String
 
+})
+ var stockC=mongoose.model("stockC",stockCSchema)
 var wishSchema=new mongoose.Schema({
 	Name:String,
 	image:String,
@@ -117,7 +134,8 @@ var popSchema=new mongoose.Schema({
     text:String,
     image:String,
     urls:String,
-    api:String
+    api:String,
+    view:String
 })
 
 
@@ -143,9 +161,11 @@ var userSchema=new mongoose.Schema({
 	username:String,
 	passsword:String,
 	name:String,
+    notinum:Number,
 	sum:Number,
+    month:String,
     offerHold:Boolean,
-
+    
     selection:[{
 
             type: mongoose.Schema.Types.ObjectId,
@@ -383,6 +403,27 @@ app.use(function(req,res,next){
   
  })
 }
+    if(req.user) {   
+
+
+   user.findById(req.user._id).populate("pops").exec(function(err,users){
+     var totalnoti=0
+     for (var i=0;i<users.pops.length;i++){
+
+         if(users.pops[i].view==""){
+
+             totalnoti=totalnoti+1
+         }
+     }
+    
+     res.locals.allnoti=totalnoti
+
+   })
+
+} 
+  
+
+
     res.locals.error=req.flash("error")
 	res.locals.success=req.flash("success")
     res.locals.currentUser=req.user
@@ -396,17 +437,17 @@ app.get("/time",function(req,res){
     res.send(new Date().toString())
 })
 
+// cron.schedule("*/2 * * * *",function(){
+
+//     request("http://localhost:2000/checking",function(error,response,data){
+
+
+//     })
+// })
+
 cron.schedule("*/1 * * * *",function(){
 
-    request("https://grocery-ji.herokuapp.com/checking",function(error,response,data){
-
-
-    })
-})
-
-cron.schedule("*/1 * * * *",function(){
-
-    request("https://grocery-ji.herokuapp.com/autoremove",function(error,response,data){
+    request("http://localhost:2000/autoremove",function(error,response,data){
 
 
     })
@@ -419,12 +460,23 @@ app.get("/autoremove",function(req,res){
           for(var i=0;i<users.length;i++){
 
 
-              user.findById(users[i]._id,function(err,found){
+              user.findById(users[i]._id).populate("pops").exec(function(err,found){
 
                  if(found.offerHold && found.offerHold==true){
 
-                     
-                      found.offerHold=false
+                   if(found.pops.length>0){
+                      for(var i=0;i<found.pops.length;i++){
+
+                         if(found.pops[i].api=="vip"){
+
+                             pop.findByIdAndDelete(found.pops[i]._id,function(err,info){
+
+
+                             })
+                         }
+                      }
+                    }  
+                       found.offerHold=false
                       found.save()
                       console.log("changed")
                  }
@@ -450,7 +502,21 @@ app.get("/checking",function(req,res){
      var m=0 
      var temp=0
      if (alluser.selection.length>0){
+      if(alluser.cart.length>0){
+      for (var j=0;j<alluser.cart.length;j++){
+             
+              if(alluser.cart[j].mainuser==alluser.username){
+
+                 carts.findByIdAndDelete(alluser.cart[j]._id,function(err,info){
+
+
+                 })
+              }
+
+        }
+     }
       for (var j=0;j<alluser.selection.length;j++){
+         
          
          product.findById(alluser.selection[j].id,function(err,prods){
               var flag=true 
@@ -463,10 +529,11 @@ app.get("/checking",function(req,res){
                       break
                   }
               }
+
+
               if(flag==true){
                  m=m+1
-
-                 
+                  
                   if(alluser.offerHold==true){
 
                       var amounts=prods.Price-20
@@ -478,64 +545,73 @@ app.get("/checking",function(req,res){
                      var amounts=prods.Price
                      var calcs=prods.off
                  }
-                 carts.create({pid:prods._id,image:prods.image,Name:prods.Name,Price:amounts,off:calcs,qty:1,urls:prods.urls,key:prods.key,author:"Added By GroceryJi"},function(err,car){
- 
+                 carts.create({pid:prods._id,image:prods.image,Name:prods.Name,Price:amounts,off:calcs,qty:1,urls:prods.urls,key:prods.key,author:"Added By GroceryJi",mainuser:alluser.username},function(err,car){
+                    
                    for (var c=0;c<alluser.pops.length;c++){
                      // pop.drop()
                      
                       if(alluser.pops[c].api=="cart"){
 
-                        pop.findByIdAndDelete(alluser.pops[c]._id,function(err,info){
+                         pop.findByIdAndDelete(alluser.pops[c]._id,function(err,info){
 
-                        })
+                         }) 
                       }
                    
                    }
                       
                     
-                      if (temp==0){
+                      // if (temp==0){
 
-                         for (var al=0;al<alluser.selection.length;al++){
+                      //    for (var al=0;al<alluser.selection.length;al++){
          
-                             product.findOne({_id:alluser.selection[al].id},function(err,checkprod){
-                                  var check=true 
+                      //        product.findOne({_id:alluser.selection[al].id},function(err,checkprod){
+                      //             var check=true 
 
-                                  for (var w=0;w<alluser.cart.length;w++){
+                      //             for (var w=0;w<alluser.cart.length;w++){
 
-                                      if(alluser.cart[w].pid==checkprod._id){
+                      //                 if(alluser.cart[w].pid==checkprod._id){
 
-                                          check=false
-                                          break
-                                      }
-                                  }
+                      //                     check=false
+                      //                     break
+                      //                 }
+                      //             }
                           
-                                  if(check==true){
+                      //             if(check==true){
                              
-                                      temp=temp+1
+                      //                 temp=temp+1
 
 
 
-                                   }
+                      //              }
              
-                               })
-                            }
-                        }           
+                      //          })
+                      //       }
+                      //   }           
 
 
-                    pop.create({text:"Some product has been added to your cart,check it",api:"cart"},function(err,popup){ 
 
-                            alluser.cart.push(car)
+                            // alluser.cart.push(car)
 
-                            alluser.pops.push(popup)
                             
-                            if (temp==m){
-                                 console.log("hitted here")
+                            // if (temp==m){
+                            //                      // pop.create({text:"Some product has been added to your cart,check it",api:"cart",urls:prods.urls,view:""},function(err,popup){ 
+   
+                            //     if(!alluser.notinum){
 
-                                 alluser.save()
-                            }
+                            //        alluser.notinum=0
+                                   
+                            //   }
+                            //     alluser.notinum=alluser.notinum+1 
+                            //      console.log(alluser.notinum)
+                            //      console.log("hitted here")
+                            //                                 alluser.pops.push(popup)
+ 
+                            //      alluser.save()
+                            // // })
+                            // }
                             
 
-                       })
+                      
                            
                    
                  
@@ -547,6 +623,43 @@ app.get("/checking",function(req,res){
          
          })  
      }
+             if(alluser.pops.length>0){
+               for (var c=0;c<alluser.pops.length;c++){
+                     // pop.drop()
+                     
+                      if(alluser.pops[c].api=="cart"){
+
+                         pop.findByIdAndDelete(alluser.pops[c]._id,function(err,info){
+
+                         }) 
+                      }
+                   
+            }
+           } 
+       carts.find({mainuser:alluser.username},function(err,allcart){
+
+             var p=0
+             for(var d=0;d<allcart.length;d++){
+                
+                 carts.findById(allcart[d]._id,function(err,alls){
+          product.findById(alls.pid,function(err,prods){
+
+                     alluser.cart.push(alls)
+                     p=p+1
+                     if(p==allcart.length){
+                         pop.create({text:"Some product has been added to your cart,check it",api:"cart",urls:prods.urls,view:""},function(err,popup){ 
+                         alluser.pops.push(popup)
+                         alluser.save()
+                     
+                     })
+                     }
+             })    
+       })
+             
+             }
+           
+      })
+
      }
   })    
   } 
@@ -796,7 +909,15 @@ app.get("/moreinfo/:id",function(req,res){
   product.findOne({_id:req.params.id}).populate("stock").populate("notify").exec(function(err,prod){
      console.log(prod)
      console.log(prod.stock.length)
-     
+    console.log("here is"+req.query.mores)
+    console.log(users.notinum) 
+    if(req.query.mores){
+
+          if(users.notinum && users.notinum>0){
+             users.notinum=users.notinum-1
+             users.save()
+          }
+    }
     if(req.user){
       if (users.offerHold==true){
 
@@ -969,8 +1090,14 @@ app.get("/cart",isLoggedin,function(req,res){
 	
     user.findById(req.user._id).populate("cart").populate("pops").exec(function(err,users){
            
-            
+     console.log("here is cart"+req.query.noti)       
+     if(req.query.noti){
 
+          if(users.notinum && users.notinum>0){
+             users.notinum=users.notinum-1
+             users.save()
+          }
+    }
        	 	
             if(users.cart.length>0){
        		 
@@ -1288,7 +1415,7 @@ if (!req.query.search){
                        }
 
                             
-                                res.render("monthOrder.ejs",{orders:orderf,month:req.params.id,totalSum:totalSum,search:key,month:req.params.id})
+                                res.render("monthOrder.ejs",{orders:orderf,month:req.params.id,totalSum:totalSum,search:key})
 
                        })
 
@@ -1322,7 +1449,75 @@ if (!req.query.search){
 
 })
 
+app.get("/vip",function(req,res){
+    
+ 
+  if(!req.query.search){
+           user.find({offerHold:true},function(err,users){
 
+       if(users.length>0){ 
+         res.render("vip.ejs",{users:users,search:""})
+       }
+       else{
+
+        res.render("novip.ejs")
+       }
+      
+  })
+ }
+ else{
+    var key=req.query.search
+    var find=[]
+    user.find({offerHold:true},function(err,users){
+     
+
+     for(var i=0;i<users.length;i++){
+       
+
+
+             for (var j=0;j<users[i].name.length;j++){
+
+                 var flag=true
+                 var p=j
+                 for (k=0;k<key.length;k++){
+
+                     if(users[i].name[p].toLowerCase()!==key[k].toLowerCase()){
+
+                         flag=false
+                         break
+
+                     }
+                     p=p+1
+                 }
+                 if(flag==true){
+                     user.find({name:{$regex:users[i].name,$options:"$i"}},function(err,found){
+
+                                  res.render("vip.ejs",{users:found,search:req.query.search})
+
+                     })
+                   find.push(0)
+
+                   var users=[]
+                   break
+                 }
+         
+              }
+           
+         
+        
+        
+     }
+    
+    if(find.length==0){
+
+      res.render("novip.ejs")
+              
+    } 
+
+})
+ }
+
+})
 
 
 
@@ -1342,7 +1537,7 @@ app.get("/moreMonth/:id/:mon",function(req,res){
 
           }
        }
-     
+      
         if(alluser.offerHold==true){
 
              var vip=true
@@ -1351,34 +1546,110 @@ app.get("/moreMonth/:id/:mon",function(req,res){
 
             var vip=false
         }
-        res.render("monthuser.ejs",{total:total,alluser:alluser,month:req.params.mon,vip:vip})  
+        const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        
+         var date=new Date()
+         
+         res.render("monthuser.ejs",{total:total,alluser:alluser,month:req.params.mon,vip:vip,secondmonth:months[date.getMonth()]})  
      
      })
  })
      
 })
 
-app.get("/updateCustomerStatus/:id/",function(req,res){
-
- user.findById(req.params.id,function(err,users){
+app.get("/updateCustomerStatus/:id/:mon",function(req,res){
+ const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+                            var date=new Date()
+ user.findById(req.params.id).populate("pops").exec(function(err,users){
 
      if(users.offerHold==false){
+ pop.create({text:"You are a VIP customer Of " +" "+ req.params.mon,api:"vip",view:"viewed"},function(err,popup){
+            
+            users.pops.push(popup)
+           users.offerHold=true
+         users.month=months[date.getMonth()]
 
-         users.offerHold=true
-         users.save()
+         users.save() 
+           
+     var transport=nodemailer.createTransport({
+                                              service:"gmail",
+                                              auth:{
+                                               user:"grocery.ofc@gmail.com",
+                                               pass:process.env.password
+                                              }
+                                               });  
+
+                                         var mailoptions={
+                                           from:"grocery.ofc@gmail.com",
+                                           bcc:`$.username}`,
+                                           subject:"GroceryJi",
+                                           html:`Hi,welcome to GroceryJi<br>
+                                           Your requested  product ${prods.Name}, Price: ${prods.Price} is available
+                                           in stock..
+                                           <br>
+                                           
+                                            <br>
+                                                       
+                        
+                        
+                                            <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                          
+                                                          </form>`
+                                    } 
+                              
+                             
+                                   
+ 
+                                      
+                              console.log("hmmmmm")
+                               transport.sendMail(mailoptions,function(err,info){
+                                    if(err)
+                                    {
+                                        req.flash("error","something went wrong...");
+
+                                        res.redirect("/login");
+                                    }
+                                        else{
+                                            console.log("here")
+
+                                        }
+
+
+                                })           
+ 
+ })         
+        
       req.flash("success",users.name + " is now VIP Customer")
       res.redirect("back")  
      }
    else{
 
+    
     users.offerHold=false
          users.save()
+      
+   if(users.pops.length>0){ 
+    for(var i=0;i<users.pops.length;i++){
+
+         if(users.pops[i].api=="vip"){
+
+             pop.findByIdAndDelete(users.pops[i]._id,function(err,info){
+
+
+             })
+         }
+    }
+   } 
     req.flash("error",users.name + " is removed from VIP Customer")
     res.redirect("back")  
 
    }
-    
-})
+  
+
+  })    
+
+
+
 
 })
 
@@ -2229,6 +2500,28 @@ app.get("/orders",isLoggedin,function(req,res){
 
 
 
+app.get("/notifications/:id",function(req,res){
+
+     pop.findById(req.params.id,function(err,popup){
+
+         if(popup.api=="cart"){
+
+             res.redirect("/cart")
+
+         }
+         else if(popup.api!=="vip"){
+
+             res.redirect("/moreinfo/"+popup.id)
+         }
+
+         popup.updateOne({view:"viewed"},function(err,pp){
+
+
+         })
+     })
+}) 
+
+
 
 app.get("/orders/:id",function(req,res){
 
@@ -2412,7 +2705,7 @@ app.post("/cancel/:id",function(req,res){
                           if (infos.username==prods.notify[j].username){
 
 
-                                      pop.create({id:prods._id,text:prods.Name,image:prods.image,urls:prods.urls},function(err,pups){
+                                      pop.create({id:prods._id,text:prods.Name,image:prods.image,urls:prods.urls,view:""},function(err,pups){
                                          infos.pops.push(pups)
                                          infos.save()
                                        
@@ -2835,7 +3128,7 @@ app.get("/increaseStock/:id/:stock",function(req,res){
 
 
 
-                 pop.create({id:prods._id,text:prods.Name,image:prods.image,urls:prods.urls},function(err,pup){
+                 pop.create({id:prods._id,text:prods.Name,image:prods.image,urls:prods.urls,view:""},function(err,pup){
 
                      found.pops.push(pup)
                      found.save()
@@ -3052,16 +3345,20 @@ app.post("/addProduct",function(req,res){
       
 
         user.findById(users[i]._id,function(err,us){
-          pop.create({id:prod._id,image:prod.image,urls:prod.urls,text:prod.Name},function(err,pup){
-         
+          pop.create({id:prod._id,image:prod.image,urls:prod.urls,text:prod.Name,view:""},function(err,pup){
+            if(!us.notinum){
+                 us.notinum=0
+            } 
             us.pops.push(pup)
-            us.save()
+            us.notinum=us.notinum+1
+               
+            us.save()  
               
           
              
 
-          })
-        })
+          }) 
+        })   
          var transport=nodemailer.createTransport({
             service:"gmail",
             auth:{
@@ -3515,7 +3812,7 @@ app.get("/statusChange/:id/:key",function(req,res){
                           if (infos.username==prods.notify[j].username){
 
 
-                                      pop.create({id:prods._id,text:prods.Name,image:prods.image,urls:prods.urls},function(err,pups){
+                                      pop.create({id:prods._id,text:prods.Name,image:prods.image,urls:prods.urls,view:""},function(err,pups){
                                          infos.pops.push(pups)
                                          infos.save()
                                        

@@ -144,6 +144,18 @@ footer .boxh3{
       </li>
       <li class="nav-item">
          <i class="fas fa-bell nav-link" style="font-size:40px;color:white;cursor:pointer" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"></i>
+          <%if(currentUser){%>
+                <span style="color:white;transform:translate(40px,-50px)"><b>
+
+                <%if(allnoti>0){%>
+                   
+                    <%=allnoti%>
+                <%}%>
+
+                </b></span>
+
+        <%}%>
+
       </li>
     </ul>
    <form class="form-inline my-2 my-lg-0" action="/allProduct" method="GET">
@@ -179,15 +191,69 @@ footer .boxh3{
     <tr style="">
       
      <%if(pup.urls=="URL"){%> 
-     <th scope="row"> <a href="/moreinfo/<%=pup.id%>"><img src="<%=pup.image%>" style="width:45px"></a></th>
-     <%}else{%>
-      <th scope="row"> <a href="/moreinfo/<%=pup.id%>"><img src="/<%=pup.image%>" style="width:45px"></a></th>
+    <%if(pup.api=="cart"){%>
+ 
+         <th scope="row" > 
+                      <a  href="/notifications/<%=pup._id%>" class="sub" style="cursor:pointer"><i class="fab fa-opencart" style="color:black"></i></a> 
 
+       </th>
+       
+      <%}else if(pup.api=="vip"){%>
+     <a  class="sub"  style="cursor:pointer"><i class="far fa-gem"></i></a> 
+
+      <%}else{%>
+        
+         <th scope="row"> 
+                        
+                       <a style="cursor:pointer"  href="/notifications/<%=pup._id%>"  class="subs"><img src="<%=pup.image%>" style="width:45px"></a>
+
+        
+         </th>
+
+      <%}%> 
+     <%}else{%>
+      <%if(pup.api=="cart"){%>
+ 
+         <th scope="row" > 
+                      <a  href="/notifications/<%=pup._id%>" class="sub" style="cursor:pointer"><i class="fab fa-opencart" style="color:black"></i></a> 
+
+       </th>
+       
+      <%}else if(pup.api=="vip"){%>
+     <a  class="sub"  style="cursor:pointer"><i class="far fa-gem"></i></a> 
+
+      <%}else{%>
+        
+         <th scope="row"> 
+                        
+                       <a style="cursor:pointer"  href="/notifications/<%=pup._id%>"  class="subs"><img src="/<%=pup.image%>" style="width:45px"></a>
+
+        
+         </th>
+
+      <%}%> 
      <%}%> 
      <td><b style="font-size:14px;word-break:break-word"><%=pup.text%></b></td></a>
-      <td><b style="color:green;font-size:10px">In-Stock-Now</b></td>
-     
+      <%if(pup.api=="cart"){%>
+
+       <td><b style="color:yellow;font-size:10px">Go-To-Cart</b></td>
+     <%}else if(pup.api=="vip"){%>
+ 
+        <td><b style="color:black;font-size:10px"><i class="far fa-gem"></i></b></td>
+
+     <%}else{%>
+            <td><b style="color:green;font-size:10px">In-Stock-Now</b></td>
+
+     <%}%
       
+   <%if(pup.view==""){%>
+
+       <td><b style="color:red;font-size:10px"><i class="fas fa-circle"></i></b></td>
+     <%}else{%>
+       <td><b style="color:green;font-size:10px"><i class="fas fa-circle"></i></b></td>
+
+    <%}%>
+    
 
     </tr>
 
@@ -216,7 +282,6 @@ footer .boxh3{
   </div>
 </div>
 </div>
-
 
 
 <title><%=currentUser.first%> your cart </title>
