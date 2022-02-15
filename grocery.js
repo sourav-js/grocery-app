@@ -911,17 +911,7 @@ app.get("/moreinfo/:id",function(req,res){
   }
   user.findById(primary).populate("pops").populate("selection").populate("cart").exec(function(err,users){
   product.findOne({_id:req.params.id}).populate("stock").populate("notify").exec(function(err,prod){
-     console.log(prod)
-     console.log(prod.stock.length)
-    console.log("here is"+req.query.mores)
-    console.log(users.notinum) 
-    if(req.query.mores){
-
-          if(users.notinum && users.notinum>0){
-             users.notinum=users.notinum-1
-             users.save()
-          }
-    }
+    
     if(req.user){
       if (users.offerHold==true){
 
