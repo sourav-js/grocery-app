@@ -441,13 +441,7 @@ app.get("/time",function(req,res){
     res.send(new Date().toString())
 })
 
-// cron.schedule("*/2 * * * *",function(){
 
-//     request("http://localhost:2000/checking",function(error,response,data){
-
-
-//     })
-// })
 
 cron.schedule("*/1 * * * *",function(){
 
