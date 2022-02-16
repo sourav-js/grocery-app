@@ -430,7 +430,12 @@ app.use(function(req,res,next){
 
     res.locals.error=req.flash("error")
 	res.locals.success=req.flash("success")
+  if(req.user){
     res.locals.currentUser=req.user
+   }
+    else {
+       res.locals.currentUser=""
+  }
     if (req.user){
      res.locals.sum=req.user.sum
     }
