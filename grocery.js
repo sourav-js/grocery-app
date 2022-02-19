@@ -447,7 +447,13 @@ app.get("/time",function(req,res){
 })
 
 
+cron.schedule("*/5 * * * *",function(){
 
+    request("https://grocery-ji.herokuapp.com/autoremove",function(error,response,data){
+
+
+    })
+})
 
 app.get("/autoremove",function(req,res){
 
