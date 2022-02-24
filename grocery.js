@@ -751,7 +751,7 @@ app.get("/moreinfo/:id",function(req,res){
   }
   user.findById(primary).populate("pops").populate("selection").populate("cart").populate("suggetions").exec(function(err,users){
   product.findOne({_id:req.params.id}).populate("stock").populate("notify").exec(function(err,prod){
-        
+        if(req.user){
          if(req.query.sugg){
         
           if(users.suggetions.length>0){ 
@@ -776,7 +776,7 @@ app.get("/moreinfo/:id",function(req,res){
         
 
          }
-       
+       }
      
 
 
