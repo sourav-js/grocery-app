@@ -97,6 +97,13 @@ footer .boxh3{
 		background-image:url("https://wallpapercave.com/wp/TjUG3t2.jpg")
 
 }
+
+.halfs{
+    
+        background-image:url("https://wallpapercave.com/wp/jaEPYnv.jpg")
+
+}
+
 </style>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#" ><b>GroceryJi</b></a>
@@ -550,23 +557,9 @@ footer .boxh3{
 
 </div>
 
-<%if(added=="no"){%>
- <div   class="btn btn-block btn-outline-success" style="transform:translateY(-50px)">
- <a href="/selection/<%=prod._id%>" style="text-decoration:none;color:black" id="quote">Select This For Future Add</a>
- </div>
-<%}else if(added=="yes"){%>
-
-<div   class="btn btn-block btn-warning" style="transform:translateY(-50px)">
- <a  href="/deleteselection/<%=prod._id%>" style="text-decoration:none;color:black" id="quote">Remove From Future Add</a>
- </div>
 
 
-<%}%>
 
- 
-
-
-<%=prod.stock.length%>
 <div class="half">
 
 <h1 align="center"><em><b>Similar Products<b></em></h1>
@@ -596,8 +589,14 @@ footer .boxh3{
         <div style="transform:translateY(100px)">
         <div style="transform:translateY(-150%);padding-left:2px;">
          
-        <a href="/moreinfo/<%=data._id%>"<button class="btn btn-md btn-success">More-Info</button></a>
-           <%if(currentUser){%> 
+        <form action="/moreinfo/<%=data._id%>" method="GET" style="display:inline">
+
+                   <input type="hidden" name="sugg" value="<%=data._id%>">
+                 <button class="btn btn-md btn-success">More-Info</button>  
+
+
+          </form>           
+          <%if(currentUser){%> 
             <%if(currentUser.offerHold==false){%>
               <button class="btn btn-md btn-outline-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
             <%}else if(currentUser.offerHold==true){%>           
@@ -626,6 +625,72 @@ footer .boxh3{
   </div>
 </div>
 </div>
+<br>
+<%if(currentUser){%>
+  <%if(users.suggetions.length>0){%>
+  <div class="halfs">
+
+
+<h1 align="center"><em><b>Suggested Products For You !<b></em></h1>
+<hr>
+
+<div style="padding-top:200px;padding-left:20px">
+  <div class="container">
+  <div class="row">
+   <%users.suggetions.forEach(function(data){%> 
+    
+    <div class="col-lg-3 col-sm-12 image" ><div style="box-shadow:1px 2px  3px grey;" class="img-thumbnail"  align="center">
+
+
+          
+
+          <%if(data.urls=="URL"){%>
+                    <a href="/moreinfo/<%=data.pid%>"><img src="<%=data.image%>" style="width:150px;height:40%;padding-bottom:50px;cursor:pointer;" class="figure-img img-fluid rounded"></a>
+
+          <%}else{%>
+
+              <a href="/moreinfo/<%=data.pid%>"> <img src="/<%=data.image%>" style="width:150px;height:40%;padding-bottom:50px;cursor:pointer;" class="figure-img img-fluid rounded"></a>
+             
+          <%}%>   
+
+        
+
+        <div style="transform:translateY(100px)">
+        <div style="transform:translateY(-150%);padding-left:2px;">
+         
+
+
+
+                     
+          <%if(currentUser){%> 
+            <%if(currentUser.offerHold==false){%>
+              <button class="btn btn-md btn-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
+            <%}else if(currentUser.offerHold==true){%>           
+               <button class="btn btn-md btn-info"><i class="fas fa-rupee-sign" class="texts"><%=data.Price-20%></i></button>
+               
+            <%}%>           
+          <%}else{%>
+              <button class="btn btn-md btn-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
+
+          <%}%>
+                         <button class="btn btn-md btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=data.offer%></i></button>
+                    
+              
+
+            </div> 
+        </div>
+        </div>
+       </div>
+     <%})%>
+    </div>
+    
+   
+  </div>
+</div>
+</div>
+ <%}%>
+<%}%>
+<br>
 <footer style="background:lightgrey">
         <div class="container">
             <div class="box">

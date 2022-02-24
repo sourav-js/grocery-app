@@ -358,7 +358,14 @@ footer .boxh3{
         <div style="transform:translateY(50px)">
         <div style="transform:translateY(-150%);padding-left:2px;">
          
-        <a href="/moreinfo/<%=data._id%>"<button class="btn btn-md btn-success">More-Info</button></a>
+    
+          <form action="/moreinfo/<%=data._id%>" method="GET" style="display:inline">
+
+                   <input type="hidden" name="sugg" value="<%=data._id%>">
+                 <button class="btn btn-md btn-success">More-Info</button>  
+
+
+          </form>
           <%if(currentUser){%>  
             <%if(currentUser.offerHold==false){%>
               <button class="btn btn-md btn-outline-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>

@@ -153,6 +153,22 @@ var selectSchema=new mongoose.Schema({
 
 var selects=mongoose.model("selects",selectSchema)
 
+var suggSchema=new mongoose.Schema({
+
+    Name:String,
+    image:String,
+    urls:String,
+    Price:Number,
+    offer:Number,
+    pid:String,
+    uid:String,
+
+    date:{type:Date,default:Date.now()}    
+})
+
+
+
+var sugg=mongoose.model("sugg",suggSchema)
 
 
 var userSchema=new mongoose.Schema({
@@ -165,7 +181,11 @@ var userSchema=new mongoose.Schema({
 	sum:Number,
     month:String,
     offerHold:Boolean,
-    
+    suggetions:[{
+
+          type: mongoose.Schema.Types.ObjectId,
+            ref:"sugg"
+    }],
     selection:[{
 
             type: mongoose.Schema.Types.ObjectId,
@@ -729,9 +749,38 @@ app.get("/moreinfo/:id",function(req,res){
 
     var primary="333"
   }
-  user.findById(primary).populate("pops").populate("selection").populate("cart").exec(function(err,users){
+  user.findById(primary).populate("pops").populate("selection").populate("cart").populate("suggetions").exec(function(err,users){
   product.findOne({_id:req.params.id}).populate("stock").populate("notify").exec(function(err,prod){
-    
+        
+         if(req.query.sugg){
+        
+          if(users.suggetions.length>0){ 
+           var smark=true
+           for (var x=0;x<users.suggetions.length;x++){
+
+             if(users.suggetions[x].pid==prod._id){
+
+                  smark=false
+                  break
+             }
+           }
+
+           if(smark==true){   
+             sugg.create({Name:prod.Name,image:prod.image,urls:prod.urls,pid:prod._id,uid:users._id,Price:prod.Price,offer:prod.offer},function(err,sugs){
+
+                  users.suggetions.push(sugs)
+                  users.save()
+             })
+          }
+         }
+        
+
+         }
+       
+     
+
+
+
     if(req.user){
       if (users.offerHold==true){
 
@@ -806,23 +855,27 @@ app.get("/moreinfo/:id",function(req,res){
 
 
             if(req.user){ 
+             var flag=true
              for(var i=0;i<prod.notify.length;i++){
-
+                 
              	 if(prod.notify[i].username==req.user.username){
 
              	 	  flag=false
-             	 	  mark="found"
+             	 	  var mark="found"
              	 	  break
              	 }
              }
-            } 
+             
              if(flag==true){
 
-             	   mark="not"
+             	   var mark="not"
 
 
              }
-            
+            }
+            else{
+                var mark=""
+            }
              console.log(flags) 
              
            
@@ -1684,8 +1737,52 @@ app.post("/allbuy/:id",function(req,res){
                                                             }
                                                          })  	 
 		                                          
+                                                  carts.find({pid:pro._id},function(err,allcart){
+
+                                                         for (var i=0;i<allcart.length;i++){
+
+                                                             carts.findByIdAndDelete(allcart[i]._id,function(err,info){
+
+
+                                                             })
+                                                         }
+                                                     })  
+
+                                                     wishlist.find({pid:pro._id},function(err,allwish){
+
+
+                                                         for(var i=0;i<allwish.length;i++){
+
+                                                             wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
+
+
+                                                             })
+                                                         }
+                                                     })
+
+
                                                   }
                                                   pro.save()
+                                                  carts.find({pid:pro._id},function(err,allcarts){
+                                  
+                                                     if(allcarts.length>0){ 
+                                                      for(var i=0;i<allcarts.length;i++){
+
+                                                          carts.findById(allcarts[i]._id,function(err,cartinfo){
+                                                             if(cartinfo){ 
+                                                              if(cartinfo.qty>pro.stocking){
+
+                                                                  carts.findByIdAndDelete(cartinfo._id,function(err,info){
+
+
+                                                                  })
+                                                              }
+                                                            }
+                                                          })
+                                                        
+                                                      }
+                                                     }
+                                               }) 
 
 	                           })
 	                 })
@@ -1733,9 +1830,70 @@ app.post("/allbuy/:id",function(req,res){
 		                           	                  pro.stocking=0
 		                           	                   pro.date=Date.now()
 		                                         	
-		                                          }
-                                                  pro.save()
+		                                              pop.find({},function(err,pup){
 
+                                                            for (var i=0;i<pup.length;i++){
+
+                                                               if (pup[i].id==pro._id){
+
+                                                                    pop.findByIdAndDelete(pup[i]._id,function(err,info){
+
+                                                                 })
+                                                               }
+                                                            }
+                                                         }) 
+
+                                                    
+                                                      carts.find({pid:pro._id},function(err,allcart){
+
+                                                         for (var i=0;i<allcart.length;i++){
+
+                                                             carts.findByIdAndDelete(allcart[i]._id,function(err,info){
+
+
+                                                             })
+                                                         }
+                                                     })  
+
+                                                     wishlist.find({pid:pro._id},function(err,allwish){
+
+
+                                                         for(var i=0;i<allwish.length;i++){
+
+                                                             wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
+
+
+                                                             })
+                                                         }
+                                                     })
+                                                      
+
+                                                  
+
+
+
+                                                  }
+                                                  pro.save()
+                                                  carts.find({pid:pro._id},function(err,allcarts){
+                                  
+                                                     if(allcarts.length>0){ 
+                                                      for(var i=0;i<allcarts.length;i++){
+
+                                                          carts.findById(allcarts[i]._id,function(err,cartinfo){
+                                                             if(cartinfo){ 
+                                                              if(cartinfo.qty>pro.stocking){
+
+                                                                  carts.findByIdAndDelete(cartinfo._id,function(err,info){
+
+
+                                                                  })
+                                                              }
+                                                            }
+                                                          })
+                                                        
+                                                      }
+                                                     }
+                                               }) 
 	                           })
 	                 })
 	  	 }
@@ -2032,23 +2190,20 @@ app.post("/buy/:pid/:lid",function(req,res){
                                       carts.findById(users.cart[i]._id,function(err,car){
                                            
                                             if (car.qty==req.body.qty){
-                                                users.sum=users.sum-car.Price
-                                                users.save()
+                                                
                                             	car.deleteOne({_id:car._id},function(err,info){
 
                                             	})
                                             }
                                            else if(car.qty<req.body.qty){
-                                                users.sum=users.sum-car.Price
-                                                users.save()
+                                               
                                                 car.deleteOne({_id:car._id},function(err,info){
 
                                             	})
 
                                            }
                                            else{
-                                                  users.sum=users.sum-(req.body.qty*prod.Price)
-                                                  users.save()
+                                                  
                                                   car.updateOne({qty:car.qty-req.body.qty,Price:car.Price-amounts},function(err,info){
 
                                                   })
@@ -2102,9 +2257,53 @@ app.post("/buy/:pid/:lid",function(req,res){
                                 }
                              })                             
  
+                             carts.find({pid:prod._id},function(err,allcart){
+
+                                 for (var i=0;i<allcart.length;i++){
+
+                                     carts.findByIdAndDelete(allcart[i]._id,function(err,info){
+
+
+                                     })
+                                 }
+                             })  
+
+                             wishlist.find({pid:prod._id},function(err,allwish){
+
+
+                                 for(var i=0;i<allwish.length;i++){
+
+                                     wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
+
+
+                                     })
+                                 }
+                             })
+
                            }
                            prod.save()
                            
+                           carts.find({pid:prod._id},function(err,allcarts){
+                                  
+                                 if(allcarts.length>0){ 
+                                  for(var i=0;i<allcarts.lengthl;i++){
+
+                                      carts.findById(allcarts[i]._id,function(err,cartinfo){
+                                         if(cartinfo){ 
+                                          if(cartinfo.qty>prod.stocking){
+
+                                              carts.findByIdAndDelete(cartinfo._id,function(err,info){
+
+
+                                              })
+                                          }
+                                        }
+                                      })
+                                    
+                                  }
+                                 }
+                           })
+
                            if(req.body.method=="Stripe"){
 
                            	  var pay="Paid"
@@ -2869,8 +3068,36 @@ app.post("/updateData/:id/:data",function(req,res){
 
              })
             
-           
+         
+         carts.find({pid:prods._id},function(err,allcart){
+
+             for(var i=0;i<allcart.length;i++){
+
+                 carts.findById(allcarts[i]._id,function(err,cartinfo){
+
+                     cartinfo.updateOne({Price:req.body.price,off:`${calc} % off`},function(err,info){
+
+
+                     })
+                 })
+             }
+         })           
        
+
+        wishlist.find({pid:prods._id},function(err,allwish){
+
+             for(var i=0;i<allwish.length;i++){
+
+                 wishlist.findById(allwish[i]._id,function(err,wishinfo){
+
+                     wishinfo.updateOne({Price:req.body.price,off:`${calc} % off`},function(err,info){
+
+                         
+                     })
+                 })
+             }
+         })
+
        }
 	  else{
 
@@ -2886,7 +3113,7 @@ app.post("/updateData/:id/:data",function(req,res){
            	 req.flash("success","Updated")
            	 res.redirect("/groceryProduct")
 
-           })
+        })  
       
       pop.find({id:prods._id},function(err,pups){
 
@@ -2900,6 +3127,26 @@ app.post("/updateData/:id/:data",function(req,res){
                  })
              })
          }
+      
+
+       carts.find({pid:prods._id},function(err,allcart){
+
+             for(var i=0;i<allcart.length;i++){
+
+                 carts.findById(allcarts[i]._id,function(err,cartinfo){
+
+                     cartinfo.updateOne({Name:req.body.name},function(err,info){
+
+
+                     })
+                 })
+             }
+         })           
+       
+
+        
+
+
       })  
 	 
      }
@@ -2916,7 +3163,24 @@ app.post("/updateData/:id/:data",function(req,res){
 
            })
 	 
-	 }
+	     
+         carts.find({pid:prods._id},function(err,allcart){
+
+             for(var i=0;i<allcart.length;i++){
+
+                 carts.findById(allcarts[i]._id,function(err,cartinfo){
+
+                     cartinfo.updateOne({offer:req.body.offer,off:`${calc} % off`},function(err,info){
+
+
+                     })
+                 })
+             }
+         })
+
+
+
+     }
    else{
 
    	 req.flash("error","Product's actual price should be greater than the product's offer price")
