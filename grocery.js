@@ -1076,7 +1076,9 @@ app.get("/carti/:cid/:pid",function(req,res){
       product.findById(req.params.pid).populate("stock").populate("ones").populate("twos").exec(function(err,prod){
 
         if(cart.size){
-          if(users.offerHold==true){
+          
+            if(cart.size=="1L"){
+                if(users.offerHold==true){
 
                      var amounts=prod.Price-20
                  }
@@ -1085,8 +1087,7 @@ app.get("/carti/:cid/:pid",function(req,res){
 
 
                  }
-            if(cart.size=="1L"){
-                
+                 
                  if(cart.qty<prod.ones.length){
 
                      cart.qty=cart.qty+1
@@ -1102,6 +1103,16 @@ app.get("/carti/:cid/:pid",function(req,res){
                  }
             }
            else if(cart.size=="2L"){
+
+                 if(users.offerHold==true){
+
+                     var amounts=(prod.Price*2)-20
+                 }
+                 else if(users.offerHold==false){
+                     var amounts=prod.Price*2
+
+
+                 }
 
                  if(cart.qty<prod.twos.length){
 
@@ -1159,7 +1170,44 @@ app.get("/cartd/:cid/:pid",function(req,res){
   
    if(cart.qty>1){
    
-       	cart.updateOne({qty:cart.qty-1,Price:(cart.qty-1)*prod.Price},function(err,info){
+      if(cart.size){ 	
+           
+            if(cart.size=="1L"){
+
+                cart.updateOne({qty:cart.qty-1,Price:(cart.qty-1)*prod.Price},function(err,info){
+       // req.user.sum=req.user.sum-(cart.qty-1)*prod.Price
+                 console.log(req.user.sum-prod.Price)
+              
+
+        })
+         users.updateOne({sum:req.user.sum-prod.Price},function(err,info){
+
+                })
+            
+            }
+
+            else if(cart.size=="2L"){
+
+                
+
+                 cart.updateOne({qty:cart.qty-1,Price:(cart.qty-1)*(prod.Price*2)},function(err,info){
+       // req.user.sum=req.user.sum-(cart.qty-1)*prod.Price
+                 console.log(req.user.sum-prod.Price)
+              
+
+             })
+            users.updateOne({sum:req.user.sum-(prod.Price*2)},function(err,info){
+
+                })
+
+
+
+            }
+
+        }
+
+        else{
+        cart.updateOne({qty:cart.qty-1,Price:(cart.qty-1)*prod.Price},function(err,info){
        // req.user.sum=req.user.sum-(cart.qty-1)*prod.Price
   	          console.log(req.user.sum-prod.Price)
               
@@ -1169,6 +1217,7 @@ app.get("/cartd/:cid/:pid",function(req,res){
 
      	        })  
   
+  }
   }
   else{
     
