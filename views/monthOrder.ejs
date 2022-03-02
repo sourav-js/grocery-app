@@ -112,6 +112,7 @@
  <%if(orders.length>0){%>   
      <%orders.forEach(function(data){%>
  <%if(data.month==month){%>   
+  
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -128,7 +129,7 @@
 
       <th scope="col">Product</th>
       <th scope="col">Price</th>
-       <%if(data.leters){%>
+       <%if(data.size){%>
             <th scope="col">Size</th>
 
       <%}%>
@@ -163,8 +164,8 @@
       
       <td><%=data.productD%></td>
       <td><%=data.Price%></td>
-      <%if(data.leters){%>
-       <td><%=data.leters%></td>
+      <%if(data.size){%>
+       <td><%=data.size%></td>
        <%}%>
       <td><%=data.qty%></td>
       <td><%=data.pay%></td>

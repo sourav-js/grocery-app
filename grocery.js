@@ -88,7 +88,8 @@ let instance = new Razorpay({
     urls:String,
     leters:String,
     author:String,
-    mainuser:String
+    mainuser:String,
+    size:String
 
 })
  var carts=mongoose.model("carts",cartSchema)
@@ -253,6 +254,26 @@ var categorySchema=new mongoose.Schema({
 
 var categ=mongoose.model("categ",categorySchema)
 
+var oneSchema=new mongoose.Schema({
+ 
+  id:String
+
+
+})  
+
+
+var one=mongoose.model("one",oneSchema)
+
+var twoSchema=new mongoose.Schema({
+ 
+  id:String
+
+
+})  
+
+
+var two=mongoose.model("two",twoSchema)
+
 var productSchema=new mongoose.Schema({
 	Name:String,
 	image:String,
@@ -265,9 +286,33 @@ var productSchema=new mongoose.Schema({
 	ratings:String,
     leters:String,
     empty:Boolean,
+    emptyOne:Boolean,
+    emptyTwo:Boolean,
+
     stocking:Number,
+    totalOne:Number,
+    totalTwo:Number,
+
+     
+
+
     date:{type:Date,default:Date.now},
-	stock:[
+	ones:[{
+           
+
+           type: mongoose.Schema.Types.ObjectId,
+            ref:"one"
+
+    }],
+    
+twos:[{
+           
+
+           type: mongoose.Schema.Types.ObjectId,
+            ref:"two"
+
+    }],
+    stock:[
           {
 
           	type: mongoose.Schema.Types.ObjectId,
@@ -328,6 +373,7 @@ var productSchema=new mongoose.Schema({
    	id:String
    },
    month:String,
+   size:String
 
 
 
@@ -750,7 +796,7 @@ app.get("/moreinfo/:id",function(req,res){
     var primary="333"
   }
   user.findById(primary).populate("pops").populate("selection").populate("cart").populate("suggetions").exec(function(err,users){
-  product.findOne({_id:req.params.id}).populate("stock").populate("notify").exec(function(err,prod){
+  product.findOne({_id:req.params.id}).populate("stock").populate("notify").populate("ones").populate("twos").exec(function(err,prod){
         if(req.user){
          if(req.query.sugg){
         
@@ -826,23 +872,17 @@ app.get("/moreinfo/:id",function(req,res){
                           var added="no"
                       }
 
-              var points=true
+              if(prod.key!=="mustards" && prod.key!=="soyabeans"){
+               var points=true
                         for (var i=0;i<users.cart.length;i++){
                        
                            if (users.cart[i].pid==prod._id){
                             
-                             if(users.cart[i].qty<prod.stock.length){   
                               
                                points=false
-                               var cart="no"
-                               break
-                              }
-                            else{
-          
-                              points=false
                                var cart="yes"
                                break
-                            }
+                              
 
                            }
                           
@@ -853,7 +893,53 @@ app.get("/moreinfo/:id",function(req,res){
                           var cart="no"
                       }
 
+                  }
+                  else if(prod.key=="mustards" || prod.key=="soyabeans"){
+                          
+                           var points=true
+                        for (var i=0;i<users.cart.length;i++){
+                       
+                           if (users.cart[i].pid==prod._id && users.cart[i].size=="1L"){
+                            
+                              
+                               points=false
+                               var cart="yes"
+                               break
+                              
 
+                           }
+                          
+
+                      }   
+                      if (points==true){
+
+                          var cart="no"
+
+                      }
+
+                 
+                    var pointstwo=true
+                        for (var i=0;i<users.cart.length;i++){
+                       
+                           if (users.cart[i].pid==prod._id && users.cart[i].size=="2L"){
+                            
+                              
+                               pointstwo=false
+                               var carttwo="yes"
+                               break
+                              
+
+                           }
+                          
+
+                      }   
+                      if (pointstwo==true){
+
+                          var carttwo="no"
+                      }
+
+
+                  }
             if(req.user){ 
              var flag=true
              for(var i=0;i<prod.notify.length;i++){
@@ -887,7 +973,7 @@ app.get("/moreinfo/:id",function(req,res){
               
                 if(wishd[p].pid==prod._id){
                  console.log(mark)
-                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:wishd,users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice})
+                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:wishd,users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo})
                 
                  flags=false
                  break  
@@ -896,7 +982,7 @@ app.get("/moreinfo/:id",function(req,res){
             
             if (flags==true){
 
-            	                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice})
+            	                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo})
 
             }
 
@@ -905,7 +991,7 @@ app.get("/moreinfo/:id",function(req,res){
        
       else{
 
-                        res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:"",cart:"no",calc:calc,actualPrice:actualPrice})
+                        res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:"",cart:"no",calc:calc,actualPrice:actualPrice,carttwo:"no"})
 
 
       }
@@ -987,14 +1073,68 @@ app.get("/carti/:cid/:pid",function(req,res){
   user.findById(req.user._id,function(err,users){
 	carts.findById(req.params.cid,function(err,cart){
  
-      product.findById(req.params.pid).populate("stock").exec(function(err,prod){
+      product.findById(req.params.pid).populate("stock").populate("ones").populate("twos").exec(function(err,prod){
 
+        if(cart.size){
+          if(users.offerHold==true){
+
+                     var amounts=prod.Price-20
+                 }
+                 else if(users.offerHold==false){
+                     var amounts=prod.Price
+
+
+                 }
+            if(cart.size=="1L"){
+                
+                 if(cart.qty<prod.ones.length){
+
+                     cart.qty=cart.qty+1
+                     cart.Price=cart.qty*amounts
+                     cart.save()
+                     req.flash("success","quantity updated")
+                     res.redirect("back")
+                 }
+                 else{
+
+                    req.flash("error","quantity can't updated more")
+                    res.redirect("back") 
+                 }
+            }
+           else if(cart.size=="2L"){
+
+                 if(cart.qty<prod.twos.length){
+
+                     cart.qty=cart.qty+1
+                     cart.Price=cart.qty*amounts
+                     cart.save()
+                     req.flash("success","quantity updated")
+                     res.redirect("back")
+                 }
+                 else{
+
+                    req.flash("error","quantity can't updated more")
+                    res.redirect("back") 
+                 }
+            }
+
+        }     
+      
+        else{   
+
+             if(users.offerHold==true){
+
+                     var amounts=prod.Price-20
+                 }
+                 else if(users.offerHold==false){
+                     var amounts=prod.Price
+
+
+                 }
           if (cart.qty<prod.stock.length){
 
           	 cart.qty=cart.qty+1
-             cart.Price=cart.qty*prod.Price
-          	 users.sum=users.sum+prod.Price
-          	 users.save()
+             cart.Price=cart.qty*amounts
           	 cart.save()
              req.flash("success","quantity updated")
              res.redirect("back")
@@ -1004,6 +1144,7 @@ app.get("/carti/:cid/:pid",function(req,res){
              req.flash("error","quantity can't updated more")
              res.redirect("back")          	
           }
+     }
       })
     })
 })
@@ -1060,7 +1201,7 @@ app.get("/cartd/:cid/:pid",function(req,res){
 
 app.post("/cart/:id",isLoggedin,function(req,res){
  user.findById(req.user._id).populate("cart").exec(function(err,users){	
-  product.findById(req.params.id).populate("stock").exec(function(err,prod){
+  product.findById(req.params.id).populate("stock").populate("ones").populate("twos").exec(function(err,prod){
     
 
     var flag=true
@@ -1075,95 +1216,140 @@ app.post("/cart/:id",isLoggedin,function(req,res){
      	
      }  
   
-     if (Number(req.body.qty)<=prod.stock.length){ 
-      for (var i=0;i<users.cart.length;i++){
+     if(req.body.size){
+     
+           if(req.body.size=="one"){
+            
+                    if (users.offerHold==false){
 
-     	if(users.cart[i].pid==prod._id){
-            flag=false 
-     	 if (users.cart[i].qty!==prod.stock.length){	
-     		 
-     		  if (users.offerHold==false){
-
-                 var amounts=(users.cart[i].qty+Number(req.body.qty))*prod.Price
-              }
+                    var amounts=Number(req.body.qty)*prod.Price
+                    var calc=parseInt((amounts*100)/prod.offer)
+                    var calcs=calc + "% off"
+                }
               
               else if(users.offerHold==true){
 
-                 var amounts=((users.cart[i].qty+Number(req.body.qty))*prod.Price)
+                 var amounts=Number(req.body.qty)*prod.Price
                  var money=amounts
-                 for(var y=0;y<users.cart[i].qty+Number(req.body.qty);y++){
+                 for(var y=0;y<Number(req.body.qty);y++){
                      amounts=amounts-20
                  }
-               
-              
-              }
-              
-              carts.findById(users.cart[i]._id,function(err,cartp){ 
-     		  cartp.updateOne({qty:users.cart[i].qty+Number(req.body.qty),Price:amounts},function(err,info){
-     		  console.log(users.cart[i].qty)
-     		  users.cart[i].qty=users.cart[i].qty+Number(req.body.qty)
-     		  // req.user.sum=req.user.sum+(req.body.qty*prod.Price)
-     		   
+                 var calc=parseInt((amounts*100)/prod.offer)
+                 var calcs=calc + "% off"
+               }  
+                     var flag=true
+                     for (var i=0;i<users.cart.length;i++){
+ 
+
+                        if(users.cart[i].pid==prod._id && users.cart[i].size=="1L"){
+
+                                
+                               req.flash("error","product in your cart already")
+                               res.redirect("back")
+                               flag=false
+                               break
+
+                        }
 
 
-     		  console.log(users.cart[i].qty)
+                  }
+                  if(flag==true){
+                    if(req.body.qty<=prod.ones.length){  
+                   
+                           carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),size:"1L",urls:prod.urls,leters:prod.leters},function(err,onecart){
+                           users.cart.push(onecart)
+                           users.save()
+                           req.flash("success","Product Is Added To The Cart")
+                               res.redirect("back")         
+                   
+                   })
+                    }
+                    else{
+
+                         req.flash("error","quantity is out of stock")
+                               res.redirect("back")
+                    }
+
+                  }
+           
+
+           } 
+           else if(req.body.size=="two"){
+
+                   
+
+                    if (users.offerHold==false){
+
+                    var amounts=Number(req.body.qty)*(prod.Price*2)
+                    var calc=parseInt((amounts*100)/prod.offer)
+                    var calcs=calc + "% off"
+                }
+              
+              else if(users.offerHold==true){
+
+                 var amounts=Number(req.body.qty)*(prod.Price*2)
+                 var money=amounts
+                 for(var y=0;y<Number(req.body.qty);y++){
+                     amounts=amounts-20
+                 }
+                 var calc=parseInt((amounts*100)/prod.offer)
+                 var calcs=calc + "% off"
+               }  
+                     var flag=true
+                     for (var i=0;i<users.cart.length;i++){
+ 
+
+                        if(users.cart[i].pid==prod._id && users.cart[i].size=="2L"){
+
+                                
+                               req.flash("error","product in your cart already")
+                               res.redirect("back")
+                               flag=false
+                               break
+
+                        }
+
+
+                  }
+                  if(flag==true){
+                    if(req.body.qty<=prod.twos.length){  
+                   
+                           carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),size:"2L",urls:prod.urls,leters:prod.leters},function(err,twocart){
+                           users.cart.push(twocart)
+                           users.save()   
+
+                              req.flash("success","Product Is Added To The Cart")
+                               res.redirect("back")
+                   
+                   })
+                    }
+                    else{
+
+                         req.flash("error","quantity is out of stock")
+                               res.redirect("back")
+                    }
+
+
+
+           }
+ 
+         }
+
+     }
+     else{
+     
+       for (var i=0;i<users.cart.length;i++){
+
+     	if(users.cart[i].pid==prod._id){
+            flag=false 
+     		 
      		  
-     		  if( users.cart[i].qty>prod.stock.length){
-                if (users.offerHold==false){
-
-                         var amounts=prod.stock.length*prod.Price
-                      }
-                      else if(users.offerHold==true){
-
-                         var amounts=prod.stock.length*prod.Price
-                      
-                         for(var y=0;y<prod.stock.length;y++){
-                             amounts=amounts-20
-                         }
-                      }
-                cartp.updateOne({qty:prod.stock.length,Price:amounts},function(err,info){ 
-                 
-                 users.cart[i].qty=prod.stock.length
-                 // req.user.sum=prod.stock.length*prod.Price
-              //     users.updateOne({sum:prod.stock.length*prod.Price},function(err,info){
-
-     	        // })
-                       
-                
-                        
-             })
-                  
-
-     		 }
-     		
-            
-             })        
-           	 // carts.findById(users.cart[i]._id,function(err,newcart){ 
-              // console.log("here")
-              // console.log(newcart.qty)
-              // console.log(cartp.qty)
-
-              // console.log(pr)
-              // console.log(".............") 
-           	 
-      	    req.flash("success","quantity is increased")
-      	    res.redirect("back")
-      	    
-      	   })
-      	  }
-      	  
-      	  else{
-
-            req.flash("error","can't add more product") 
-      	  	res.redirect("back")
-      	  }
-      	
-        break
+            break
       }
      }
      if(flag==true){
      if(users.offerHold==true){
-
+        
          var amounts=Number(req.body.qty)*prod.Price
          var money=amounts
          for(var i=0;i<Number(req.body.qty);i++){
@@ -1179,7 +1365,8 @@ app.post("/cart/:id",isLoggedin,function(req,res){
          var amounts=Number(req.body.qty)*prod.Price
          var calcs=prod.off 
      }
-
+     
+     if(req.body.qty<=prod.stock.length){
       carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),urls:prod.urls,leters:prod.leters},function(err,onecart){
 
       	    users.cart.push(onecart)
@@ -1189,13 +1376,18 @@ app.post("/cart/:id",isLoggedin,function(req,res){
             req.flash("success","product added to the cart")
             res.redirect("/moreinfo/"+prod._id)
       })
+     
+     }
+     else
+     {
+
+        req.flash("error","quantity is out of stock")
+        res.redirect("back") 
+     }
     }
   }
  
-  else{
-    req.flash("error","product quantity is out of stock") 
-  	res.redirect("back")
-  } 
+   
   
             
  })
@@ -1531,10 +1723,18 @@ app.get("/buy/:pid",isLoggedin,function(req,res){
    }
   user.findById(req.user._id,function(err,users){ 
 
-   product.findById(req.params.pid).populate("stock").exec(function(err,prod){
-   if (users.offerHold==true){
+   product.findById(req.params.pid).populate("stock").populate("ones").populate("twos").exec(function(err,prod){
+  if(req.query.size){
+        
+         if(req.query.size=="one"){ 
+ 
+            if (users.offerHold==true){
 
-     var amounts=(req.query.qty*prod.Price)-20
+     var amounts=(req.query.qty*prod.Price)
+     for(var i=0;i<req.query.qty;i++){
+
+         amounts=amounts-20
+     }  
    }
    else if(users.offerHold==false){
 
@@ -1543,27 +1743,150 @@ app.get("/buy/:pid",isLoggedin,function(req,res){
   
 
    }
+ 
+ 
+ }
 
-   if(prod.stock.length>=req.query.qty){ 
-    if(!req.query.new){   
+ else if(req.query.size=="two"){ 
+
+     
+         if (users.offerHold==true){
+
+     var amounts=(req.query.qty*(prod.Price*2))
+     for(var i=0;i<req.query.qty;i++){
+
+         amounts=amounts-20
+     }  
+   }
+   else if(users.offerHold==false){
+
+          var amounts=req.query.qty*(prod.Price*2)
+
+  
+
+   }
+
+
+
+ }
+
+}
+   
+
+   if(req.query.size){
+        
+         if(req.query.size=="one"){
+
+             if(req.query.qty<=prod.ones.length){
+                
+
+                if(!req.query.new){   
       location.find({mainuser:req.user.username},function(err,preord){
         console.log(preord)
         if (preord.length>0){
                
-                         res.render("preorder.ejs",{prod:prod,qty:req.query.qty,key:public_key,preord:preord,amount:amounts})
+                         res.render("preorder.ejs",{prod:prod,qty:req.query.qty,key:public_key,preord:preord,amount:amounts,size:req.query.size})
 
             
          }
          else{
             
 
-         res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:amounts})
+         res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:amounts,size:req.query.size})
        }
      })
    }
    else{
               console.log(req.query.qty*prod.Price)
-   	          res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:amounts})
+              res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:amounts,size:req.query.size})
+
+   }
+
+             }
+
+        else{  
+          req.flash("error","Selected quantity is greater than the number of total stock of this product")
+          res.redirect("back")
+           }
+
+         }
+         else if(req.query.size=="two"){
+
+
+               if(req.query.qty<=prod.twos.length){
+                
+
+                if(!req.query.new){   
+      location.find({mainuser:req.user.username},function(err,preord){
+        console.log(preord)
+        if (preord.length>0){
+               
+                         res.render("preorder.ejs",{prod:prod,qty:req.query.qty,key:public_key,preord:preord,amount:amounts,size:req.query.size})
+
+            
+         }
+         else{
+            
+
+         res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:amounts,size:req.query.size})
+       }
+     })
+   }
+   else{
+              console.log(req.query.qty*prod.Price)
+              res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:amounts,size:req.query.size})
+
+   }
+
+             }
+
+        else{  
+          req.flash("error","Selected quantity is greater than the number of total stock of this product")
+          res.redirect("back")
+           }
+
+         }
+
+   
+
+
+   }
+   else{
+    if (users.offerHold==true){
+
+        var amounts=(req.query.qty*prod.Price)
+        for(var i=0;i<req.query.qty;i++){
+
+             amounts=amounts-20
+        }
+   }
+   else if(users.offerHold==false){
+
+          var amounts=req.query.qty*prod.Price
+
+  
+
+   }
+   if(prod.stock.length>=req.query.qty){ 
+    if(!req.query.new){   
+      location.find({mainuser:req.user.username},function(err,preord){
+        console.log(preord)
+        if (preord.length>0){
+               
+                         res.render("preorder.ejs",{prod:prod,qty:req.query.qty,key:public_key,preord:preord,amount:amounts,size:""})
+
+            
+         }
+         else{
+            
+
+         res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:amounts,size:""})
+       }
+     })
+   }
+   else{
+              console.log(req.query.qty*prod.Price)
+   	          res.render("order.ejs",{prod:prod,qty:req.query.qty,key:public_key,amount:amounts,size:""})
 
    }
    }
@@ -1571,6 +1894,7 @@ app.get("/buy/:pid",isLoggedin,function(req,res){
 
    	req.flash("error","Selected quantity is greater than the number of total stock of this product")
    	res.redirect("back")
+   }
    }
    })
 
@@ -1696,8 +2020,212 @@ app.post("/allbuy/:id",function(req,res){
                                                                   flag=false
                                                                     
                                                                  	 for (var i=0;i<users.cart.length;i++){
-    
-                                                                      
+                                                                if(users.cart[i].size){ 
+                                                                    if(users.cart[i].size=="1L"){
+                                                                   
+                                                                              
+
+                                                                                  order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:users.cart[i].Price,returnId:"",author:author,productD:users.cart[i].Name,qty:users.cart[i].qty,locality:req.body.locality,pay:pay,image:users.cart[i].image,returnQ:0,pid:users.cart[i].pid,ifsc:"",account:"",cartId:users.cart[i]._id,ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,lid:loc._id,mainuser:req.user.username,urls:users.cart[i].urls,size:users.cart[i].size,month:months[d.getMonth()],},function(err,orders){
+     
+                                                                         product.findById(orders.pid).populate("stock").populate("ones").populate("twos").exec(function(err,pro){                                
+                                                            pro.totalOne=pro.totalOne-orders.qty
+
+                                                              pro.date=Date.now()
+                                                              
+                                                            for(var p=0;p<orders.qty;p++){
+                                                               console.log("here inside") 
+                                                               one.deleteOne({id:orders.pid},function(err,info){
+                                
+                                                          
+                                                                          })
+                                                     
+                                                             }                 
+
+                                                            carts.deleteOne({_id:orders.cartId},function(err,inf){
+
+                                                                })
+                               
+                               
+                                                if (pro.totalOne==0){
+                                                      pro.emptyOne=true
+                                                      pro.totalOne=0
+                                                       pro.date=Date.now()
+                                                       pop.find({},function(err,pup){
+
+                                                            for (var i=0;i<pup.length;i++){
+
+                                                               if (pup[i].id==pro._id){
+
+                                                                    pop.findByIdAndDelete(pup[i]._id,function(err,info){
+
+                                                                 })
+                                                               }
+                                                            }
+                                                         })      
+                                                  
+                                                  carts.find({pid:pro._id},function(err,allcart){
+
+                                                         for (var i=0;i<allcart.length;i++){
+                                                           
+                                                           if(allcart[i].size=="1L"){
+                                                             carts.findByIdAndDelete(allcart[i]._id,function(err,info){
+
+
+                                                             })
+                                                           }
+                                                         }
+
+                                                     })  
+
+                                                     wishlist.find({pid:pro._id},function(err,allwish){
+
+
+                                                         for(var i=0;i<allwish.length;i++){
+
+                                                             wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
+
+
+                                                             })
+                                                         }
+                                                     })
+
+
+                                                  }
+                                                  pro.save()
+                                                  carts.find({pid:pro._id},function(err,allcarts){
+                                  
+                                                     if(allcarts.length>0){ 
+                                                      for(var i=0;i<allcarts.length;i++){
+                                                           
+                                                          carts.findById(allcarts[i]._id,function(err,cartinfo){
+                                                             if(cartinfo && cartinfo.size=="1L"){ 
+                                                              if(cartinfo.qty>pro.totalOne){
+
+                                                                  carts.findByIdAndDelete(cartinfo._id,function(err,info){
+
+
+                                                                  })
+                                                              }
+                                                            }
+                                                          })
+                                                        
+                                                      }
+                                                     }
+                                               }) 
+
+                               })
+                         })
+
+
+
+
+
+                                                    }
+                                                    
+                                                    else if(users.cart[i].size=="2L"){
+
+                                                                       
+
+                                                                           
+
+
+                                                                           order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:users.cart[i].Price,returnId:"",author:author,productD:users.cart[i].Name,qty:users.cart[i].qty,locality:req.body.locality,pay:pay,image:users.cart[i].image,returnQ:0,pid:users.cart[i].pid,ifsc:"",account:"",cartId:users.cart[i]._id,ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,lid:loc._id,mainuser:req.user.username,urls:users.cart[i].urls,size:users.cart[i].size,month:months[d.getMonth()],},function(err,orders){
+     
+                                                                         product.findById(orders.pid).populate("stock").populate("ones").populate("twos").exec(function(err,pro){                                
+                                                            pro.totalTwo=pro.totalTwo-orders.qty
+
+                                                              pro.date=Date.now()
+                                                              
+                                                            for(var p=0;p<orders.qty;p++){
+                                                               console.log("here inside") 
+                                                               two.deleteOne({id:orders.pid},function(err,info){
+                                
+                                                          
+                                                                          })
+                                                     
+                                                             }                 
+
+                                                            carts.deleteOne({_id:orders.cartId},function(err,inf){
+
+                                                                })
+                               
+                               
+                                                if (pro.totalTwo==0){
+                                                      pro.emptyTwo=true
+                                                      pro.totalTwo=0
+                                                       pro.date=Date.now()
+                                                       pop.find({},function(err,pup){
+
+                                                            for (var i=0;i<pup.length;i++){
+
+                                                               if (pup[i].id==pro._id){
+
+                                                                    pop.findByIdAndDelete(pup[i]._id,function(err,info){
+
+                                                                 })
+                                                               }
+                                                            }
+                                                         })      
+                                                  
+                                                  carts.find({pid:pro._id},function(err,allcart){
+
+                                                         for (var i=0;i<allcart.length;i++){
+                                                           
+                                                           if(allcart[i].size=="2L"){
+                                                             carts.findByIdAndDelete(allcart[i]._id,function(err,info){
+
+
+                                                             })
+                                                           }
+                                                         }
+
+                                                     })  
+
+                                                     wishlist.find({pid:pro._id},function(err,allwish){
+
+
+                                                         for(var i=0;i<allwish.length;i++){
+
+                                                             wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
+
+
+                                                             })
+                                                         }
+                                                     })
+
+
+                                                  }
+                                                  pro.save()
+                                                  carts.find({pid:pro._id},function(err,allcarts){
+                                  
+                                                     if(allcarts.length>0){ 
+                                                      for(var i=0;i<allcarts.length;i++){
+                                                           
+                                                          carts.findById(allcarts[i]._id,function(err,cartinfo){
+                                                             if(cartinfo && cartinfo.size=="2L"){ 
+                                                              if(cartinfo.qty>pro.totalTwo){
+
+                                                                  carts.findByIdAndDelete(cartinfo._id,function(err,info){
+
+
+                                                                  })
+                                                              }
+                                                            }
+                                                          })
+                                                        
+                                                      }
+                                                     }
+                                               }) 
+
+                               })
+                         })
+
+
+                                                            
+ 
+                                                                    }
+                                                                   } 
+                                                                    else{  
                                                                            
                                                                            order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:users.cart[i].Price,returnId:"",author:author,productD:users.cart[i].Name,qty:users.cart[i].qty,locality:req.body.locality,pay:pay,image:users.cart[i].image,returnQ:0,pid:users.cart[i].pid,ifsc:"",account:"",cartId:users.cart[i]._id,ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,lid:loc._id,mainuser:req.user.username,urls:users.cart[i].urls,leters:users.cart[i].leters,month:months[d.getMonth()],offerHold:false},function(err,orders){
 	 
@@ -1790,7 +2318,7 @@ app.post("/allbuy/:id",function(req,res){
                 }
       
                                                                
-                                                               
+                                                           }    
                                                                break
                                                                }  
                                                                 
@@ -1803,7 +2331,219 @@ app.post("/allbuy/:id",function(req,res){
  
                                                 for (var j=0;j<users.cart.length;j++){
 
-                                                   
+                                                if(users.cart[j].size){
+                                                 
+                                                 if(users.cart[j].size=="1L"){
+                                                      
+
+                                                        order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:users.cart[j].Price,returnId:"",author:author,productD:users.cart[j].Name,qty:users.cart[j].qty,locality:req.body.locality,pay:pay,image:users.cart[j].image,returnQ:0,pid:users.cart[j].pid,ifsc:"",account:"",cartId:users.cart[j]._id,ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,lid:loca._id,mainuser:req.user.username,urls:users.cart[j].urls,size:users.cart[j].size,month:months[d.getMonth()]},function(err,orders){
+     
+                                                       product.findById(orders.pid).populate("stock").populate("ones").populate("twos").exec(function(err,pro){                                
+                                                            pro.totalOne=pro.totalOne-orders.qty
+
+                                                              pro.date=Date.now()
+                                                            for(var p=0;p<orders.qty;p++){
+                                                               console.log("here inside") 
+                                                               one.deleteOne({id:orders.pid},function(err,info){
+                                
+                                                          
+                                                                          })
+                                                     
+                                                             }                 
+
+                                                            carts.deleteOne({_id:orders.cartId},function(err,inf){
+
+                                                                })
+                               
+                               
+                                                if (pro.totalOne==0){
+                                                      pro.emptyOne=true
+                                                      pro.totalOne=0
+                                                       pro.date=Date.now()
+                                                    
+                                                      pop.find({},function(err,pup){
+
+                                                            for (var i=0;i<pup.length;i++){
+
+                                                               if (pup[i].id==pro._id){
+
+                                                                    pop.findByIdAndDelete(pup[i]._id,function(err,info){
+
+                                                                 })
+                                                               }
+                                                            }
+                                                         }) 
+
+                                                    
+                                                      carts.find({pid:pro._id},function(err,allcart){
+
+                                                         for (var i=0;i<allcart.length;i++){
+                                                             if(allcart[i].size=="1L"){    
+                                                              carts.findByIdAndDelete(allcart[i]._id,function(err,info){
+
+                                                                
+                                                             })
+                                                            
+                                                            }
+                                                         }
+                                                     })  
+
+                                                     wishlist.find({pid:pro._id},function(err,allwish){
+
+
+                                                         for(var i=0;i<allwish.length;i++){
+
+                                                             wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
+
+
+                                                             })
+                                                         }
+                                                     })
+                                                      
+
+                                                  
+
+
+
+                                                  }
+                                                  pro.save()
+                                                  carts.find({pid:pro._id},function(err,allcarts){
+                                  
+                                                     if(allcarts.length>0){ 
+                                                      for(var i=0;i<allcarts.length;i++){
+
+                                                          carts.findById(allcarts[i]._id,function(err,cartinfo){
+                                                             if(cartinfo && cartinfo.size=="1L"){ 
+                                                              if(cartinfo.qty>pro.totalOne){
+
+                                                                  carts.findByIdAndDelete(cartinfo._id,function(err,info){
+
+
+                                                                  })
+                                                              }
+                                                            }
+                                                          })
+                                                        
+                                                      }
+                                                     }
+                                               }) 
+                               })
+                     })
+
+
+                                                 }
+
+
+                                                else if(users.cart[j].size=="2L"){
+
+
+                                                     
+
+
+                                                       order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:users.cart[j].Price,returnId:"",author:author,productD:users.cart[j].Name,qty:users.cart[j].qty,locality:req.body.locality,pay:pay,image:users.cart[j].image,returnQ:0,pid:users.cart[j].pid,ifsc:"",account:"",cartId:users.cart[j]._id,ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,lid:loca._id,mainuser:req.user.username,urls:users.cart[j].urls,size:users.cart[j].size,month:months[d.getMonth()]},function(err,orders){
+     
+                                                       product.findById(orders.pid).populate("stock").populate("ones").populate("twos").exec(function(err,pro){                                
+                                                            pro.totalTwo=pro.totalTwo-orders.qty
+
+                                                              pro.date=Date.now()
+                                                            for(var p=0;p<orders.qty;p++){
+                                                               console.log("here inside") 
+                                                               two.deleteOne({id:orders.pid},function(err,info){
+                                
+                                                          
+                                                                          })
+                                                     
+                                                             }                 
+
+                                                            carts.deleteOne({_id:orders.cartId},function(err,inf){
+
+                                                                })
+                               
+                               
+                                                if (pro.totalTwo==0){
+                                                      pro.emptyTwo=true
+                                                      pro.totalTwo=0
+                                                       pro.date=Date.now()
+                                                    
+                                                      pop.find({},function(err,pup){
+
+                                                            for (var i=0;i<pup.length;i++){
+
+                                                               if (pup[i].id==pro._id){
+
+                                                                    pop.findByIdAndDelete(pup[i]._id,function(err,info){
+
+                                                                 })
+                                                               }
+                                                            }
+                                                         }) 
+
+                                                    
+                                                      carts.find({pid:pro._id},function(err,allcart){
+
+                                                         for (var i=0;i<allcart.length;i++){
+                                                             if(allcart[i].size=="2L"){    
+                                                              carts.findByIdAndDelete(allcart[i]._id,function(err,info){
+
+                                                                
+                                                             })
+                                                            
+                                                            }
+                                                         }
+                                                     })  
+
+                                                     wishlist.find({pid:pro._id},function(err,allwish){
+
+
+                                                         for(var i=0;i<allwish.length;i++){
+
+                                                             wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
+
+
+                                                             })
+                                                         }
+                                                     })
+                                                      
+
+                                                  
+
+
+
+                                                  }
+                                                  pro.save()
+                                                  carts.find({pid:pro._id},function(err,allcarts){
+                                  
+                                                     if(allcarts.length>0){ 
+                                                      for(var i=0;i<allcarts.length;i++){
+
+                                                          carts.findById(allcarts[i]._id,function(err,cartinfo){
+                                                             if(cartinfo && cartinfo.size=="2L"){ 
+                                                              if(cartinfo.qty>pro.totalTwo){
+
+                                                                  carts.findByIdAndDelete(cartinfo._id,function(err,info){
+
+
+                                                                  })
+                                                              }
+                                                            }
+                                                          })
+                                                        
+                                                      }
+                                                     }
+                                               }) 
+                               })
+                     })
+        
+
+
+
+
+                                                }  
+                                             
+                                               }
+
+
+                                                  else{   
                                        
 	                                               order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:users.cart[j].Price,returnId:"",author:author,productD:users.cart[j].Name,qty:users.cart[j].qty,locality:req.body.locality,pay:pay,image:users.cart[j].image,returnQ:0,pid:users.cart[j].pid,ifsc:"",account:"",cartId:users.cart[j]._id,ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,lid:loca._id,mainuser:req.user.username,urls:users.cart[j].urls,leters:users.cart[j].leters,month:months[d.getMonth()],offerHold:false},function(err,orders){
 	 
@@ -1897,7 +2637,8 @@ app.post("/allbuy/:id",function(req,res){
 	                           })
 	                 })
 	  	 }
-	  	 })
+	  	 }
+         })
 	  	 
                                 
          }
@@ -1967,31 +2708,109 @@ app.post("/allbuy/:id",function(req,res){
 app.post("/razor/:pid/:lid",function(req,res){
   location.findById(req.params.lid,function(err,loc){ 
 
-        product.findById(req.params.pid).populate("stock").exec(function(err,prod){
+        product.findById(req.params.pid).populate("stock").populate("ones").populate("twos").exec(function(err,prod){
     user.findById(req.user._id,function(err,users){
+    
+
+    if(req.body.size){
+
+         
+         if(req.body.size=="one"){
+            
+         if(users.offerHold==true){
+
+                 var amounts=(req.body.qty*prod.Price)-20
+                 
+            }
+            else if(users.offerHold==false){
+
+                 var amounts=req.body.qty*prod.Price
+            }
+
+             
+           if (loc){
+ 
+        res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:loc._id,prod:prod,amount:amounts,size:req.body.size})
+
+ 
+     }       
+    else{
+
+     res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:"tttt",prod:prod,amount:amounts,size:req.body.size})
+
+
+
+    } 
+
+
+
+
+
+
+
+         }
+        else if(req.body.size=="two"){
+
+
+                
+
+                 if(users.offerHold==true){
+
+                 var amounts=(req.body.qty*(prod.Price*2))-20
+                 
+            }
+            else if(users.offerHold==false){
+
+                 var amounts=req.body.qty*(prod.Price*2)
+            }
+
+
+        
+                if (loc){
+ 
+               res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:loc._id,prod:prod,amount:amounts,size:req.body.size})
+
+ 
+           }       
+        else{
+
+           res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:"tttt",prod:prod,amount:amounts,size:req.body.size})
+
+
+
+        }    
+
+
+
+        }
+
+
+    }
+  else{
     if(users.offerHold==true){
 
          var amounts=(req.body.qty*prod.Price)-20
-    }
+      }   
     else if(users.offerHold==false){
 
          var amounts=req.body.qty*prod.Price
     }
     if (loc){
  
-        res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:loc._id,prod:prod,amount:amounts})
+        console.log("this template passed")
+        res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:loc._id,prod:prod,amount:amounts,size:""})
 
  
  }      
  else{
 
-    res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:"tttt",prod:prod,amount:amounts})
+    res.render("razor.ejs",{quantity:req.body.qty,first:req.body.first,last:req.body.last,landmark:req.body.landmark,locality:req.body.locality,road:req.body.road,phone:req.body.phone,city:req.body.city,method:req.body.method,loc:"tttt",prod:prod,amount:amounts,size:""})
 
 
 
  } 
      
-    
+}    
  
 
 })
@@ -2110,27 +2929,625 @@ app.post("/buy/:pid/:lid",function(req,res){
         
         product.findById(req.params.pid).populate("stock").exec(function(err,prod){
         
+                      
+
         if(!users.offerHold){
 
              users.offerHold=false
              users.save()
         } 
 
-            if(users.offerHold==true){
+            
+            
+        
+      if(req.body.size){
 
+        if(req.body.size=="one" && req.body.qty>prod.ones.length){
+                    
+                    req.flash("error","quantity is out of stock")
+                    res.redirect("back")
+
+        }  
+        else if(req.body.size=="two" && req.body.qty>prod.twos.length)
+        {
+
+             req.flash("error","quantity is out of stock")
+                    res.redirect("back")
+        }
+        
+        else{
+
+            
+
+            if (req.body.method=="Stripe"){ 
+             
+           
+           if(users.offerHold==true){
+
+                 if(req.body.size=="one"){     
                  var amounts=(req.body.qty*prod.Price)-20
+                }
+                else if(req.body.size=="two"){
+
+                     var amounts=(req.body.qty*(prod.Price*2))-20
+                }
+                
+
+
             }
+
             else if(users.offerHold==false){
+                  
+                  if(req.body.size=="one"){     
+                    
+                     var amounts=(req.body.qty*prod.Price)
+                }
+                else if(req.body.size=="two"){
 
-                    var amounts=req.body.qty*prod.Price
+                     var amounts=(req.body.qty*(prod.Price*2))
+                }
+ 
+                
+            
+            }
 
+
+            stripe.customers.create({ 
+                            email: req.body.stripeEmail, 
+                            source: req.body.stripeToken, 
+                            name: req.user.username, 
+                            address: { 
+                                line1: 'TC 9/4 Old MES colony', 
+                                postal_code: '110092', 
+                                city: 'Kolkata', 
+                                state: 'India', 
+                                country: 'India', 
+                            } 
+                        }) 
+                        .then((customer) => { 
+
+                                return stripe.charges.create({ 
+                                amount:amounts,    // Charing Rs 25 
+                                description:prod.Name, 
+                                currency: 'INR', 
+                                customer: customer.id 
+                            
+
+                            })
+
+                       })   
+                            .then((charge) => {
+                           })
+                            .catch((err) => { 
+                              res.send(err)    
+                            })
+
+
+}
+                           
+      
+
+
+                            if(users.offerHold==true){
+
+                 if(req.body.size=="one"){     
+                 var amounts=(req.body.qty*prod.Price)-20
+                }
+                else if(req.body.size=="two"){
+
+                     var amounts=(req.body.qty*(prod.Price*2))-20
+                }
+              
 
             }
+
+            else if(users.offerHold==false){
+                  
+                  if(req.body.size=="one"){     
+                    
+                     var amounts=(req.body.qty*prod.Price)
+                }
+                else if(req.body.size=="two"){
+
+                     var amounts=(req.body.qty*(prod.Price*2))
+                }
+ 
+               
+            
+            }
+
+                           
+
+                            
+                            
+                           var flag=true 
+                           for(var i=0;i<users.cart.length;i++){
+                                  if(req.body.size=="one"){
+                                     var sizes="1L"
+
+                                  }else if(req.body.size=="two"){
+
+                                     var sizes="2L"
+                                  }
+                                  if (users.cart[i].pid==prod._id && users.cart[i].size==sizes){
+                                      
+                                      carts.findById(users.cart[i]._id,function(err,car){
+                                           
+                                            if (car.qty==req.body.qty){
+                                                
+                                                car.deleteOne({_id:car._id},function(err,info){
+
+                                                })
+                                            }
+                                           else if(car.qty<req.body.qty){
+                                               
+                                                car.deleteOne({_id:car._id},function(err,info){
+
+                                                })
+
+                                           }
+                                           else{
+                                                  
+                                                  car.updateOne({qty:car.qty-req.body.qty,Price:car.Price-amounts},function(err,info){
+
+                                                  })
+
+                                           }
+                                           
+                                      })
+                                       break
+                                      }
+                                  }
+                                  
+                             
+                           var author={
+                            username:req.user.username,
+                            id:req.user._id
+                           }
+                           var p=0
+                            if(req.body.size=="one"){ 
+                             prod.totalOne=prod.totalOne-req.body.qty
+                             prod.date=Date.now()
+                            }
+                            else if(req.body.size=="two"){
+
+                                 prod.totalTwo=prod.totalTwo-req.body.qty
+                                 prod.date=Date.now()
+                            }
+                           for (var i=0;i<req.body.qty;i++){
+                                      if(req.body.size=="one") { 
+                                        
+                                        one.deleteOne({id:prod._id},function(err,info){
+                                               
+                                                   
+                                         
+                                        })
+                                  }
+                                  else if(req.body.size=="two"){
+                                   
+                                    
+                                        
+                                        two.deleteOne({id:prod._id},function(err,info){
+                                               
+                                                   
+                                         
+                                        })
+                                    }    
+                                   
+                                 
+                                  }
+                           
+                         if(req.body.size=="one"){ 
+                           if(prod.totalOne==0){
+                             prod.emptyOne=true
+                             prod.totalOne=0
+                             prod.date=Date.now()
+                           
+                             pop.find({pid:prod._id},function(err,pup){
+
+                                for (var i=0;i<pup.length;i++){
+
+                                   if (pup[i].id==prod._id){
+
+
+                                            pop.findByIdAndDelete(pup[i]._id,function(err,info){
+
+                                     })
+                                   }
+                                }
+                             })                             
+ 
+                             carts.find({pid:prod._id},function(err,allcart){
+                                
+
+                                 for (var i=0;i<allcart.length;i++){
+                                    if(allcart[i].size=="1L"){
+                                             
+                                     carts.findByIdAndDelete(allcart[i]._id,function(err,info){
+                                      
+
+                                     })
+                                   }
+                                 }
+
+                             })  
+
+                             wishlist.find({pid:prod._id},function(err,allwish){
+
+
+                                 for(var i=0;i<allwish.length;i++){
+
+                                
+
+                                     wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
+
+
+                                     })
+                                   
+                                 }
+                             })
+                             }
+                           }
+                           else if(req.body.size=="two"){
+                               
+                               if(prod.totalTwo==0){
+                             prod.emptyTwo=true
+                             prod.totalTwo=0
+                             prod.date=Date.now()
+                           
+                             pop.find({pid:prod._id},function(err,pup){
+
+                                for (var i=0;i<pup.length;i++){
+
+                                   if (pup[i].id==prod._id){
+
+
+                                            pop.findByIdAndDelete(pup[i]._id,function(err,info){
+
+                                     })
+                                   }
+                                }
+                             })                             
+ 
+                             carts.find({pid:prod._id},function(err,allcart){
+                                
+
+                                 for (var i=0;i<allcart.length;i++){
+                                    if(allcart[i].size=="2L"){
+                                             
+                                     carts.findByIdAndDelete(allcart[i]._id,function(err,info){
+                                      
+
+                                     })
+                                   }
+                                 }
+
+                             })  
+
+                             wishlist.find({pid:prod._id},function(err,allwish){
+
+
+                                 for(var i=0;i<allwish.length;i++){
+
+
+                                     wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
+
+
+                                     })
+                                   
+                                 }
+                             })
+                             }
+ 
+
+                           }
+                           prod.save()
+                           if(req.body.size=="one"){
+                            carts.find({pid:prod._id},function(err,allcarts){
+                                  
+                                 if(allcarts.length>0){ 
+                                  for(var i=0;i<allcarts.length;i++){
+                                     if(allcarts[i].size=="1L"){
+                                      carts.findById(allcarts[i]._id,function(err,cartinfo){
+                                         if(cartinfo){ 
+                                          if(cartinfo.qty>prod.totalOne){
+
+                                              carts.findByIdAndDelete(cartinfo._id,function(err,info){
+
+
+                                              })
+                                          }
+                                        }
+                                      })
+                                    }
+                                  }
+                                 }
+                                })
+                              }        
+                                else if(req.body.size=="two"){
+
+                                      carts.find({pid:prod._id},function(err,allcarts){
+                                  
+                                 if(allcarts.length>0){ 
+                                  for(var i=0;i<allcarts.length;i++){
+                                     if(allcarts[i].size=="2L"){
+                                      carts.findById(allcarts[i]._id,function(err,cartinfo){
+                                         if(cartinfo){ 
+                                          if(cartinfo.qty>prod.totalTwo){
+
+                                              carts.findByIdAndDelete(cartinfo._id,function(err,info){
+
+
+                                              })
+                                          }
+                                        }
+                                      })
+                                    }
+                                  }
+                                 }
+                                })
+                                }
+                                    
+                                   
+
+                           if(req.body.method=="Stripe"){
+
+                              var pay="Paid"
+                           }
+                           
+                           
+                          else if(req.body.method=="razorpay"){
+
+                            var pay="Paid"
+                          }  
+
+
+                           else if (req.body.method=="Cash-On-Delivery"){
+ 
+                                 var pay="Cash-On-Delivery"
+
+
+          
+
+                           }
+                           
+                            var id=""
+     
+                               if(users.offerHold==true){
+
+                                 if(req.body.size=="one"){     
+                                 var amounts=(req.body.qty*prod.Price)-20
+                                }
+                                else if(req.body.size=="two"){
+
+                                     var amounts=(req.body.qty*(prod.Price*2))-20
+                                }
+                              
+
+                        }
+
+                        else if(users.offerHold==false){
+                              
+                              if(req.body.size=="one"){     
+                                
+                                 var amounts=(req.body.qty*prod.Price)
+                            }
+                            else if(req.body.size=="two"){
+
+                                 var amounts=(req.body.qty*(prod.Price*2))
+                            }
+             
+                           
+                        
+                        }
+ 
+   
+                            order.find({mainuser:req.user.username},function(err,orders){
+                                  var flag=true
+                                   
+                                if(loc){ 
+                                  for(var i=0;i<orders.length;i++){
+
+                                           if(orders[i].lid==loc._id){
+
+                                                 if(req.body.size=="one"){
+                                                     var sizes="1L"
+                                                 }
+                                                 else if(req.body.size=="two"){
+
+                                                     var sizes="2L"
+                                                 }
+                                                 order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:amounts,returnId:"",author:author,productD:prod.Name,qty:Number(req.body.qty),locality:req.body.locality,pay:pay,image:prod.image,returnQ:0,pid:prod._id,ifsc:"",account:"",cartId:"",ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,mainuser:req.user.username,lid:loc._id,urls:prod.urls,leters:prod.leters,month:months[d.getMonth()],size:sizes},function(err,order){
+                            
+                           
+                                                      
+                           
+ 
+                                                     
+                                         var transport=nodemailer.createTransport({
+                                              service:"gmail",
+                                              auth:{
+                                               user:"grocery.ofc@gmail.com",
+                                               pass:process.env.password
+                                              }
+                                               });  
+
+
+                                         var mailoptions={
+                                           from:"grocery.ofc@gmail.com",
+                                           bcc:`${req.user.username}`,
+                                           subject:"GroceryjI",
+                                           html:`Hi,${req.user.first},welcome to GroceryjI<br>
+                                           Your Order ${prod.Name}, Price: ${prod.Price},Qty:${req.body.qty} is successfully
+                                           perchased..
+                                           <br>
+                                           size:${sizes}
+                                           <br>
+                                           Amount ${pay}:<b>${req.body.qty*prod.Price}</b>
+                                            <br>
+                                                       
+                        
+                        
+                                            <a href="https://grocery-ji.herokuapp.com/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>                       
+                                                          
+                                                          </form>
+                                                             `
+                           } 
+                              console.log("hmmmmm")
+                               transport.sendMail(mailoptions,function(err,info){
+                                    if(err)
+                                    {
+                                        req.flash("error","something went wrong...");
+
+                                    }
+                                        else{
+                                            console.log("here")
+
+                                        }
+
+
+                                                         
+
+
+                                  })
+                                 
+
+                    })
+
+
+
+
+
+                                                 console.log("here")
+                                                 console.log(id)
+                                                 flag=false
+                                                 break        
+
+                                           }
+
+                               
+                                 }                      
+                                } 
+                                 if(flag==true){
+                                              if(req.body.size=="one"){
+                                                     var sizes="1L"
+                                                 }
+                                                 else if(req.body.size=="two"){
+
+                                                     var sizes="2L"
+                                                 }
+
+                                                        location.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:req.body.qty*prod.Price,returnId:"",author:author,productD:prod.Name,qty:Number(req.body.qty),locality:req.body.locality,pay:pay,image:prod.image,returnQ:0,pid:prod._id,ifsc:"",account:"",cartId:"",ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,mainuser:req.user.username},function(err,loca){
+                                                 
+                                                    
+
+                                                         order.create({first:req.body.first,last:req.body.last,name:req.body.first +" "+req.body.last,city:req.body.city,phone:req.body.phone,roadNumber:req.body.road,landmark:req.body.landmark,Price:amounts,returnId:"",author:author,productD:prod.Name,qty:Number(req.body.qty),locality:req.body.locality,pay:pay,image:prod.image,returnQ:0,pid:prod._id,ifsc:"",account:"",cartId:"",ordered:"Ordered",dateone:Date.now(),shipped:"",outfor:"",update:"",autoCancel:false,mainuser:req.user.username,lid:loca._id,urls:prod.urls,leters:prod.leters,month:months[d.getMonth()],size:sizes},function(err,order){
+                            
+                           
+                                                      
+                           
+ 
+                                                     
+                                         var transport=nodemailer.createTransport({
+                                              service:"gmail",
+                                              auth:{
+                                               user:"grocery.ofc@gmail.com",
+                                               pass:process.env.password
+                                              }
+                                               });  
+
+
+                                         var mailoptions={
+                                           from:"grocery.ofc@gmail.com",
+                                           bcc:`${req.user.username}`,
+                                           subject:"GroceryJi",
+                                           html:`Hi,${req.user.first},welcome to GroceryJi<br>
+                                           Your order ${prod.Name}, Price: ${prod.Price},Qty:${req.body.qty} is successfully
+                                           perchased..
+                                           <br>
+                                           size:${sizes}
+                                           <br>
+                                           Amount ${pay}:${req.body.qty*prod.Price}
+                                            <br>
+                                                       
+                        
+                        
+                                            <a href="https://grocery-ji.herokuapp.com/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>                       
+                                                          
+                                                          </form>
+                                                             `
+                           } 
+                              console.log("hmmmmm")
+                               transport.sendMail(mailoptions,function(err,info){
+                                    if(err)
+                                    {
+                                        req.flash("error","something went wrong...");
+
+                                    }
+                                        else{
+                                            console.log("here")
+
+                                        }
+
+
+                                                         
+
+
+                                  })
+                                 
+
+                    })
+                                 
+                  
+               
+           
+              })  
+         
+             }
+        
+        })                  
+                          
+          req.flash("success","product purchased successfully")
+           res.redirect("/moreinfo/"+prod._id)
+     
+
+
+      }
+        
+
+}
+       else{  
 
         if (req.body.qty<=prod.stock.length){
         	if (req.body.method=="Stripe"){ 
         	 
            
+            
+             if(users.offerHold==true){
+
+                 
+
+                          var amounts=(req.body.qty*prod.Price)-20
+
+                
+
+
+            }
+
+            else if(users.offerHold==false){
+                  
+                 
+ 
+                     var amounts=(req.body.qty*prod.Price)
+
+
+                
+            
+            }
+
+
+
+
             stripe.customers.create({ 
 					        email: req.body.stripeEmail, 
 					        source: req.body.stripeToken, 
@@ -2169,14 +3586,25 @@ app.post("/buy/:pid/:lid",function(req,res){
 
                             if(users.offerHold==true){
 
-                                 var amounts=(req.body.qty*prod.Price)-20
-                            }
-                            else if(users.offerHold==false){
+                 
 
-                                    var amounts=req.body.qty*prod.Price
+                          var amounts=(req.body.qty*prod.Price)-20
+
+                
 
 
-                            }
+            }
+
+            else if(users.offerHold==false){
+                  
+                 
+ 
+                     var amounts=(req.body.qty*prod.Price)
+
+
+                
+            
+            }
 
                            
 
@@ -2495,7 +3923,8 @@ app.post("/buy/:pid/:lid",function(req,res){
           	  res.redirect("back")
        } 	
    
-   })
+   }
+})
    })
 })
 })
@@ -2674,7 +4103,7 @@ app.get("/cancel/:id",function(req,res){
 app.post("/cancel/:id",function(req,res){
  var flag=true
 	order.findById(req.params.id,function(err,orders){
-		product.findById(orders.pid).populate("stock").populate("notify").exec(function(err,prods){
+		product.findById(orders.pid).populate("stock").populate("ones").populate("twos").populate("notify").exec(function(err,prods){
 
 		    
 			
@@ -2704,8 +4133,193 @@ app.post("/cancel/:id",function(req,res){
 		
   })
 	   
-         
+        if(orders.size){
+
+            if(orders.size=="1L"){
+
+                 if(prods.ones.length==0){
+                      
+                       prods.totalOne=0
+            prods.save()
+                user.find({},function(err,alluser){
+
+                   for (var i=0;i<alluser.length;i++){
+                      
+                     user.findById(alluser[i]._id,function(err,infos){ 
+                      for(var j=0;j<prods.notify.length;j++){
+
+                          if (infos.username==prods.notify[j].username){
+
+
+                                      pop.create({id:prods._id,text:prods.Name + "1L",image:prods.image,urls:prods.urls,view:""},function(err,pups){
+                                         infos.pops.push(pups)
+                                         infos.save()
+                                       
+                                       })
+                                      
+                                   
+                              break
+                          }
+                           {
+
+                           }
+                      }
+
+                    
+                 
+                  })
+                 }                    
+                }) 
+
+            for( var n=0;n<prods.notify.length;n++){
+
+
+                    var transport=nodemailer.createTransport({
+                                              service:"gmail",
+                                              auth:{
+                                               user:"grocery.ofc@gmail.com",
+                                               pass:process.env.password
+                                              }
+                                               });  
+
+                                         var mailoptions={
+                                           from:"grocery.ofc@gmail.com",
+                                           bcc:`${prods.notify[n].username}`,
+                                           subject:"GroceryJi",
+                                           html:`Hi,welcome to GroceryJi<br>
+                                           Your requested  product ${prods.Name}, Price: ${prods.Price},Size:${orders.size} is available
+                                           in stock..
+                                           <br>
+                                           
+                                            <br>
+                                                       
+                        
+                        
+                                            <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                          
+                                                          </form>`
+                                    } 
+                              
+                             
+                                   
  
+                                      
+                              console.log("hmmmmm")
+                               transport.sendMail(mailoptions,function(err,info){
+                                    if(err)
+                                    {
+                                        req.flash("error","something went wrong...");
+
+                                        res.redirect("/login");
+                                    }
+                                        else{
+                                            console.log("here")
+
+                                        }
+
+
+                                })
+
+
+            }
+
+                 }
+          }  
+           else if(orders.size=="2L"){
+
+                if(prods.twos.length==0){
+                      
+                       prods.totalTwo=0
+            prods.save()
+                user.find({},function(err,alluser){
+
+                   for (var i=0;i<alluser.length;i++){
+                      
+                     user.findById(alluser[i]._id,function(err,infos){ 
+                      for(var j=0;j<prods.notify.length;j++){
+
+                          if (infos.username==prods.notify[j].username){
+
+
+                                      pop.create({id:prods._id,text:prods.Name + "2L",image:prods.image,urls:prods.urls,view:""},function(err,pups){
+                                         infos.pops.push(pups)
+                                         infos.save()
+                                       
+                                       })
+                                      
+                                   
+                              break
+                          }
+                           {
+
+                           }
+                      }
+
+                    
+                 
+                  })
+                 }                    
+                }) 
+
+            for( var n=0;n<prods.notify.length;n++){
+
+
+                    var transport=nodemailer.createTransport({
+                                              service:"gmail",
+                                              auth:{
+                                               user:"grocery.ofc@gmail.com",
+                                               pass:process.env.password
+                                              }
+                                               });  
+
+                                         var mailoptions={
+                                           from:"grocery.ofc@gmail.com",
+                                           bcc:`${prods.notify[n].username}`,
+                                           subject:"GroceryJi",
+                                           html:`Hi,welcome to GroceryJi<br>
+                                           Your requested  product ${prods.Name}, Price: ${prods.Price},Size:${orders.size} is available
+                                           in stock..
+                                           <br>
+                                           
+                                            <br>
+                                                       
+                        
+                        
+                                            <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                          
+                                                          </form>`
+                                    } 
+                              
+                             
+                                   
+ 
+                                      
+                              console.log("hmmmmm")
+                               transport.sendMail(mailoptions,function(err,info){
+                                    if(err)
+                                    {
+                                        req.flash("error","something went wrong...");
+
+                                        res.redirect("/login");
+                                    }
+                                        else{
+                                            console.log("here")
+
+                                        }
+
+
+                                })
+
+
+            }
+
+
+           }
+
+
+        }         
+      }  
+      else{
          if(prods.stock.length==0){
 
             prods.stocking=0
@@ -2793,8 +4407,84 @@ app.post("/cancel/:id",function(req,res){
             }
 }
 
+}
 
 
+    if(orders.size){
+
+
+          if(orders.size=="1L"){
+
+
+              var i=0; 
+                 var p=0; 
+                 prods.totalOne=prods.totalOne+orders.qty
+                 prods.emptyOne=false
+                 prods.date=Date.now()
+
+                 for ( i=0;i<orders.qty;i++){
+
+                      console.log("hitted")
+                    
+                    one.create({id:prods._id},function(err,sto){
+                        console.log(sto)
+                        prods.ones.push(sto)
+                        console.log(i)
+                        if(p==orders.qty-1){
+                         console.log("total stock after cancel")
+                          console.log(prods.stock.length)   
+                            prods.save()
+                        
+                        }   
+                        p=p+1
+
+                    })
+                 
+                 
+                 }
+
+
+          }
+
+       if(orders.size=="2L"){
+
+
+              var i=0; 
+                 var p=0; 
+                 prods.totalTwo=prods.totalTwo+orders.qty
+                 prods.emptyTwo=false
+                 prods.date=Date.now()
+
+                 for ( i=0;i<orders.qty;i++){
+
+                      console.log("hitted")
+                    
+                    two.create({id:prods._id},function(err,sto){
+                        console.log(sto)
+                        prods.twos.push(sto)
+                        console.log(i)
+                        if(p==orders.qty-1){
+                         console.log("total stock after cancel")
+                          console.log(prods.stock.length)   
+                            prods.save()
+                        
+                        }   
+                        p=p+1
+
+                    })
+                 
+                 
+                 }
+
+
+          }
+
+
+
+    } 
+        
+
+     else{
 
          var i=0; 
          var p=0; 
@@ -2823,6 +4513,15 @@ app.post("/cancel/:id",function(req,res){
 		 
 		 }
           
+            
+         
+   }
+
+
+
+
+
+
             if(orders.pay=="Cash-On-Delivery"){
 
             	var status=""
@@ -2905,7 +4604,22 @@ app.get("/mydata",function(req,res){
    })
 })
 
+app.get("/review",function(req,res){
 
+     product.find({key:"jeeras"},function(err,allpr){
+
+         for(var i=0;i<allpr.length;i++){
+
+             product.findById(allpr[i]._id,function(err,foundp){
+
+                 foundp.updateOne({stocking:5},function(err,info){
+
+                 })
+             })
+         }
+     })
+     res.send("all updated")
+})
 
 app.get("/data/:product",function(req,res){
 	request(`https://www.flipkart.com/search?q=${req.params.product}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off`,function(error,response,html){
@@ -2970,7 +4684,7 @@ app.get("/data/:product",function(req,res){
 			// product.deleteOne({key:"buiscuits"},function(err,info){
 
 			// })
-			product.create({image:datas.find("._396cs4").attr("src"),Name:datas.find(".s1Q9rs").attr("title"),Price:Number(final),offer:Number(finals),off:info,key:`${req.params.product}s`,ratings:datas.find("._3LWZlK").text(),empty:false,stocking:5,date:Date.now(),urls:"URL",leters:""},function(err,products){
+			product.create({image:datas.find("._396cs4").attr("src"),Name:datas.find(".s1Q9rs").attr("title"),Price:Number(final),offer:Number(finals),off:info,key:`${req.params.product}`,ratings:datas.find("._3LWZlK").text(),empty:false,stocking:5,date:Date.now(),urls:"URL",leters:""},function(err,products){
 			if (products!==undefined){
  	
 		      // coproduct.create({image:datas.find("._396cs4").attr("src"),Price:Number(final),offer:Number(finals),key:`${req.params.product}s`,ratings:datas.find("._3LWZlK").text(),pid:products._id},function(err,cos){
@@ -2983,26 +4697,30 @@ app.get("/data/:product",function(req,res){
 		                  stocks.create({id:products._id},function(err,stothree){
 		                  stocks.create({id:products._id},function(err,stofour){
 		                  stocks.create({id:products._id},function(err,stofive){
+                         
+                          
                            
-		                  
+                           
+                           
                            products.stock.push(stoOne)
                            products.stock.push(stotwo)
                            products.stock.push(stothree)
                            products.stock.push(stofour)
                            products.stock.push(stofive)
-                         
                            
 
+                          
 
                            products.save()
                             
                            
-		                  })	
-		                  })
-		                  })
-		                  })
-		                  })
+		                  
 
+                          }) 
+                          })
+                          })
+                          })
+                          })
                     
               console.log(products)
 		// })	
@@ -3190,8 +4908,229 @@ app.post("/updateData/:id/:data",function(req,res){
 })
 
 })
-app.get("/increaseStock/:id/:stock",function(req,res){
 
+
+app.get("/increaseStockOne/:id/:stock",function(req,res){
+  
+   product.findById(req.params.id).populate("ones").populate("notify").exec(function(err,prods){
+
+       if (prods.ones.length==0){  
+         prods.totalOne=0
+         prods.save()
+        
+      user.find({},function(err,users){  
+      
+      for(var i=0;i<users.length;i++)
+       user.findById(users[i]._id,function(err,found){
+        for(var j=0;j<prods.notify.length;j++){
+           
+           if (found.username==prods.notify[j].username){
+
+
+
+                 pop.create({id:prods._id,text:prods.Name + " " +"1L",image:prods.image,urls:prods.urls,view:""},function(err,pup){
+
+                     found.pops.push(pup)
+                     found.save()
+
+                 })
+              
+               break
+           }                   
+               
+
+     }
+   })
+  })
+         for(var i=0;i<prods.notify.length;i++){
+
+              var transport=nodemailer.createTransport({
+            service:"gmail",
+            auth:{
+                user:"grocery.ofc@gmail.com",
+                pass:process.env.password
+            }
+        }); 
+
+
+            var mailoptions={
+                from:"grocery.ofc@gmail.com",
+                bcc:`${prods.notify[i].username}`,
+                subject:"GroceryJi",
+                html:`Hi,welcome to GroceryJi<br>
+                                           Your requested  product ${prods.Name}, Price: ${prods.Price},Size:1L is now available
+                                           in stock..
+                                           <br>
+                                           
+                                            <br>
+                                                       
+                        
+                        
+                                            <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                          
+                                                          </form>`
+            }
+                console.log("hmmmmm")
+                transport.sendMail(mailoptions,function(err,info){
+                    if(err)
+                    {
+                        console.log("error")
+                    }
+                        else{
+                            console.log("here")
+
+                        }
+
+
+                
+
+  })
+ }  
+}
+
+
+
+         var p=0
+         prods.totalOne=prods.totalOne+Number(req.params.stock)
+         prods.emptyOne=false
+         prods.date=Date.now()
+         for (var i=0;i<Number(req.params.stock);i++){
+
+              one.create({id:prods._id},function(err,sto){
+                  prods.ones.push(sto) 
+                  if(p==Number(req.params.stock)-1){
+
+                      prods.save()
+                  }
+                  p=p+1
+              })
+         }
+         
+         
+             
+
+            
+
+    })
+ 
+     
+     req.flash("success","Stock Is Increased")
+     res.redirect("back")
+
+})
+
+
+app.get("/increaseStockTwo/:id/:stock",function(req,res){
+  
+   product.findById(req.params.id).populate("twos").populate("notify").exec(function(err,prods){
+
+       if (prods.twos.length==0){  
+         prods.totalTwo=0
+         prods.save()
+        
+      user.find({},function(err,users){  
+      
+      for(var i=0;i<users.length;i++)
+       user.findById(users[i]._id,function(err,found){
+        for(var j=0;j<prods.notify.length;j++){
+           
+           if (found.username==prods.notify[j].username){
+
+
+
+                 pop.create({id:prods._id,text:prods.Name + " " +"2L",image:prods.image,urls:prods.urls,view:""},function(err,pup){
+
+                     found.pops.push(pup)
+                     found.save()
+
+                 })
+              
+               break
+           }                   
+               
+
+     }
+   })
+  })
+         for(var i=0;i<prods.notify.length;i++){
+
+              var transport=nodemailer.createTransport({
+            service:"gmail",
+            auth:{
+                user:"grocery.ofc@gmail.com",
+                pass:process.env.password
+            }
+        }); 
+
+
+            var mailoptions={
+                from:"grocery.ofc@gmail.com",
+                bcc:`${prods.notify[i].username}`,
+                subject:"GroceryJi",
+                html:`Hi,welcome to GroceryJi<br>
+                                           Your requested  product ${prods.Name}, Price: ${prods.Price},Size:2L is now available
+                                           in stock..
+                                           <br>
+                                           
+                                            <br>
+                                                       
+                        
+                        
+                                            <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                          
+                                                          </form>`
+            }
+                console.log("hmmmmm")
+                transport.sendMail(mailoptions,function(err,info){
+                    if(err)
+                    {
+                        console.log("error")
+                    }
+                        else{
+                            console.log("here")
+
+                        }
+
+
+                
+
+  })
+ }  
+}
+
+
+
+         var p=0
+         prods.totalTwo=prods.totalTwo+Number(req.params.stock)
+         prods.emptyTwo=false
+         prods.date=Date.now()
+         for (var i=0;i<Number(req.params.stock);i++){
+
+              two.create({id:prods._id},function(err,sto){
+                  prods.twos.push(sto) 
+                  if(p==Number(req.params.stock)-1){
+
+                      prods.save()
+                  }
+                  p=p+1
+              })
+         }
+         
+         
+             
+
+            
+
+    })
+ 
+     
+     req.flash("success","Stock Is Increased")
+     res.redirect("back")
+
+})
+
+app.get("/increaseStock/:id/:stock",function(req,res){
+  
 	product.findById(req.params.id).populate("stock").populate("notify").exec(function(err,prods){
 
        if (prods.stock.length==0){  
@@ -3555,9 +5494,18 @@ else{
 
 app.get("/outof",function(req,res){
 
-	 product.find({empty:true},function(err,prods){
-	 	  
-	 	if(prods.length>0){
+	 product.find({},function(err,prods){
+	  var data=0 	  
+      for(var i=0;i<prods.length;i++){
+           
+            if(prods[i].empty && prods[i].empty==true || prods[i].emptyOne && prods[i].emptyOne==true || prods[i].emptyTwo && prods[i].emptyTwo==true){
+        
+            data=data+1
+
+        }
+      
+      }
+	 	if(data>0){
 
 
 	 	  res.render("out.ejs",{prods:prods})
@@ -3876,9 +5824,237 @@ app.get("/statusChange/:id/:key",function(req,res){
         console.log("yaaaaaa")
     	orders.updateOne({update:req.params.key,datefour:Date.now(),autoCancel:true,returnId:orders._id},function(err,info){
 
-              product.findById(orders.pid).populate("stock").populate("notify").exec(function(err,prods){
-                var p=0
+              product.findById(orders.pid).populate("stock").populate("notify").populate("ones").populate("twos").exec(function(err,prods){
                 
+     
+     if(orders.size){
+
+          if(orders.size=="1L"){
+                
+
+                 if(prods.ones.length==0){
+
+                     prods.totalOne=0
+                     prods.save()
+                    user.find({},function(err,alluser){
+
+                  for (var i=0;i<alluser.length;i++){
+                  
+                     user.findById(alluser[i]._id,function(err,infos){ 
+                      for(var j=0;j<prods.notify.length;j++){
+
+                          if (infos.username==prods.notify[j].username){
+
+
+                                      pop.create({id:prods._id,text:prods.Name + " " + "(1L)",image:prods.image,urls:prods.urls,view:""},function(err,pups){
+                                         infos.pops.push(pups)
+                                         infos.save()
+                                       
+                                       })
+                                var transport=nodemailer.createTransport({
+                       service:"gmail",
+                      auth:{
+                         user:"grocery.ofc@gmail.com",
+                         pass:process.env.password
+                    }
+              
+               
+                     });    
+
+
+                            var mailoptions={
+                                from:"grocery.ofc@gmail.com",
+                                bcc:`${infos.username}`,
+                                subject:"GroceryJi",
+                                html:`Hi,welcome to GroceryJi<br>
+                                                           Your requested  product ${prods.Name}, Price: ${prods.Price},Size:${orders.size} is now available
+                                                           in stock..
+                                                           <br>
+                                                           
+                                                            <br>
+                                                                       
+                                        
+                                        
+                                                            <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                                          
+                                                                          </form>`
+                            }
+                console.log("hmmmmm")
+                transport.sendMail(mailoptions,function(err,info){
+                    if(err)
+                    {
+                        console.log("error")
+
+                    }
+                        else{
+                            console.log("here")
+
+                        }
+
+
+                
+
+                    })       
+                                   
+                               break
+                          }
+                           
+                      }
+
+                    
+                 
+                  })
+                 }                    
+                }) 
+                    
+                   
+                  
+
+                 
+                 
+
+                 }
+               
+          prods.totalOne=prods.totalOne+orders.qty
+                prods.emptyOne=false
+                prods.date=Date.now()
+                var p=0
+                for(var i=0;i<orders.qty;i++){
+                   
+                   one.create({id:orders.pid},function(err,sto){
+                     
+                      prods.ones.push(sto)
+                      if(p==orders.qty-1){
+
+                         prods.save()
+                      }
+                     p=p+1
+                   })
+                } 
+         
+
+          }
+         
+          else if(orders.size=="2L"){
+             
+                 
+
+                     
+
+
+                     if(prods.twos.length==0){
+
+                     prods.totalTwo=0
+                     prods.save()
+                    user.find({},function(err,alluser){
+
+                  for (var i=0;i<alluser.length;i++){
+                  
+                     user.findById(alluser[i]._id,function(err,infos){ 
+                      for(var j=0;j<prods.notify.length;j++){
+
+                          if (infos.username==prods.notify[j].username){
+
+
+                                      pop.create({id:prods._id,text:prods.Name + " " + "(2L)",image:prods.image,urls:prods.urls,view:""},function(err,pups){
+                                         infos.pops.push(pups)
+                                         infos.save()
+                                       
+                                       })
+                                var transport=nodemailer.createTransport({
+                       service:"gmail",
+                      auth:{
+                         user:"grocery.ofc@gmail.com",
+                         pass:process.env.password
+                    }
+              
+               
+                     });    
+
+
+                            var mailoptions={
+                                from:"grocery.ofc@gmail.com",
+                                bcc:`${infos.username}`,
+                                subject:"GroceryJi",
+                                html:`Hi,welcome to GroceryJi<br>
+                                                           Your requested  product ${prods.Name}, Price: ${prods.Price},Size:${orders.size} is now available
+                                                           in stock..
+                                                           <br>
+                                                           
+                                                            <br>
+                                                                       
+                                        
+                                        
+                                                            <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                                          
+                                                                          </form>`
+                            }
+                console.log("hmmmmm")
+                transport.sendMail(mailoptions,function(err,info){
+                    if(err)
+                    {
+                        console.log("error")
+
+                    }
+                        else{
+                            console.log("here")
+
+                        }
+
+
+                
+
+                    })       
+                                   
+                               break
+                          }
+                           
+                      }
+
+                    
+                 
+                  })
+                 }                    
+                }) 
+                    
+                  
+
+                 
+                 
+
+                 }
+
+
+               prods.totalTwo=prods.totalTwo+orders.qty
+                prods.emptyTwo=false
+                prods.date=Date.now()
+                                var p=0
+
+                for(var i=0;i<orders.qty;i++){
+                   
+                   two.create({id:orders.pid},function(err,sto){
+                     
+                      prods.twos.push(sto)
+                      if(p==orders.qty-1){
+
+                         prods.save()
+                      }
+                     p=p+1
+                   })
+                }
+
+
+
+
+
+          } 
+            
+ 
+
+
+
+     }
+     else{
      if (prods.stock.length==0){
               prods.stocking=0 
               prods.save()
@@ -3899,11 +6075,54 @@ app.get("/statusChange/:id/:key",function(req,res){
                                        })
                                       
                                    
+                                 var transport=nodemailer.createTransport({
+                       service:"gmail",
+                      auth:{
+                         user:"grocery.ofc@gmail.com",
+                         pass:process.env.password
+                    }
+              
+               
+                     });    
+
+
+                            var mailoptions={
+                                from:"grocery.ofc@gmail.com",
+                                bcc:`${infos.username}`,
+                                subject:"GroceryJi",
+                                html:`Hi,welcome to GroceryJi<br>
+                                                           Your requested  product ${prods.Name}, Price: ${prods.Price} is now available
+                                                           in stock..
+                                                           <br>
+                                                           
+                                                            <br>
+                                                                       
+                                        
+                                        
+                                                            <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                                          
+                                                                          </form>`
+                            }
+                console.log("hmmmmm")
+                transport.sendMail(mailoptions,function(err,info){
+                    if(err)
+                    {
+                        console.log("error")
+
+                    }
+                        else{
+                            console.log("here")
+
+                        }
+
+
+                
+
+                    })
+
                                break
                           }
-                           {
-
-                           }
+                           
                       }
 
                     
@@ -3913,79 +6132,56 @@ app.get("/statusChange/:id/:key",function(req,res){
                 })  
 
 
-              for(var i=0;i<prods.notify.length;i++){
-
-                      var transport=nodemailer.createTransport({
-			           service:"gmail",
-		           	  auth:{
-				         user:"grocery.ofc@gmail.com",
-				         pass:process.env.password
-		         	}
-		      
-               
-             });	
+                          
 
 
-			var mailoptions={
-				from:"grocery.ofc@gmail.com",
-				bcc:`${prods.notify[i].username}`,
-				subject:"GroceryJi",
-				html:`Hi,welcome to GroceryJi<br>
-                                           Your requested  product ${prods.Name}, Price: ${prods.Price} is now available
-                                           in stock..
-                                           <br>
-                                           
-				                            <br>
-						                               
-						
-						
-					                        <a href="https://grocery-ji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>						
-						                                  
-						                                  </form>`
-			}
-                console.log("hmmmmm")
-				transport.sendMail(mailoptions,function(err,info){
-					if(err)
-					{
-						console.log("error")
-
-					}
-						else{
-							console.log("here")
-
-						}
-
-
-				
-
-  })
-
-                }   
+                
 
              } 
 
-                prods.stocking=prods.stocking+orders.qty
+              
+
+               prods.stocking=prods.stocking+orders.qty
                 prods.empty=false
                 prods.date=Date.now()
+                               var p=0
+ 
                 for(var i=0;i<orders.qty;i++){
-              	   
-              	   stocks.create({id:orders.pid},function(err,sto){
+                   
+                   stocks.create({id:orders.pid},function(err,sto){
                      
-              	      prods.stock.push(sto)
-              	      if(p==orders.qty-1){
+                      prods.stock.push(sto)
+                      if(p==orders.qty-1){
 
-              	      	 prods.save()
-              	      }
-              	     p=p+1
-              	   })
-                }
+                         prods.save()
+                      }
+                     p=p+1
+                   })
+                }  
+
+
+
+
+
+}
+
+
+
+
+                
                  
               })
+                   
+
+
                     if(orders.pay=="Paid"){
 
                     	var amount="Give Us Account Details, so that we can give back you the paid money" +" "+ orders.Price
                     }
-                   
+                   else{
+
+                     var amount=""
+                   }
                      var transport=nodemailer.createTransport({
 			                                  service:"gmail",
 			                                  auth:{

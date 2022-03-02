@@ -69,13 +69,27 @@
       <th scope="col">offPrice</th>
       
       <th scope="col">ActualPrice</th>
-     <%if(data.leters){%>
-            <th scope="col">Size</th>
+     
+       <th scope="col">Offer</th>
+      <%if(data.key!=="mustards" && data.key!=="soyabeans"){%>
+
+        <th scope="col">Stock</th>
+      <%}else{%>
+        <th scope="col">1LStock</th>
+        <th scope="col">2LStock</th>
 
       <%}%>
-       <th scope="col">Offer</th>
-       <th scope="col">Stock</th>
-       <th scope="col">updateStock</th>
+       <%if(data.key!=="mustards" && data.key!=="soyabeans"){%>
+         <th scope="col">updateStock</th>
+       
+       <%}else{%>
+         <th scope="col">update1L</th>
+                  
+                  <th scope="col">update2L</th>
+  
+
+       <%}%>
+       
        <th scope="col">updationDate</th>
 
 
@@ -100,16 +114,32 @@
      
       
       <td><%=data.offer%>  <a href="/updateData/<%=data._id%>/offer" style="padding-left:10px"><i class="fas fa-edit" style="color:black;"> </i> </a></td>
-       <%if(data.leters){%>
-      <td><%=data.leters%></td>
-      <%}%>
+      
       <td><%=data.off%></td>
+      <%if(data.key!=="mustards" && data.key!=="soyabeans"){%>
+    
           <%if (data.empty==false){%> 
            <td><%=data.stocking%></td>
           <%}else{%>
           <td><button class="btn btn-md btn-outline-danger">Out-Of-Stock</button></td>
           <%}%>
-      
+     <%}else{%>
+      <%if (data.emptyOne==false){%> 
+           <td><%=data.totalOne%></td>
+          <%}else{%>
+          <td><button class="btn btn-md btn-outline-danger">Out-Of-Stock</button></td>
+          <%}%>     
+
+     <%if (data.emptyTwo==false){%> 
+           <td><%=data.totalTwo%></td>
+          <%}else{%>
+          <td><button class="btn btn-md btn-outline-danger">Out-Of-Stock</button></td>
+          <%}%>
+
+
+     <%}%>  
+    <%if(data.key!=="mustards" && data.key!=="soyabeans"){%>
+  
 	     <td> <div class="dropdown">
 			  <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 			  Update
@@ -119,13 +149,60 @@
 			     <li disabled><a class="dropdown-item" href="/increaseStock/<%=data._id%>/1">1</a></li>
                     
            <li disabled><a class="dropdown-item" href="/increaseStock/<%=data._id%>/2">2</a></li>
+           
            <li disabled><a class="dropdown-item" href="/increaseStock/<%=data._id%>/3">3</a></li>
+           
            <li disabled><a class="dropdown-item" href="/increaseStock/<%=data._id%>/4">4</a></li>
+           
            <li disabled><a class="dropdown-item" href="/increaseStock/<%=data._id%>/5">5</a></li>
 
 
               
 </td>
+       <%}else{%>
+
+ <td> <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Update1L
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+ 
+           <li disabled><a class="dropdown-item" href="/increaseStockOne/<%=data._id%>/1">1</a></li>
+                    
+           <li disabled><a class="dropdown-item" href="/increaseStockOne/<%=data._id%>/2">2</a></li>
+           
+           <li disabled><a class="dropdown-item" href="/increaseStockOne/<%=data._id%>/3">3</a></li>
+           
+           <li disabled><a class="dropdown-item" href="/increaseStockOne/<%=data._id%>/4">4</a></li>
+           
+           <li disabled><a class="dropdown-item" href="/increaseStockOne/<%=data._id%>/5">5</a></li>
+
+
+              
+</td>
+
+ <td> <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Update2L
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+ 
+           <li disabled><a class="dropdown-item" href="/increaseStockTwo/<%=data._id%>/1">1</a></li>
+                    
+           <li disabled><a class="dropdown-item" href="/increaseStockTwo/<%=data._id%>/2">2</a></li>
+           
+           <li disabled><a class="dropdown-item" href="/increaseStockTwo/<%=data._id%>/3">3</a></li>
+           
+           <li disabled><a class="dropdown-item" href="/increaseStockTwo/<%=data._id%>/4">4</a></li>
+           
+           <li disabled><a class="dropdown-item" href="/increaseStockTwo/<%=data._id%>/5">5</a></li>
+
+
+              
+</td>
+
+
+       <%}%>    
            <td><%=data.date.toLocaleString("en-UN")%></td>
 
     </tr>

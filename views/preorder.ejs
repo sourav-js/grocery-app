@@ -168,8 +168,13 @@ body{
         <b><b class="btn btn-sm btn-success">Phone </b><br><%=data.phone%></b>
       
         <form action="/razor/<%=prod._id%>/<%=data._id%>" method="POST">
-    
+                         
                            <input type="hidden" name="qty"   value="<%=qty%>" required>
+                         <%if(size){%>
+                           <input type="hidden" name="size"   value="<%=size%>" required>
+                        <%}%>
+
+
                   <input type="hidden" name="first" value=<%=data.first%> required>
 
                  <input type="hidden" name="last" value=<%=data.last%> required>
@@ -250,6 +255,11 @@ body{
       
         <form action="/buy/<%=prod._id%>/<%=data._id%>" method="POST">
     
+    
+                    <%if(size){%>
+                           <input type="hidden" name="size"   value="<%=size%>" required>
+                        <%}%>
+
                            <input type="hidden" name="qty"   value="<%=qty%>" required>
                   <input type="hidden" name="first" value=<%=data.first%> required>
 
@@ -327,6 +337,11 @@ body{
         <form action="/buy/<%=prod._id%>/<%=data._id%>" method="POST">
     
                            <input type="hidden" name="qty"   value="<%=qty%>" required>
+                      <%if(size){%>
+                           <input type="hidden" name="size"   value="<%=size%>" required>
+                        <%}%>
+
+
                   <input type="hidden" name="first" value=<%=data.first%> required>
 
                  <input type="hidden" name="last" value=<%=data.last%> required>
@@ -452,6 +467,7 @@ body{
 <form action="/buy/<%=prod._id%>" method="GET">
  <input type="hidden" name="new" value="1">
  <input type="hidden" name="qty" value="<%=qty%>">
+ <input type="hidden" name="size" value="<%=size%>">
 
  <button style="position:fixed;bottom:0;" class="btn btn-block btn-success">Add-New-Adress</button>
 </form>

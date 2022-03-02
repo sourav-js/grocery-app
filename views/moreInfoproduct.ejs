@@ -103,7 +103,10 @@ footer .boxh3{
         background-image:url("https://wallpapercave.com/wp/jaEPYnv.jpg")
 
 }
-
+.hidecart{
+    
+     display:none;
+}
 </style>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#" ><b>GroceryJi</b></a>
@@ -348,19 +351,19 @@ footer .boxh3{
         <div style="transform:translateY(-150%);padding-left:1px;">
          
         <%if(!actualPrice && !calc){%>
-            <button class="btn btn-sm btn-outline-info"><i class="fas fa-rupee-sign"><%=prod.Price%></i></button>
-                       <button class="btn btn-sm btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=prod.offer%></i></button> 
+            <button class="btn btn-sm btn-outline-info"><i class="fas fa-rupee-sign price"><%=prod.Price%></i></button>
+                       <button class="btn btn-sm btn-danger"style="color:black"><i class="fas fa-rupee-sign offer" style="display:inline;text-decoration:line-through"><%=prod.offer%></i></button> 
                               
                 <%if (prod.off){%>
-                 <button class="btn btn-sm btn-success"><%=prod.off%></button>      
+                 <button class="btn btn-sm btn-success off"><%=prod.off%></button>      
                 <%}%>
        <%}else{%>
 
-              <button class="btn btn-sm btn-outline-info"><i class="fas fa-rupee-sign"><%=actualPrice%></i></button>
-                       <button class="btn btn-sm btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=prod.offer%></i></button> 
+              <button class="btn btn-sm btn-outline-info"><i class="fas fa-rupee-sign price"><%=actualPrice%></i></button>
+                       <button class="btn btn-sm btn-danger"style="color:black"><i class="fas fa-rupee-sign offer" style="display:inline;text-decoration:line-through"><%=prod.offer%></i></button> 
                               
                 <%if (prod.off){%>
-                 <button class="btn btn-sm btn-success"><%=calc%></button>      
+                 <button class="btn btn-sm btn-success off"><%=calc%></button>      
                 <%}%>
 
        <%}%>
@@ -407,6 +410,297 @@ footer .boxh3{
 <% } %>
 </div>
 
+<div class="hidecart" id="twol">
+
+<div style="padding-top:200px;padding-left:20px;padding-bottom:50px">
+  <div class="container">
+  <div class="row">
+    
+    <div class="col-lg-4 col-sm-12 image" ><div style="padding-top:20px"><figure class="figure"><div style="box-shadow:1px 2px  3px grey;" class="img-thumbnail"  align="center">
+   
+
+
+          <%if(prod.urls=="URL"){%>
+                   <img src="<%=prod.image%>" style="width:200px;height:70%;padding-bottom:50px;cursor:pointer;" class="figure-img img-fluid rounded">
+
+          <%}else{%>
+
+              <img src="/<%=prod.image%>" style="width:200px;height:70%;padding-bottom:50px;cursor:pointer;" class="figure-img img-fluid rounded">
+             
+          <%}%>   
+
+
+        <div style="transform:translateY(50px)">
+        <div style="transform:translateY(-150%);padding-left:2px;">
+         
+       
+         </div>           
+            </div> 
+        </div>
+        </figure>
+        </div>
+       
+       </div>
+    
+
+      <div class="col-lg-4 col-sm-12 image"><div style="padding-top:100px;padding-bottom:50px"><div style="box-shadow:1px 2px  3px grey;border-radius:10px" class="img-thumbnail"  align="center">
+        <b>Full View</b>
+        
+        <div style="transform:translateY(75px)">
+        <div style="transform:translateY(-150%);padding-left:1px;">
+         
+             
+                              <button class="btn btn-lg btn-success" data-toggle="modal" data-target="#staticBackdrop"><i class="fas fa-arrow-circle-down"></i></button>
+                      
+
+                      
+            </div> 
+        </div>
+        </div>
+       </div>
+</div>
+          <div style="padding-top:20px"> 
+          <div class="col-lg-4 col-sm-12 image" ><div style="width:300px"><div style="box-shadow:1px 2px  4px grey;" class="img-thumbnail"  align="center">
+    
+
+    <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+  
+         <%if(prod.twos.length>0){%>
+            
+               <div class="dropdown">
+           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <em id="qty">Qty 1</em>
+
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#"  id="one"><h6>1</h6></a>
+            <a class="dropdown-item" href="#" id="two"><em>2</em></a>
+            <a class="dropdown-item" href="#"  id="three"><em>3</em></a>
+                        <a class="dropdown-item" href="#" id="four"><em>4</em></a>
+                           <a class="dropdown-item" href="#" id="five"><em>5</em></a>
+         
+
+             </div>
+               </div>            
+          <%}else{%>
+            <%if(currentUser){%> 
+             <button class="btn btn-outline-danger" type="button">
+               <em id="qty">Out-Of-Stock</em>
+
+              </button>
+             <%}%> 
+          <%}%>
+          <%}else{%>
+         
+
+              <%if(prod.stock.length>0){%>
+            
+               <div class="dropdown">
+           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <em id="qty">Qty 1</em>
+
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#"  id="one"><h6>1</h6></a>
+            <a class="dropdown-item" href="#" id="two"><em>2</em></a>
+            <a class="dropdown-item" href="#"  id="three"><em>3</em></a>
+                        <a class="dropdown-item" href="#" id="four"><em>4</em></a>
+                           <a class="dropdown-item" href="#" id="five"><em>5</em></a>
+         
+
+             </div>
+               </div>            
+          <%}else{%>
+            <%if(currentUser){%> 
+             <button class="btn btn-outline-danger" type="button">
+               <em id="qty">Out-Of-Stock</em>
+
+              </button>
+             <%}%> 
+          <%}%>
+
+          <%}%> 
+    
+
+
+
+          <br>
+              <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <b class="sizede">2L</b>
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item sizeone" style="cursor:pointer"><b>1L</b></a>
+                    
+                  </div>
+                </div>      
+           <%}%>      
+        <div style="transform:translateY(200px)">
+        <div style="transform:translateY(-150%)">
+         
+                         <div style="padding-top:50px;padding-left:2px">     
+                    <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+                    <%if(prod.twos.length>0){%>
+
+                    <form action="/buy/<%=prod._id%>" method="GET" display:inline> 
+                    
+                    <button class="btn btn-md btn-warning"><i class="fas fa-bolt"> Buy Now</i></button>
+                       
+                              <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>  
+                                                <input type="hidden" id="inputsizes" name="size" value="two">
+                                            <%}%>
+                                                    <input type="hidden" id="inputb" name="qty">
+
+                        </form>
+                     <%}%>
+
+                     
+                    
+                     <%}else{%>
+                         
+                         <%if(prod.stock.length>0){%>
+
+                            <form action="/buy/<%=prod._id%>" method="GET" display:inline> 
+                            
+                            <button class="btn btn-md btn-warning"><i class="fas fa-bolt"> Buy Now</i></button>
+                               
+                                      
+                                                            <input type="hidden" id="inputb" name="qty">
+
+                                </form>
+                     <%}%>
+
+
+                     <%}%> 
+
+                    <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+                     <%if(prod.twos.length>0){%>
+ 
+                     <%if(carttwo=="no"){%>
+
+                        <form action="/cart/<%=prod._id%>" method="POST" display:inline>       
+                            <input type="hidden" id="inputs" name="qty">
+                        <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>  
+
+
+                            <input type="hidden" id="inputsize" name="size" value="two">
+                        <%}%>    
+
+                            <button class="btn btn-md btn-success"><i class="fas fa-shopping-cart" class=""> Add-To-Cart</i></button>
+                        </form>
+                     <%}else if(carttwo=="yes"){%>
+                      <form action="/cart" method="GET" display:inline>       
+                            <button class="btn btn-md btn-warning"><i class="fas fa-shopping-cart" class=""> Go-To-Cart</i></button>
+                        </form>
+                     <%}%>   
+ 
+                   <%}else{%>
+                           <%if (currentUser){%> 
+                            <%if(mark=="not"){%>
+                             <a href="/notify/<%=prod._id%>"><button class="btn btn-md btn-warning">Notify-Me</button></a>
+                            <%}else{%>
+                                <a href=""><button class="btn btn-md btn-danger" disabled="true">You will be notified</button></a>
+                            <%}%>
+                          <%}%>
+                   <%}%>
+                 <%}else{%> 
+                    
+
+                    
+                    <%if(prod.stock.length>0){%>
+ 
+                     <%if(cart=="no"){%>
+
+                        <form action="/cart/<%=prod._id%>" method="POST" display:inline>       
+                            <input type="hidden" id="inputs" name="qty">
+                          
+
+                            <button class="btn btn-md btn-success"><i class="fas fa-shopping-cart"> Add-To-Cart</i></button>
+                        </form>
+                     <%}else if(cart=="yes"){%>
+                      <form action="/cart" method="GET" display:inline>       
+                            <button class="btn btn-md btn-warning"><i class="fas fa-shopping-cart"> Go-To-Cart</i></button>
+                        </form>
+                     <%}%>   
+ 
+                   <%}else{%>
+                           <%if (currentUser){%> 
+                            <%if(mark=="not"){%>
+                             <a href="/notify/<%=prod._id%>"><button class="btn btn-md btn-warning">Notify-Me</button></a>
+                            <%}else{%>
+                                <a href=""><button class="btn btn-md btn-danger" disabled="true">You will be notified</button></a>
+                            <%}%>
+                          <%}%>
+                   <%}%>
+
+
+                 <%}%>   
+                   
+                </div>
+         
+        </div>
+            
+
+            </div> 
+        
+        <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+                     <%if(prod.twos.length>0){%>
+                     <%if(wishes){%>                            
+                          <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/deleteWish/off/<%=prod._id%>" ><i class="fas fa-heart btn btn-lg" style="color:red;"></i></a></div>
+
+             <%}else{%>
+                    <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/wishlist/<%=prod._id%>" ><i class="far fa-heart btn btn-lg" style="color:red;"></i></a></div>
+
+            <%}%>
+                    <%}%> 
+        <%}else{%>
+        <%if(prod.stock.length>0){%>
+                                
+              <%if(wishes){%>                            
+                          <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/deleteWish/off/<%=prod._id%>" ><i class="fas fa-heart btn btn-lg" style="color:red;"></i></a></div>
+
+             <%}else{%>
+            <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/wishlist/<%=prod._id%>" ><i class="far fa-heart btn btn-lg" style="color:red;"></i></a></div>
+
+            <%}%>
+        <%}%>
+       <%}%> 
+
+
+
+
+        </div>
+        
+        </div>
+       </div>
+
+       </div>
+
+
+    </div>
+    
+   
+  </div>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="" id="onel">
 
 <div style="padding-top:200px;padding-left:20px;padding-bottom:50px">
   <div class="container">
@@ -456,19 +750,51 @@ footer .boxh3{
 </div>
           <div style="padding-top:20px"> 
           <div class="col-lg-4 col-sm-12 image" ><div style="width:300px"><div style="box-shadow:1px 2px  4px grey;" class="img-thumbnail"  align="center">
-         <%if(prod.stock.length>0){%>
+    
 
+    <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+  
+         <%if(prod.ones.length>0){%>
+            
                <div class="dropdown">
            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               <em id="qty">Qty 1</em>
+               <em class="qty">Qty 1</em>
 
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#"  id="one"><h6>1</h6></a>
-            <a class="dropdown-item" href="#" id="two"><em>2</em></a>
-            <a class="dropdown-item" href="#"  id="three"><em>3</em></a>
-                        <a class="dropdown-item" href="#" id="four"><em>4</em></a>
-                           <a class="dropdown-item" href="#" id="five"><em>5</em></a>
+            <a class="dropdown-item one" href="#"  ><h6>1</h6></a>
+            <a class="dropdown-item two" href="#"><em>2</em></a>
+            <a class="dropdown-item three" href="#"  ><em>3</em></a>
+                        <a class="dropdown-item four" href="#" ><em>4</em></a>
+                           <a class="dropdown-item five"  href="#" ><em>5</em></a>
+         
+
+             </div>
+               </div>            
+          <%}else{%>
+            <%if(currentUser){%> 
+             <button class="btn btn-outline-danger" type="button">
+               <em id="qty">Out-Of-Stock</em>
+
+              </button>
+             <%}%> 
+          <%}%>
+          <%}else{%>
+         
+
+              <%if(prod.stock.length>0){%>
+            
+               <div class="dropdown">
+           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <em class="qty">Qty 1</em>
+
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item one" href="#"  ><h6>1</h6></a>
+            <a class="dropdown-item two" href="#" ><em>2</em></a>
+            <a class="dropdown-item three" href="#"  ><em>3</em></a>
+                        <a class="dropdown-item four" href="#" ><em>4</em></a>
+                           <a class="dropdown-item five" href="#"><em>5</em></a>
          
 
              </div>
@@ -482,25 +808,104 @@ footer .boxh3{
              <%}%> 
           <%}%>
 
+          <%}%> 
+    
+
+
+
+          <br>
+              <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <b class="sizede">1L</b>
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item sizetwo" style="cursor:pointer"><b>2L</b></a>
+                    
+                  </div>
+                </div>      
+             
+           <%}%>      
         <div style="transform:translateY(200px)">
         <div style="transform:translateY(-150%)">
          
                          <div style="padding-top:50px;padding-left:2px">     
+                    <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+                    <%if(prod.ones.length>0){%>
+
                     <form action="/buy/<%=prod._id%>" method="GET" display:inline> 
-                    <%if(prod.stock.length>0){%>
-                    <button class="btn btn-md btn-warning"><i class="fas fa-bolt"> Buy Now</i></button>
-                       <%}%>
                     
-                                                    
-                                                    <input type="hidden" id="inputb" name="qty">
+                    <button class="btn btn-md btn-warning"><i class="fas fa-bolt"> Buy Now</i></button>
+                       
+                              <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>  
+                                                <input type="hidden" class="inputsizes" name="size" value="one">
+                                            <%}%>
+                                                    <input type="hidden" class="inputb" name="qty">
 
                         </form>
-                     <%if(prod.stock.length>0){%>
+                     <%}%>
+
+                     
+                    
+                     <%}else{%>
+                         
+                         <%if(prod.stock.length>0){%>
+
+                            <form action="/buy/<%=prod._id%>" method="GET" display:inline> 
+                            
+                            <button class="btn btn-md btn-warning"><i class="fas fa-bolt"> Buy Now</i></button>
+                               
+                                      
+                                                            <input type="hidden" class="inputb" name="qty">
+
+                                </form>
+                     <%}%>
+
+
+                     <%}%> 
+
+                    <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+                     <%if(prod.ones.length>0){%>
  
                      <%if(cart=="no"){%>
 
                         <form action="/cart/<%=prod._id%>" method="POST" display:inline>       
-                            <input type="hidden" id="inputs" name="qty">
+                            <input type="hidden" class="inputs" name="qty">
+                        <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>  
+
+
+                            <input type="hidden" class="inputsize" name="size" value="one">
+                        <%}%>    
+
+                            <button class="btn btn-md btn-success"><i class="fas fa-shopping-cart" class=""> Add-To-Cart</i></button>
+                        </form>
+                     <%}else if(cart=="yes"){%>
+                      <form action="/cart" method="GET" display:inline>       
+                            <button class="btn btn-md btn-warning"><i class="fas fa-shopping-cart" class=""> Go-To-Cart</i></button>
+                        </form>
+                     <%}%>   
+ 
+                   <%}else{%>
+                           <%if (currentUser){%> 
+                            <%if(mark=="not"){%>
+                             <a href="/notify/<%=prod._id%>"><button class="btn btn-md btn-warning">Notify-Me</button></a>
+                            <%}else{%>
+                                <a href=""><button class="btn btn-md btn-danger" disabled="true">You will be notified</button></a>
+                            <%}%>
+                          <%}%>
+                   <%}%>
+                 <%}else{%> 
+                    
+
+                    
+                    <%if(prod.stock.length>0){%>
+ 
+                     <%if(cart=="no"){%>
+
+                        <form action="/cart/<%=prod._id%>" method="POST" display:inline>       
+                            <input type="hidden" class="inputs" name="qty">
+                          
+
                             <button class="btn btn-md btn-success"><i class="fas fa-shopping-cart"> Add-To-Cart</i></button>
                         </form>
                      <%}else if(cart=="yes"){%>
@@ -518,14 +923,28 @@ footer .boxh3{
                             <%}%>
                           <%}%>
                    <%}%>
-                     
 
+
+                 <%}%>   
+                   
                 </div>
          
         </div>
             
 
             </div> 
+        
+        <%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+                     <%if(prod.ones.length>0){%>
+                     <%if(wishes){%>                            
+                          <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/deleteWish/off/<%=prod._id%>" ><i class="fas fa-heart btn btn-lg" style="color:red;"></i></a></div>
+
+             <%}else{%>
+                    <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/wishlist/<%=prod._id%>" ><i class="far fa-heart btn btn-lg" style="color:red;"></i></a></div>
+
+            <%}%>
+                    <%}%> 
+        <%}else{%>
         <%if(prod.stock.length>0){%>
                                 
               <%if(wishes){%>                            
@@ -536,7 +955,7 @@ footer .boxh3{
 
             <%}%>
         <%}%>
-        
+       <%}%> 
 
 
 
@@ -558,7 +977,21 @@ footer .boxh3{
 </div>
 
 
+</div>
 
+<%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
+
+ <%=prod.totalOne%>
+ <%=prod.ones.length%>
+ <%=prod.totalTwo%>
+ <%=prod.twos.length%>
+<%}else{%>
+
+ <%=prod.stocking%>
+ <%=prod.stock.length%>
+ 
+
+<%}%>
 
 <div class="half">
 
@@ -609,10 +1042,7 @@ footer .boxh3{
           <%}%>
                          <button class="btn btn-md btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=data.offer%></i></button>
                     
-              <%if(data.leters){%>
-                    
-                    <div style="padding-top:10px"><button class="btn btn-sm btn-info"><%=data.leters%></button></div>
-              <%}%>
+             
 
             </div> 
         </div>
@@ -769,6 +1199,8 @@ $(".subs").click(function(){
 })
 $("#inputs").val(1)
 $("#inputb").val(1)
+$(".inputs").val(1)
+$(".inputb").val(1)
 
 $("#one").click(function(){
 	$("#inputs").val(1)
@@ -784,6 +1216,60 @@ $("#two").click(function(){
 
  	$("#inputb").val(2)
 
+})
+$("#one").click(function(){
+    $("#inputs").val(1)
+        $("#qty").text(1)
+
+    $("#inputb").val(1)
+
+})
+
+$("#two").click(function(){
+    $("#inputs").val(2)
+            $("#qty").text(2)
+
+    $("#inputb").val(2)
+
+})
+$("#three").click(function(){
+    $("#inputs").val(3)
+        $("#qty").text(3)
+
+    $("#inputb").val(3)
+
+})
+$("#four").click(function(){
+    $("#inputs").val(4)
+        $("#qty").text(4)
+
+        $("#inputb").val(4)
+
+})
+$("#five").click(function(){
+    $("#inputs").val(5)
+            $("#qty").text(5)
+
+        $("#inputb").val(5)
+
+})
+$(".sizetwo").click(function(){
+    $("#inputsize").val("two")
+    $("#inputsizes").val("two")
+    $(".sizede").text("2L") 
+    $("#twol").removeClass("hidecart")
+    $("#onel").addClass("hidecart")
+    
+       
+})
+$(".sizeone").click(function(){
+    $(".inputsize").val("one")
+    $(".inputsizes").val("one")
+    $(".sizede").text("1L") 
+    $("#twol").addClass("hidecart")
+    $("#onel").removeClass("hidecart")
+    
+       
 })
 $("#three").click(function(){
 	$("#inputs").val(3)
@@ -806,7 +1292,42 @@ $("#five").click(function(){
 	 	$("#inputb").val(5)
 
 })
+$(".one").click(function(){
+    $(".inputs").val(1)
+        $(".qty").text(1)
 
+    $(".inputb").val(1)
+
+})
+
+$(".two").click(function(){
+    $(".inputs").val(2)
+            $(".qty").text(2)
+
+    $(".inputb").val(2)
+
+})
+$(".three").click(function(){
+    $(".inputs").val(3)
+        $(".qty").text(3)
+
+    $(".inputb").val(3)
+
+})
+$(".four").click(function(){
+    $(".inputs").val(4)
+        $(".qty").text(4)
+
+        $(".inputb").val(4)
+
+})
+$(".five").click(function(){
+    $(".inputs").val(5)
+            $(".qty").text(5)
+
+        $(".inputb").val(5)
+
+})
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>

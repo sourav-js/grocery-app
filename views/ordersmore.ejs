@@ -411,12 +411,16 @@ footer .boxh3{
         <hr>
         <b><b class="btn btn-sm btn-success">Price </b><%=orders.Price%></b>
         <hr>
-        <%if(orders.leters){%>
+        
+        <%if(orders.size){%>
         
          <hr>
-        <b><b class="btn btn-sm btn-success">Size </b><%=orders.leters%></b>
+         
+
+        <b><b class="btn btn-sm btn-success">Size </b><%=orders.size%></b>
 
         <%}%>
+        <hr>
         <b><b class="btn btn-sm btn-success">Quantity </b><%=orders.qty%></b>
         <%if(orders.returnId==""){%> 
          <hr>

@@ -329,7 +329,7 @@ footer .boxh3{
         <a href="/moreinfo/<%=data._id%>"<button class="btn btn-md btn-success"><b>Qty <%=data.qty%></b></button></a>
             
             <button class="btn btn-md btn-outline-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
-                       <button class="btn btn-md btn-success"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;"><%=data.off%></i></button>
+                      
                     
               
 
@@ -347,8 +347,8 @@ footer .boxh3{
  
                     <%}%>
 
-                            <%if(data.author){%>
-                              <b style="color:green;font-size:10px;">Added By Groceryji</b> 
+                            <%if(data.size){%>
+                              <b style="color:green;font-size:10px;"><%=data.size%></b> 
                             <%}%>
 
         </div>

@@ -39,11 +39,14 @@
 
       <th scope="col">Product</th>
       <th scope="col">Price</th>
-      <%if(data.leters){%>
-                    
-              <th scope="col">Size</th>
-      <%}%>
+      
       <th scope="col">Quantity</th>
+      <%if(data.size){%>
+       
+      <th scope="col">Size</th>
+
+
+      <%}%>
      <%if(data.pay=="Paid"){%>
 
        <th scope="col">Ifsc</th>
@@ -86,11 +89,12 @@
       
       <td><%=data.productD%></td>
       <td><%=data.Price%></td>
-      <%if(data.leters){%>
+           <td><%=data.qty%></td>
+ 
+      <%if(data.size){%>
                     
-              <td><%=data.leters%></td>
+              <td><%=data.size%></td>
       <%}%>
-      <td><%=data.qty%></td>
       <%if(data.pay=="Paid"){%>
         <%if(data.ifsc==""){%> 
          <td>User Have'nt Uploaded Yet</td>
@@ -138,11 +142,12 @@
 
       <th scope="col">Product</th>
       <th scope="col">Price</th>
-      <%if(data.leters){%>
+      <th scope="col">Quantity</th>
+
+      <%if(data.size){%>
             <th scope="col">Size</th>
 
       <%}%>
-      <th scope="col">Quantity</th>
       
 
        <th scope="col">Date</th>
@@ -184,10 +189,11 @@
       
       <td><%=data.productD%></td>
       <td><%=data.Price%></td>
-      <%if(data.leters){%>
-       <td><%=data.leters%></td>
-      <%}%>
       <td><%=data.qty%></td>
+
+      <%if(data.size){%>
+       <td><%=data.size%></td>
+      <%}%>
       <td><%=data.datefour.toLocaleString("en-UN")%></td>
       <td>
         <%=data.update%>
