@@ -564,7 +564,9 @@ app.get("/login",function(req,res){
 
 
 
-
+app.get("/",function(req,res){
+  res.render("landingPage.ejs")
+})
 
 
 app.get("/api",function(req,res)
@@ -5752,7 +5754,7 @@ failureRedirect:"/login"
 
 });
 
-app.get("/",function(req,res){
+app.get("/admin",function(req,res){
  
  var totalSum=0
  if(!req.query.search){
