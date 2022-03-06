@@ -33,7 +33,7 @@ secret_key="sk_test_51HYDa6DEQHowOc9K5x2DAfrJ2a2hDQn4NbzTg0TdIfw4put9bnK8D4Lz3ME
 public_key="pk_test_51HYDa6DEQHowOc9KWUatQJTsMzgOTdRLgxsglppcuXrLpaXH6ZAeewv2MCn0ZpdD08e3YH2mUZMFrJs6BQTnc6AX00FsXjmk2E",
 stripe=require("stripe")(secret_key),
 
-port=process.env.PORT || 9000;
+port=process.env.PORT || 3003;
 
 path.parse("D:/Backup/web-server/shop/public");
 mongoose.connect("mongodb+srv://localGrocery:TV8mAWGwGFJDyqhU@mongodb-tutorial.wvkvs.mongodb.net/Grocery?retryWrites=true&w=majority");
@@ -708,6 +708,7 @@ app.get("/wishlist/:id",isLoggedin,function(req,res){
 
 
 app.get("/allProduct",function(req,res){
+ console.log("just testing")
  if(req.user){
 
     var primary=req.user._id
