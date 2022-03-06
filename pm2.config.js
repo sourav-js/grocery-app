@@ -1,8 +1,8 @@
 module.exports = {
     apps : [{
-      name   : "adminPanel",
+      name   : "groceryji",
       script : "nodemon grocery.js",
-      error_file : "/home/sourav/sourav/admingroceryJi_error.log",
-      out_file : "/home/sourav/sourav/admingroceryJi_out.log"
+      error_file : "/home/sourav/sourav/groceryJi_error.log",
+      out_file : "/home/sourav/sourav/groceryJi_out.log"
     }]
   }
