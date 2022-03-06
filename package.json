@@ -1,5 +1,5 @@
 {
-  "name": "adminPanel",
+  "name": "grocery-app",
   "version": "1.0.0",
   "description": "this is a gupta app",
   "main": "grocery.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sourav-js/adminGroceryji.git"
+    "url": "git+https://github.com/sourav-js/grocery-app.git"
   },
   "author": "sourav",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sourav-js/https://github.com/sourav-js/adminGroceryji/issues"
+    "url": "https://github.com/sourav-js/grocery-app/issues"
   },
-  "homepage": "https://github.com/sourav-js/adminGroceryji#readme",
+  "homepage": "https://github.com/sourav-js/grocery-app#readme",
   "dependencies": {
     "body-parser": "^1.19.1",
     "cheerio": "^1.0.0-rc.10",
