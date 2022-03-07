@@ -489,7 +489,7 @@ app.use(function(req,res,next){
 } 
  else{
          
-     users.notinum=totalnoti
+     users.notinum=0
      users.save()
  }
 
