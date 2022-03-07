@@ -142,9 +142,9 @@ footer .boxh3{
            <%if(currentUser){%>
                 <span style="color:white;transform:translate(40px,-50px)"><b>
 
-                <%if(allnoti && allnoti>0){%>
+                <%if(currentUser.notinum>0){%>
                    
-                    <%=allnoti%>
+                    <%=currentUser.notinum%>
                 <%}%>
 
                 </b></span>

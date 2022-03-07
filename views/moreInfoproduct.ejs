@@ -157,9 +157,9 @@ footer .boxh3{
          <%if(currentUser){%>
                 <span style="color:white;transform:translate(40px,-50px)"><b>
 
-                <%if(allnoti && allnoti>0){%>
+              <%if(currentUser.notinum>0){%>
                    
-                    <%=allnoti%>
+                    <%=currentUser.notinum%>
                 <%}%>
 
                 </b></span>
@@ -410,6 +410,49 @@ footer .boxh3{
 <% } %>
 </div>
 
+<div  style="width:500px;box-shadow:1px 2px  4px grey;transform:translateX(100px);"  >
+<span><i class="fa-regular fa-xmark cross"></i></span>
+
+</div> 
+
+
+  <div class="modal-dialog hidecart" id="modin">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Copy Link</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    <input type="text" class="form-control" id="mods"  value="https://groceryji.com/moreinfo/<%=prod._id%>">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="myFunction()">Copy</button>
+      </div>
+    
+    <script type="text/javascript">    
+
+              
+              
+              function myFunction() {
+          /* Get the text field */
+          var copyText = document.getElementById("mods");
+
+          /* Select the text field */
+          copyText.select();
+          copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+           /* Copy the text inside the text field */
+          navigator.clipboard.writeText(copyText.value);
+
+          /* Alert the copied text */
+          alert("Copied the text: " + copyText.value);
+        }
+      </script> 
+    </div>
+  </div>
+
 <div class="hidecart" id="twol">
 
 <div style="padding-top:200px;padding-left:20px;padding-bottom:50px">
@@ -653,6 +696,8 @@ footer .boxh3{
                     <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/wishlist/<%=prod._id%>" ><i class="far fa-heart btn btn-lg" style="color:red;"></i></a></div>
 
             <%}%>
+                     <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a><i class="fas fa-share btn btn-lg modin" style="color:green"></i></a></div>
+
                     <%}%> 
         <%}else{%>
         <%if(prod.stock.length>0){%>
@@ -664,6 +709,7 @@ footer .boxh3{
             <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/wishlist/<%=prod._id%>" ><i class="far fa-heart btn btn-lg" style="color:red;"></i></a></div>
 
             <%}%>
+         <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a><i class="fas fa-share btn btn-lg modin" style="color:green"></i></a></div>
         <%}%>
        <%}%> 
 
@@ -943,6 +989,7 @@ footer .boxh3{
                     <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/wishlist/<%=prod._id%>" ><i class="far fa-heart btn btn-lg" style="color:red;"></i></a></div>
 
             <%}%>
+                    <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a><i class="fas fa-share btn btn-lg modin" style="color:green"></i></a></div> 
                     <%}%> 
         <%}else{%>
         <%if(prod.stock.length>0){%>
@@ -954,6 +1001,7 @@ footer .boxh3{
             <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px"> <a href="/wishlist/<%=prod._id%>" ><i class="far fa-heart btn btn-lg" style="color:red;"></i></a></div>
 
             <%}%>
+         <div style="box-shadow:1px 2px 2px grey;width:60px;border-radius:80px" > <a ><i class="fas fa-share btn btn-lg modin" style="color:green"></i></a></div>
         <%}%>
        <%}%> 
 
@@ -1326,6 +1374,17 @@ $(".five").click(function(){
             $(".qty").text(5)
 
         $(".inputb").val(5)
+
+})
+$(".modin").click(function(){
+    $("#modin").removeClass("hidecart")
+           
+
+})
+
+$(".close").click(function(){
+    $("#modin").addClass("hidecart")
+           
 
 })
 </script>

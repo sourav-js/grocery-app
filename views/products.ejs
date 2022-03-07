@@ -158,9 +158,9 @@ footer .boxh3{
           <%if(currentUser){%>
                 <span style="color:white;transform:translate(40px,-50px)"><b>
 
-                <%if(allnoti && allnoti>0){%>
+                <%if(currentUser.notinum>0){%>
                    
-                    <%=allnoti%>
+                    <%=currentUser.notinum%>
                 <%}%>
 
                 </b></span>
@@ -339,16 +339,60 @@ footer .boxh3{
 </div>
          
 <title>All-Products</title>
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Copy Link</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="modin" class="form-control" value="">
 
+              
+              </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-primary" onclick="myFunction()">Copy</button>
+      </div>
+     <script type="text/javascript">    
+
+              
+              
+              function myFunction() {
+          /* Get the text field */
+          var copyText = document.getElementById("modin");
+
+          /* Select the text field */
+          copyText.select();
+          copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+           /* Copy the text inside the text field */
+          navigator.clipboard.writeText(copyText.value);
+
+          /* Alert the copied text */
+          alert("Copied the text: " + copyText.value);
+        }
+      </script> 
+
+    </div>
+  </div>
+</div>
 
 <div style="padding-top:200px;padding-left:20px">
   <div class="container">
   <div class="row">
    <%prod.forEach(function(data){%> 
     
-    <div class="col-lg-3 col-sm-12 image" ><div style="padding-bottom:100px"><div style="box-shadow:1px 2px  3px grey;" class="img-thumbnail"  align="center">
+    <div class="col-lg-3 col-sm-12 image" >
+
+     <div style="padding-bottom:100px"><div style="box-shadow:1px 2px  3px grey;" class="img-thumbnail"  align="center">
+    
     <%if(data.urls=="URL"){%>
-        <img src="<%=data.image%>" style="width:150px;height:50%;padding-bottom:100px;cursor:pointer;">
+        
+         <img src="<%=data.image%>" style="width:150px;height:50%;padding-bottom:100px;cursor:pointer;">
        <%}else{%>
   
                <img src="/<%=data.image%>" style="width:150px;height:50%;padding-bottom:100px;cursor:pointer;">
@@ -357,35 +401,45 @@ footer .boxh3{
        <%}%> 
         <div style="transform:translateY(50px)">
         <div style="transform:translateY(-150%);padding-left:2px;">
-         
+         <div class="img-thumbnail" style="transform:translateY(50px)"> 
     
           <form action="/moreinfo/<%=data._id%>" method="GET" style="display:inline">
 
                    <input type="hidden" name="sugg" value="<%=data._id%>">
-                 <button class="btn btn-md btn-success">More-Info</button>  
+                 <button class="btn btn-md btn-success"><i class="fas fa-arrow-alt-circle-right"></i></button>  
 
 
           </form>
           <%if(currentUser){%>  
             <%if(currentUser.offerHold==false){%>
-              <button class="btn btn-md btn-outline-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
+              <button class="btn btn-sm btn-outline-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
             <%}else if(currentUser.offerHold==true){%>           
-               <button class="btn btn-md btn-outline-info"><i class="fas fa-rupee-sign" class="texts"><%=data.Price-20%></i></button>
+               <button class="btn btn-sm btn-outline-info"><i class="fas fa-rupee-sign" class="texts"><%=data.Price-20%></i></button>
                
             <%}%>          
            
           <%}else{%>
  
-               <button class="btn btn-md btn-outline-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
+               <button class="btn btn-sm btn-outline-info"><i class="fas fa-rupee-sign"><%=data.Price%></i></button>
           
 
           <%}%>            
-                       <button class="btn btn-md btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=data.offer%></i></button>
+                       <button class="btn btn-sm btn-danger"style="color:black"><i class="fas fa-rupee-sign" style="display:inline;text-decoration:line-through"><%=data.offer%></i></button>
                     
-              <%if(data.leters){%>
-                    
-                    <div style="padding-top:10px"><button class="btn btn-sm btn-info"><%=data.leters%></button></div>
-              <%}%>
+          <br>
+          <div style="color:green;transform:translateY(5px)"> 
+         <button class="btn btn-block btn-success" data-toggle="modal" data-target="#staticBackdrop" id="<%=data._id%>"> <i class="fas fa-share"></i></button>
+         </div>
+        <script type="text/javascript">
+       
+        $("#<%=data._id%>").click(function(){
+
+               
+               $("#modin").val("https://groceryji.com/moreinfo/<%=data._id%>")
+
+        })
+        </script>
+         </div>     
 
             </div> 
         </div>

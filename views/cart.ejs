@@ -103,6 +103,7 @@ footer .boxh3{
 }
 
 
+
 </style>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#" style="font:bold"><b>GroceryJi</b></a>
@@ -147,9 +148,9 @@ footer .boxh3{
           <%if(currentUser){%>
                 <span style="color:white;transform:translate(40px,-50px)"><b>
 
-                <%if(allnoti && allnoti>0){%>
+                <%if(currentUser.notinum>0){%>
                    
-                    <%=allnoti%>
+                    <%=currentUser.notinum%>
                 <%}%>
 
                 </b></span>
@@ -317,7 +318,6 @@ footer .boxh3{
         <a href="/moreinfo/<%=data.pid%>"><img src="<%=data.image%>" style="width:150px;height:50%;padding-bottom:80px;cursor:pointer;"></a>
      
       <%}else{%>
-          <b style="color:black;font-size:5px">Added By Groceryji</b>
            <a href="/moreinfo/<%=data.pid%>"><img src="/<%=data.image%>" style="width:150px;height:50%;padding-bottom:80px;cursor:pointer;"></a>
 
 

@@ -482,15 +482,15 @@ app.use(function(req,res,next){
          }
      }
     
-     res.locals.allnoti=totalnoti
-
+     users.notinum=totalnoti
+     users.save()
    })
 
 } 
  else{
          
-          res.locals.allnoti=0
-
+     users.notinum=totalnoti
+     users.save()
  }
 
 
@@ -708,7 +708,6 @@ app.get("/wishlist/:id",isLoggedin,function(req,res){
 
 
 app.get("/allProduct",function(req,res){
- console.log("just testing")
  if(req.user){
 
     var primary=req.user._id
@@ -1045,13 +1044,7 @@ app.get("/cart",isLoggedin,function(req,res){
     user.findById(req.user._id).populate("cart").populate("pops").exec(function(err,users){
            
      console.log("here is cart"+req.query.noti)       
-     if(req.query.noti){
-
-          if(users.notinum && users.notinum>0){
-             users.notinum=users.notinum-1
-             users.save()
-          }
-    }
+    
             
             if(users.cart.length>0){
              
@@ -5415,11 +5408,8 @@ app.post("/addProduct",function(req,res){
 
         user.findById(users[i]._id,function(err,us){
           pop.create({id:prod._id,image:prod.image,urls:prod.urls,text:prod.Name,view:""},function(err,pup){
-            if(!us.notinum){
-                 us.notinum=0
-            } 
+            
             us.pops.push(pup)
-            us.notinum=us.notinum+1
                
             us.save()  
               
