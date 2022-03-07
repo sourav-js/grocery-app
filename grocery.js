@@ -487,11 +487,7 @@ app.use(function(req,res,next){
    })
 
 } 
- else{
-         
-     users.notinum=0
-     users.save()
- }
+ 
 
 
     res.locals.error=req.flash("error")
