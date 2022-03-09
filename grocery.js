@@ -181,6 +181,7 @@ var userSchema=new mongoose.Schema({
     notinum:Number,
     sum:Number,
     month:String,
+    phone:Number,
     offerHold:Boolean,
     suggetions:[{
 
@@ -563,6 +564,50 @@ app.get("/",function(req,res){
   res.render("landingPage.ejs")
 })
 
+app.get("/myprofile/:id",function(req,res){
+ 
+  user.findById(req.params.id,function(err,users){
+    user.find({},function(err,alluser){ 
+     res.render("profile.ejs",{users:users,alluser:alluser})
+    })
+  })
+})
+
+
+app.post("/updateprofile/:id",function(req,res){
+
+     user.findById(req.params.id,function(err,users){
+         if (req.body.username==users.username){       
+  
+          users.updateOne({first:req.body.first,last:req.body.last,name:req.body.first + " " +req.body.last,phone:req.body.phone,username:req.body.username},function(err,info){
+
+              
+         req.flash("success","successfully Updated")
+         res.redirect("back") 
+       
+
+          })
+         }
+         else{
+
+       user.findOne({username:req.body.username},function(err,foundu){ 
+      if(!foundu){
+       users.updateOne({first:req.body.first,last:req.body.last,name:req.body.first + " " +req.body.last,phone:req.body.phone,username:req.body.username},function(err,info){
+
+              req.flash("success","you are logged out,for changing the email id")
+              res.redirect("/logout")
+       
+
+          })
+
+      }
+
+    })
+         } 
+     
+ 
+   })
+})
 
 
 
