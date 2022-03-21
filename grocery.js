@@ -659,15 +659,24 @@ app.get("/category",function(req,res){
 })
 
 app.get("/catproduct/:keys",function(req,res){
-  
+  if(req.user){
+
+    var primary=req.user._id
+  }
+  else{
+
+    var primary="ttttt"
+  }
+
+  user.findById(primary).populate("pops").exec(function(err,users){
     product.find({key:{$regex:req.params.keys,$options:"$i"}},function(err,prod){
                
-                         res.render("products.ejs",{prod:prod})
+                         res.render("products.ejs",{prod:prod,users:users})
                     
                    }) 
 
+ })
 })
-
 
 app.get("/wishlist",isLoggedin,function(req,res){
  user.findById(req.user._id).populate("pops").exec(function(err,users){
