@@ -452,24 +452,24 @@ passport.serializeUser(user.serializeUser());
 passport.deserializeUser(user.deserializeUser());
 
 app.use(function(req,res,next){
- if(req.user) {   
-  user.findById(req.user._id).populate("cart").exec(function(err,users){
-              var sums=0
-              var i=0
-              while (i<users.cart.length){
+//  if(req.user) {   
+//   user.findById(req.user._id).populate("cart").exec(function(err,users){
+//               var sums=0
+//               var i=0
+//               while (i<users.cart.length){
               
 
-                  sums=sums+users.cart[i].Price
+//                   sums=sums+users.cart[i].Price
                   
                
-                  i=i+1
-              } 
+//                   i=i+1
+//               } 
  
-               users.sum=sums 
-               users.save()
+//                users.sum=sums 
+//                users.save()
   
- })
-}
+//  })
+// }
     if(req.user) {   
 
 
