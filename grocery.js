@@ -1137,6 +1137,8 @@ app.get("/carti/:cid/:pid",function(req,res){
                      cart.qty=cart.qty+1
                      cart.Price=cart.qty*amounts
                      cart.save()
+                     users.sum=users.sum+amounts
+                     users.save()
                      req.flash("success","quantity updated")
                      res.redirect("back")
                  }
@@ -1163,6 +1165,8 @@ app.get("/carti/:cid/:pid",function(req,res){
                      cart.qty=cart.qty+1
                      cart.Price=cart.qty*amounts
                      cart.save()
+                     users.sum=users.sum+amounts
+                     users.save() 
                      req.flash("success","quantity updated")
                      res.redirect("back")
                  }
@@ -1191,6 +1195,8 @@ app.get("/carti/:cid/:pid",function(req,res){
              cart.qty=cart.qty+1
              cart.Price=cart.qty*amounts
              cart.save()
+             users.sum=users.sum+amounts
+             users.save() 
              req.flash("success","quantity updated")
              res.redirect("back")
           }                 
@@ -1351,6 +1357,7 @@ app.post("/cart/:id",isLoggedin,function(req,res){
                    
                            carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),size:"1L",urls:prod.urls,leters:prod.leters},function(err,onecart){
                            users.cart.push(onecart)
+                           users.sum=users.sum+amounts
                            users.save()
                            req.flash("success","Product Is Added To The Cart")
                                res.redirect("back")         
@@ -1409,6 +1416,7 @@ app.post("/cart/:id",isLoggedin,function(req,res){
                    
                            carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),size:"2L",urls:prod.urls,leters:prod.leters},function(err,twocart){
                            users.cart.push(twocart)
+                           users.sum=users.sum+amounts
                            users.save()   
 
                               req.flash("success","Product Is Added To The Cart")
@@ -2276,7 +2284,7 @@ app.post("/allbuy/:id",function(req,res){
 
                                                      wishlist.find({pid:pro._id},function(err,allwish){
 
-
+                                                      
                                                          for(var i=0;i<allwish.length;i++){
 
                                                              wishlist.findByIdAndDelete(allwish[i]._id,function(err,info){
@@ -2390,7 +2398,7 @@ app.post("/allbuy/:id",function(req,res){
                                                       for(var i=0;i<allcarts.length;i++){
 
                                                           carts.findById(allcarts[i]._id,function(err,cartinfo){
-                                                             if(cartinfo){ 
+                                                             if(cartinfo && !cartinfo.size){ 
                                                               if(cartinfo.qty>pro.stocking){
 
                                                                   carts.findByIdAndDelete(cartinfo._id,function(err,info){
@@ -2713,7 +2721,7 @@ app.post("/allbuy/:id",function(req,res){
                                                       for(var i=0;i<allcarts.length;i++){
 
                                                           carts.findById(allcarts[i]._id,function(err,cartinfo){
-                                                             if(cartinfo){ 
+                                                             if(cartinfo && !cartinfo.size){ 
                                                               if(cartinfo.qty>pro.stocking){
 
                                                                   carts.findByIdAndDelete(cartinfo._id,function(err,info){
