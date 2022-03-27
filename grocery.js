@@ -2220,19 +2220,21 @@ app.post("/allbuy/:id",function(req,res){
 
                                
                                         
-                                        for(var i=0;i<users.length;i++){
+                                       user.find({},function(err,regu){
+                                           for(var i=0;i<regu.length;i++){
 
-                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
-                                                 var sums=0
-                                                 for(var j=0;j<alluser.cart.length;j++){
+                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                             var sums=0
+                                                             for(var j=0;j<alluser.cart.length;j++){
 
-                                                      sums=sums+alluser.cart[j].Price
-                                                 }
+                                                                  sums=sums+alluser.cart[j].Price
+                                                             }
 
-                                                alluser.sum=sums
-                                                alluser.save()
-                                             })
-                                        }
+                                                            alluser.sum=sums
+                                                            alluser.save()
+                                                         })
+                                                    }        
+                                    }) 
 
 
                                })
@@ -2342,19 +2344,21 @@ app.post("/allbuy/:id",function(req,res){
                                         
 
 
-                                        for(var i=0;i<users.length;i++){
+                                        user.find({},function(err,regu){
+                                           for(var i=0;i<regu.length;i++){
 
-                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
-                                                 var sums=0
-                                                 for(var j=0;j<alluser.cart.length;j++){
+                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                             var sums=0
+                                                             for(var j=0;j<alluser.cart.length;j++){
 
-                                                      sums=sums+alluser.cart[j].Price
-                                                 }
+                                                                  sums=sums+alluser.cart[j].Price
+                                                             }
 
-                                                alluser.sum=sums
-                                                alluser.save()
-                                             })
-                                        }
+                                                            alluser.sum=sums
+                                                            alluser.save()
+                                                         })
+                                                    }        
+                                     }) 
 
 
                                })
@@ -2455,19 +2459,21 @@ app.post("/allbuy/:id",function(req,res){
                                        
 
 
-                                        for(var i=0;i<users.length;i++){
+                                        user.find({},function(err,regu){
+                                           for(var i=0;i<regu.length;i++){
 
-                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
-                                                 var sums=0
-                                                 for(var j=0;j<alluser.cart.length;j++){
+                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                             var sums=0
+                                                             for(var j=0;j<alluser.cart.length;j++){
 
-                                                      sums=sums+alluser.cart[j].Price
-                                                 }
+                                                                  sums=sums+alluser.cart[j].Price
+                                                             }
 
-                                                alluser.sum=sums
-                                                alluser.save()
-                                             })
-                                        }
+                                                            alluser.sum=sums
+                                                            alluser.save()
+                                                         })
+                                                    }        
+                                   }) 
 
 
                                })
@@ -2589,19 +2595,21 @@ app.post("/allbuy/:id",function(req,res){
 
                                               
 
-                                        for(var i=0;i<users.length;i++){
+                                       user.find({},function(err,regu){
+                                           for(var i=0;i<regu.length;i++){
 
-                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
-                                                 var sums=0
-                                                 for(var j=0;j<alluser.cart.length;j++){
+                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                             var sums=0
+                                                             for(var j=0;j<alluser.cart.length;j++){
 
-                                                      sums=sums+alluser.cart[j].Price
-                                                 }
+                                                                  sums=sums+alluser.cart[j].Price
+                                                             }
 
-                                                alluser.sum=sums
-                                                alluser.save()
-                                             })
-                                        }
+                                                            alluser.sum=sums
+                                                            alluser.save()
+                                                         })
+                                                    }        
+                                     }) 
 
 
 
@@ -2712,19 +2720,21 @@ app.post("/allbuy/:id",function(req,res){
                               
                                           
 
-                                        for(var i=0;i<users.length;i++){
+                                      user.find({},function(err,regu){
+                                           for(var i=0;i<regu.length;i++){
 
-                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
-                                                 var sums=0
-                                                 for(var j=0;j<alluser.cart.length;j++){
+                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                             var sums=0
+                                                             for(var j=0;j<alluser.cart.length;j++){
 
-                                                      sums=sums+alluser.cart[j].Price
-                                                 }
+                                                                  sums=sums+alluser.cart[j].Price
+                                                             }
 
-                                                alluser.sum=sums
-                                                alluser.save()
-                                             })
-                                        }
+                                                            alluser.sum=sums
+                                                            alluser.save()
+                                                         })
+                                                    }        
+                                   }) 
 
 
 
@@ -2836,19 +2846,21 @@ app.post("/allbuy/:id",function(req,res){
 
 
                                                 
-                                        for(var i=0;i<users.length;i++){
+                                       user.find({},function(err,regu){
+                                           for(var i=0;i<regu.length;i++){
 
-                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
-                                                 var sums=0
-                                                 for(var j=0;j<alluser.cart.length;j++){
+                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                             var sums=0
+                                                             for(var j=0;j<alluser.cart.length;j++){
 
-                                                      sums=sums+alluser.cart[j].Price
-                                                 }
+                                                                  sums=sums+alluser.cart[j].Price
+                                                             }
 
-                                                alluser.sum=sums
-                                                alluser.save()
-                                             })
-                                        }
+                                                            alluser.sum=sums
+                                                            alluser.save()
+                                                         })
+                                                    }        
+                                   }) 
 
 
                                })
@@ -3311,6 +3323,27 @@ app.post("/buy/:pid/:lid",function(req,res){
 
                                            }
                                            
+                                      
+                                       
+
+                                                         user.findById(req.user._id).populate("cart").exec(function(err,alluser){
+                                                             var sums=0
+                                                             for(var j=0;j<alluser.cart.length;j++){
+
+                                                                  sums=sums+alluser.cart[j].Price
+                                                             }
+
+                                                            alluser.sum=sums
+                                                            alluser.save()
+                                                         })
+                                                            
+                                      
+
+
+
+
+
+
                                       })
                                        break
                                       }
@@ -3505,10 +3538,10 @@ app.post("/buy/:pid/:lid",function(req,res){
                                 })
                                 }
                                 
+                           user.find({},function(err,regu){
+                               for(var i=0;i<regu.length;i++){
 
-                                 for(var i=0;i<users.length;i++){
-
-                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                             user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
                                                  var sums=0
                                                  for(var j=0;j<alluser.cart.length;j++){
 
@@ -3518,8 +3551,8 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                 alluser.sum=sums
                                                 alluser.save()
                                              })
-                                 }         
-                                   
+                                        }        
+                               })    
 
                            if(req.body.method=="Stripe"){
 
@@ -3869,6 +3902,25 @@ app.post("/buy/:pid/:lid",function(req,res){
 
                                            }
                                            
+                                           
+                                       
+
+                                               user.findById(req.user._id).populate("cart").exec(function(err,alluser){
+                                                  var sums=0
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                                             })
+                                                       
+
+                                     
+                                                  
+
+
                                       })
                                        break
                                       }
@@ -3963,10 +4015,10 @@ app.post("/buy/:pid/:lid",function(req,res){
                                  }
                            })
 
-            
-                            for(var i=0;i<users.length;i++){
+                         user.find({},function(err,regu){
+                            for(var i=0;i<regu.length;i++){
 
-                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                             user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
                                                  var sums=0
                                                  for(var j=0;j<alluser.cart.length;j++){
 
@@ -3976,9 +4028,9 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                 alluser.sum=sums
                                                 alluser.save()
                                              })
-                             }                 
+                                        }                
 
-
+                        })  
 
 
 
