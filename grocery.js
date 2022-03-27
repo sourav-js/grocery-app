@@ -452,6 +452,7 @@ passport.serializeUser(user.serializeUser());
 passport.deserializeUser(user.deserializeUser());
 
 app.use(function(req,res,next){
+
 //  if(req.user) {   
 //   user.findById(req.user._id).populate("cart").exec(function(err,users){
 //               var sums=0
@@ -470,6 +471,7 @@ app.use(function(req,res,next){
   
 //  })
 // }
+
     if(req.user) {   
 
 
@@ -2061,6 +2063,7 @@ app.post("/allbuy/:id",function(req,res){
                                 return stripe.charges.create({ 
                                 amount:req.user.sum,    // Charing Rs 25 
                                 description:"All Products Of Your Cart", 
+
                                 currency: 'INR', 
                                 customer: customer.id 
                             
@@ -2771,7 +2774,7 @@ app.post("/allbuy/:id",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/Orders"<button style=color:green>Check Your Order</button></a>                       
+                                            <a href="https://groceryji.herokuapp.com/orders"<button style=color:green>Check Your Order</button></a>                       
                                                           
                                                           </form>
                                                              `
@@ -3489,7 +3492,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>                       
+                                            <a href="https://groceryji.herokuapp.com/orders/${order._id}"<button style=color:green>Check Your Order</button></a>                       
                                                           
                                                           </form>
                                                              `
@@ -3573,7 +3576,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>                       
+                                            <a href="https://groceryji.herokuapp.com/orders/${order._id}"<button style=color:green>Check Your Order</button></a>                       
                                                           
                                                           </form>
                                                              `
@@ -3905,7 +3908,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>                      
+                                            <a href="https://groceryji.herokuapp.com/orders/${order._id}"<button style=color:green>Check Your Order</button></a>                      
                                                           
                                                           </form>
                                                              `
@@ -3980,7 +3983,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/Orders/${order._id}"<button style=color:green>Check Your Order</button></a>                      
+                                            <a href="https://groceryji.herokuapp.com/orders/${order._id}"<button style=color:green>Check Your Order</button></a>                      
                                                           
                                                           </form>
                                                              `
@@ -4653,7 +4656,7 @@ app.post("/cancel/:id",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/Orders/${orders._id}"<button style=color:green>Check Your Order</button></a>                     
+                                            <a href="https://groceryji.herokuapp.com/orders/${orders._id}"<button style=color:green>Check Your Order</button></a>                     
                                                           
                                                           </form>`
                                     } 
