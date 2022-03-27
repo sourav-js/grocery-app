@@ -851,9 +851,9 @@ app.get("/moreinfo/:id",function(req,res){
   product.findOne({_id:req.params.id}).populate("stock").populate("notify").populate("ones").populate("twos").exec(function(err,prod){
         if(req.user){
          if(req.query.sugg){
-        
+          var smark=true
+
           if(users.suggetions.length>0){ 
-           var smark=true
            for (var x=0;x<users.suggetions.length;x++){
 
              if(users.suggetions[x].pid==prod._id){
@@ -863,6 +863,7 @@ app.get("/moreinfo/:id",function(req,res){
              }
            }
 
+         }
            if(smark==true){   
              sugg.create({Name:prod.Name,image:prod.image,urls:prod.urls,pid:prod._id,uid:users._id,Price:prod.Price,offer:prod.offer},function(err,sugs){
 
@@ -870,7 +871,7 @@ app.get("/moreinfo/:id",function(req,res){
                   users.save()
              })
           }
-         }
+         
         
 
          }
@@ -2217,6 +2218,23 @@ app.post("/allbuy/:id",function(req,res){
                                                      }
                                                }) 
 
+                               
+                                        
+                                        for(var i=0;i<users.length;i++){
+
+                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                                             })
+                                        }
+
+
                                })
                          })
 
@@ -2321,6 +2339,24 @@ app.post("/allbuy/:id",function(req,res){
                                                      }
                                                }) 
 
+                                        
+
+
+                                        for(var i=0;i<users.length;i++){
+
+                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                                             })
+                                        }
+
+
                                })
                          })
 
@@ -2415,6 +2451,24 @@ app.post("/allbuy/:id",function(req,res){
                                                       }
                                                      }
                                                }) 
+
+                                       
+
+
+                                        for(var i=0;i<users.length;i++){
+
+                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                                             })
+                                        }
+
 
                                })
                      })
@@ -2531,6 +2585,26 @@ app.post("/allbuy/:id",function(req,res){
                                                       }
                                                      }
                                                }) 
+                               
+
+                                              
+
+                                        for(var i=0;i<users.length;i++){
+
+                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                                             })
+                                        }
+
+
+
                                })
                      })
 
@@ -2635,6 +2709,26 @@ app.post("/allbuy/:id",function(req,res){
                                                       }
                                                      }
                                                }) 
+                              
+                                          
+
+                                        for(var i=0;i<users.length;i++){
+
+                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                                             })
+                                        }
+
+
+
+
                                })
                      })
         
@@ -2738,6 +2832,25 @@ app.post("/allbuy/:id",function(req,res){
                                                       }
                                                      }
                                                }) 
+                               
+
+
+                                                
+                                        for(var i=0;i<users.length;i++){
+
+                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                                             })
+                                        }
+
+
                                })
                      })
          }
@@ -3391,7 +3504,21 @@ app.post("/buy/:pid/:lid",function(req,res){
                                  }
                                 })
                                 }
-                                    
+                                
+
+                                 for(var i=0;i<users.length;i++){
+
+                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                                             })
+                                 }         
                                    
 
                            if(req.body.method=="Stripe"){
@@ -3835,6 +3962,26 @@ app.post("/buy/:pid/:lid",function(req,res){
                                   }
                                  }
                            })
+
+            
+                            for(var i=0;i<users.length;i++){
+
+                                             user.findById(users[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                                             })
+                             }                 
+
+
+
+
+
 
                            if(req.body.method=="Stripe"){
 
