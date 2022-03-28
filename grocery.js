@@ -2220,21 +2220,7 @@ app.post("/allbuy/:id",function(req,res){
 
                                
                                         
-                                       user.find({},function(err,regu){
-                                           for(var i=0;i<regu.length;i++){
-
-                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
-                                                             var sums=0
-                                                             for(var j=0;j<alluser.cart.length;j++){
-
-                                                                  sums=sums+alluser.cart[j].Price
-                                                             }
-
-                                                            alluser.sum=sums
-                                                            alluser.save()
-                                                         })
-                                                    }        
-                                    }) 
+                                        
 
 
                                })
@@ -2344,21 +2330,7 @@ app.post("/allbuy/:id",function(req,res){
                                         
 
 
-                                        user.find({},function(err,regu){
-                                           for(var i=0;i<regu.length;i++){
-
-                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
-                                                             var sums=0
-                                                             for(var j=0;j<alluser.cart.length;j++){
-
-                                                                  sums=sums+alluser.cart[j].Price
-                                                             }
-
-                                                            alluser.sum=sums
-                                                            alluser.save()
-                                                         })
-                                                    }        
-                                     }) 
+                                        
 
 
                                })
@@ -2459,21 +2431,7 @@ app.post("/allbuy/:id",function(req,res){
                                        
 
 
-                                        user.find({},function(err,regu){
-                                           for(var i=0;i<regu.length;i++){
-
-                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
-                                                             var sums=0
-                                                             for(var j=0;j<alluser.cart.length;j++){
-
-                                                                  sums=sums+alluser.cart[j].Price
-                                                             }
-
-                                                            alluser.sum=sums
-                                                            alluser.save()
-                                                         })
-                                                    }        
-                                   }) 
+                                       
 
 
                                })
@@ -2483,6 +2441,27 @@ app.post("/allbuy/:id",function(req,res){
       
                                                                
                                                            }    
+                                                              
+
+                                                          user.find({},function(err,regu){
+                                                             for(var i=0;i<regu.length;i++){
+
+                                                                 user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                                     var sums=0
+                                                                     for(var j=0;j<alluser.cart.length;j++){
+
+                                                                          sums=sums+alluser.cart[j].Price
+                                                                     }
+
+                                                                    alluser.sum=sums
+                                                                    alluser.save()
+                                                                 })
+                                                    }        
+                                          })   
+
+
+
+
                                                                break
                                                                }  
                                                                 
@@ -2595,21 +2574,7 @@ app.post("/allbuy/:id",function(req,res){
 
                                               
 
-                                       user.find({},function(err,regu){
-                                           for(var i=0;i<regu.length;i++){
-
-                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
-                                                             var sums=0
-                                                             for(var j=0;j<alluser.cart.length;j++){
-
-                                                                  sums=sums+alluser.cart[j].Price
-                                                             }
-
-                                                            alluser.sum=sums
-                                                            alluser.save()
-                                                         })
-                                                    }        
-                                     }) 
+                                        
 
 
 
@@ -2720,21 +2685,7 @@ app.post("/allbuy/:id",function(req,res){
                               
                                           
 
-                                      user.find({},function(err,regu){
-                                           for(var i=0;i<regu.length;i++){
-
-                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
-                                                             var sums=0
-                                                             for(var j=0;j<alluser.cart.length;j++){
-
-                                                                  sums=sums+alluser.cart[j].Price
-                                                             }
-
-                                                            alluser.sum=sums
-                                                            alluser.save()
-                                                         })
-                                                    }        
-                                   }) 
+                                       
 
 
 
@@ -2846,7 +2797,19 @@ app.post("/allbuy/:id",function(req,res){
 
 
                                                 
-                                       user.find({},function(err,regu){
+                                        
+
+
+                               })
+                     })
+         }
+         }
+         })
+         
+                                
+         }
+          
+                         user.find({},function(err,regu){
                                            for(var i=0;i<regu.length;i++){
 
                                                          user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
@@ -2860,17 +2823,9 @@ app.post("/allbuy/:id",function(req,res){
                                                             alluser.save()
                                                          })
                                                     }        
-                                   }) 
+                                    })              
+            
 
-
-                               })
-                     })
-         }
-         }
-         })
-         
-                                
-         }
            })                      
 
 
@@ -3304,38 +3259,43 @@ app.post("/buy/:pid/:lid",function(req,res){
                                            
                                             if (car.qty==req.body.qty){
                                                 
+                                                users.sum=users.sum-car.Price
+                                                users.save() 
                                                 car.deleteOne({_id:car._id},function(err,info){
 
                                                 })
+                                                
+                                                
+
                                             }
                                            else if(car.qty<req.body.qty){
                                                
+                                                users.sum=users.sum-car.Price
+                                                users.save() 
                                                 car.deleteOne({_id:car._id},function(err,info){
 
                                                 })
+
+                                                 
+                                                 
 
                                            }
                                            else{
                                                   
                                                   car.updateOne({qty:car.qty-req.body.qty,Price:car.Price-amounts},function(err,info){
 
-                                                  })
+                                                         
+                                                         users.sum=users.sum-amounts
+                                                         users.save()
+                                                  
+                                                   })
 
                                            }
                                            
                                       
                                        
 
-                                                         user.findById(req.user._id).populate("cart").exec(function(err,alluser){
-                                                             var sums=0
-                                                             for(var j=0;j<alluser.cart.length;j++){
-
-                                                                  sums=sums+alluser.cart[j].Price
-                                                             }
-
-                                                            alluser.sum=sums
-                                                            alluser.save()
-                                                         })
+                                                        
                                                             
                                       
 
@@ -3883,20 +3843,32 @@ app.post("/buy/:pid/:lid",function(req,res){
                                            
                                             if (car.qty==req.body.qty){
                                                 
+                                                users.sum=users.sum-car.Price
+                                                users.save()
                                                 car.deleteOne({_id:car._id},function(err,info){
 
                                                 })
+                                               
+                                               
                                             }
                                            else if(car.qty<req.body.qty){
                                                
+                                                users.sum=users.sum-car.Price
+                                                users.save() 
                                                 car.deleteOne({_id:car._id},function(err,info){
 
                                                 })
 
+                                                
                                            }
                                            else{
                                                   
                                                   car.updateOne({qty:car.qty-req.body.qty,Price:car.Price-amounts},function(err,info){
+
+                                                          
+                                                         users.sum=users.sum-amounts
+                                                         users.save()  
+
 
                                                   })
 
@@ -3905,16 +3877,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                            
                                        
 
-                                               user.findById(req.user._id).populate("cart").exec(function(err,alluser){
-                                                  var sums=0
-                                                 for(var j=0;j<alluser.cart.length;j++){
-
-                                                      sums=sums+alluser.cart[j].Price
-                                                 }
-
-                                                alluser.sum=sums
-                                                alluser.save()
-                                             })
+                                              
                                                        
 
                                      
