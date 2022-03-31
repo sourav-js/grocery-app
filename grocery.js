@@ -79,6 +79,7 @@ let instance = new Razorpay({
     Name:String,
     image:String,
     Price:Number,
+    full:Boolean,
     offer:Number,
     key:String,
     pid:String,
@@ -1139,9 +1140,14 @@ app.get("/carti/:cid/:pid",function(req,res){
 
                      cart.qty=cart.qty+1
                      cart.Price=cart.qty*amounts
+                     if(cart.qty==prod.ones.length){
+
+                         cart.full=true
+                     }
                      cart.save()
                      users.sum=users.sum+amounts
                      users.save()
+                     
                      req.flash("success","quantity updated")
                      res.redirect("back")
                  }
@@ -1167,6 +1173,10 @@ app.get("/carti/:cid/:pid",function(req,res){
 
                      cart.qty=cart.qty+1
                      cart.Price=cart.qty*amounts
+                     if(cart.qty==prod.twos.length){
+
+                         cart.full=true
+                     }
                      cart.save()
                      users.sum=users.sum+amounts
                      users.save() 
@@ -1197,6 +1207,10 @@ app.get("/carti/:cid/:pid",function(req,res){
 
              cart.qty=cart.qty+1
              cart.Price=cart.qty*amounts
+             if(cart.qty==prod.stock.length){
+
+                 cart.full=true
+             }
              cart.save()
              users.sum=users.sum+amounts
              users.save() 
@@ -1292,8 +1306,17 @@ app.get("/cartd/:cid/:pid",function(req,res){
     
    
   }
+  if(cart.full==true){
+
+     cart.full=false
+    cart.save()     
+   } 
   req.flash("success","quantity reduced")
   res.redirect("back")
+  
+
+
+
   })
 })
 })
@@ -1358,10 +1381,16 @@ app.post("/cart/:id",isLoggedin,function(req,res){
                   if(flag==true){
                     if(req.body.qty<=prod.ones.length){  
                    
-                           carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),size:"1L",urls:prod.urls,leters:prod.leters},function(err,onecart){
+                           carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),size:"1L",urls:prod.urls,leters:prod.leters,full:false},function(err,onecart){
+                           if (onecart.qty==prod.ones.length){
+
+                             onecart.full=true
+                             onecart.save()
+                           }
                            users.cart.push(onecart)
                            users.sum=users.sum+amounts
                            users.save()
+
                            req.flash("success","Product Is Added To The Cart")
                                res.redirect("back")         
                    
@@ -1417,7 +1446,13 @@ app.post("/cart/:id",isLoggedin,function(req,res){
                   if(flag==true){
                     if(req.body.qty<=prod.twos.length){  
                    
-                           carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),size:"2L",urls:prod.urls,leters:prod.leters},function(err,twocart){
+                           carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),size:"2L",urls:prod.urls,leters:prod.leters,full:false},function(err,twocart){
+                           if(twocart.qty==prod.twos.length){
+
+                                twocart.full=true
+                                twocart.save()
+
+                           }
                            users.cart.push(twocart)
                            users.sum=users.sum+amounts
                            users.save()   
@@ -1471,9 +1506,13 @@ app.post("/cart/:id",isLoggedin,function(req,res){
      }
      
      if(req.body.qty<=prod.stock.length){
-      carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),urls:prod.urls,leters:prod.leters},function(err,onecart){
+      carts.create({image:prod.image,Name:prod.Name,Price:amounts,offer:prod.offer,key:prod.key,pid:prod._id,off:calcs,qty:Number(req.body.qty),urls:prod.urls,leters:prod.leters,full:false},function(err,onecarts){
+            if(onecarts.qty==prod.stock.length){
 
-            users.cart.push(onecart)
+                onecarts.full=true
+                onecarts.save()
+            }
+            users.cart.push(onecarts)
 
             users.sum=users.sum+amounts
             users.save()
