@@ -3323,7 +3323,12 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                   
                                                   car.updateOne({qty:car.qty-req.body.qty,Price:car.Price-amounts},function(err,info){
 
+                                                         if (car.full==true){
+
+                                                            car.full=false
+                                                            car.save()     
                                                          
+                                                         }                                                         
                                                          users.sum=users.sum-amounts
                                                          users.save()
                                                   
