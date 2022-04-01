@@ -2482,21 +2482,7 @@ app.post("/allbuy/:id",function(req,res){
                                                            }    
                                                               
 
-                                                          user.find({},function(err,regu){
-                                                             for(var i=0;i<regu.length;i++){
-
-                                                                 user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
-                                                                     var sums=0
-                                                                     for(var j=0;j<alluser.cart.length;j++){
-
-                                                                          sums=sums+alluser.cart[j].Price
-                                                                     }
-
-                                                                    alluser.sum=sums
-                                                                    alluser.save()
-                                                                 })
-                                                    }        
-                                          })   
+                                                            
 
 
 
@@ -2848,21 +2834,7 @@ app.post("/allbuy/:id",function(req,res){
                                 
          }
           
-                         user.find({},function(err,regu){
-                                           for(var i=0;i<regu.length;i++){
-
-                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
-                                                             var sums=0
-                                                             for(var j=0;j<alluser.cart.length;j++){
-
-                                                                  sums=sums+alluser.cart[j].Price
-                                                             }
-
-                                                            alluser.sum=sums
-                                                            alluser.save()
-                                                         })
-                                                    }        
-                                    })              
+                                      
             
 
            })                      
@@ -2915,6 +2887,25 @@ app.post("/allbuy/:id",function(req,res){
                   
                   users.sum=0
                   users.save()
+                  user.find({},function(err,regu){
+                                           for(var i=0;i<regu.length;i++){
+
+                                                         user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                             var sums=0
+                                                            if(alluser.length>0){
+
+
+                                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                                      sums=sums+alluser.cart[j].Price
+                                                                 }
+
+                                                                alluser.sum=sums
+                                                                alluser.save()
+                                                            }
+                                                         })
+                                                    }        
+                                    }) 
                   req.flash("success","successfully perchased all product of your cart")
                   res.redirect("/orders") 
 
@@ -3542,21 +3533,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                 })
                                 }
                                 
-                           user.find({},function(err,regu){
-                               for(var i=0;i<regu.length;i++){
-
-                                             user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
-                                                 var sums=0
-                                                 for(var j=0;j<alluser.cart.length;j++){
-
-                                                      sums=sums+alluser.cart[j].Price
-                                                 }
-
-                                                alluser.sum=sums
-                                                alluser.save()
-                                             })
-                                        }        
-                               })    
+                              
 
                            if(req.body.method=="Stripe"){
 
@@ -3775,6 +3752,28 @@ app.post("/buy/:pid/:lid",function(req,res){
         
         })                  
                           
+           user.find({},function(err,regu){
+                     for(var i=0;i<regu.length;i++){
+
+                                             
+                        user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                if(alluser.length){ 
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                            }
+                        }) 
+
+                  
+
+                  }
+
+        })
           req.flash("success","product purchased successfully")
            res.redirect("/moreinfo/"+prod._id)
      
@@ -3909,7 +3908,11 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                   
                                                   car.updateOne({qty:car.qty-req.body.qty,Price:car.Price-amounts},function(err,info){
 
-                                                          
+                                                         if (car.full==true){
+
+                                                             car.full=false
+                                                             car.save()
+                                                         } 
                                                          users.sum=users.sum-amounts
                                                          users.save()  
 
@@ -4022,22 +4025,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                  }
                            })
 
-                         user.find({},function(err,regu){
-                            for(var i=0;i<regu.length;i++){
-
-                                             user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
-                                                 var sums=0
-                                                 for(var j=0;j<alluser.cart.length;j++){
-
-                                                      sums=sums+alluser.cart[j].Price
-                                                 }
-
-                                                alluser.sum=sums
-                                                alluser.save()
-                                             })
-                                        }                
-
-                        })  
+                          
 
 
 
@@ -4223,7 +4211,29 @@ app.post("/buy/:pid/:lid",function(req,res){
              }
         
         })                  
-                          
+           user.find({},function(err,regu){
+                     for(var i=0;i<regu.length;i++){
+
+                                             
+                    user.findById(regu[i]._id).populate("cart").exec(function(err,alluser){
+                                                 var sums=0
+                                                if(alluser.length){ 
+                                                 for(var j=0;j<alluser.cart.length;j++){
+
+                                                      sums=sums+alluser.cart[j].Price
+                                                 }
+
+                                                alluser.sum=sums
+                                                alluser.save()
+                            }
+                        }) 
+
+                  
+
+                  }
+
+        })
+
           req.flash("success","product purchased successfully")
            res.redirect("/moreinfo/"+prod._id)
      }
