@@ -337,6 +337,7 @@ footer .boxh3{
             </div> 
         </div>
              
+             <%if(data.full){%>  
                <%if(data.full==false){%>
 
                    <%if(data.qty>1){%>  
@@ -355,6 +356,22 @@ footer .boxh3{
                 <a href="/cartd/<%=data._id%>/<%=data.pid%>"><button class="btn btn-sm btn-success"><i class="fas fa-minus"></i></button></a>
 
               <%}%>      
+    <%}else{%>
+
+      
+       <%if(data.qty>1){%>  
+                    <a href="/carti/<%=data._id%>/<%=data.pid%>"><button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button></a>
+                    <a href="/cartd/<%=data._id%>/<%=data.pid%>"><button class="btn btn-sm btn-success"><i class="fas fa-minus"></i></button></a>
+
+                    <%}else{%>
+                    <a href="/carti/<%=data._id%>/<%=data.pid%>"><button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button></a>
+
+                    <a href="/cartd/<%=data._id%>/<%=data.pid%>"><button class="btn btn-md btn-danger"><i class="far fa-trash-alt"></i></button></a>
+ 
+                    <%}%>
+       
+
+    <%}%>
 
                             <%if(data.size){%>
                               <b style="color:green;font-size:10px;"><%=data.size%></b> 
