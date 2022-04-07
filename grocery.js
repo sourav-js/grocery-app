@@ -1387,7 +1387,17 @@ app.post("/cart/:id",isLoggedin,function(req,res){
                              onecart.full=true
                              onecart.save()
                            }
-                           users.cart.push(onecart)
+                           
+                           var size=users.cart.length-1
+                           users.cart.push(0)
+                           while (size!==-1){
+
+                              users.cart[size+1]=users.cart[size]
+                              size=size-1
+                           } 
+
+                           size=size+1
+                           users.cart[size]=onecart
                            users.sum=users.sum+amounts
                            users.save()
 
