@@ -96,7 +96,10 @@ footer .boxh3{
     --footer:#35373b;
 }
 
-
+.hidden{
+    
+    display:none
+}
 </style>
 
 </style>
@@ -513,17 +516,23 @@ footer .boxh3{
    <div style="position:fixed;bottom:0;" class="btn btn-block btn-success ">
   
 
-  <a href=""><button class="btn"><b>Your Order Is Canceled   On <%=orders.datefour.toDateString()%></b></button></a>
+  <a href=""><button class="btn"><b>Your Order Is Canceled On <%=orders.datefour.toDateString()%></b></button></a>
   </div>
 <%}else if (orders.autoCancel==true){%>
  <div style="position:fixed;bottom:0;" class="btn btn-block btn-success ">
   
 
-  <a href=""><button class="btn"><b>Your Order  Has Been Canceled On <%=orders.datefour.toDateString()%></b></button></a>
+  <button class="btn"><b>Your Order  Has Been Canceled On <%=orders.datefour.toDateString()%></b></button>
   </div>
 <%}%>
 <%}%>
 
+
+    <%if(orders.update!=="Canceled"){%>
+        <a href="/invoice/<%=orders._id%>"><button class="btn btn-block btn-success"><i class="far fa-check-circle"> Invoice</i></button></a>
+    <%}%>
+
+<br>
 
 <footer style="background:lightgrey;padding-bottom:100px">
         <div class="container">
@@ -589,8 +598,11 @@ footer .boxh3{
         </div>
     </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>
 
 <script type="text/javascript">
+
+
 
 $("#inputs").val(1)
 $("#inputb").val(1)
@@ -631,6 +643,8 @@ $("#five").click(function(){
 	 	$("#inputb").val(5)
 
 })
+
+
 
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

@@ -1867,6 +1867,10 @@ app.get("/updateCustomersStatus/:id/:mon",function(req,res){
 
 })
 
+
+
+
+
 app.get("/buy/:pid",isLoggedin,function(req,res){
 
    var author={
@@ -3141,6 +3145,15 @@ app.get("/selection/:id",function(req,res){
     })
 })
 
+})
+
+
+app.get("/invoice/:id",function(req,res){
+
+     order.findById(req.params.id,function(err,orders){
+
+         res.render("invoice.ejs",{orders:orders})
+     })
 })
 
 app.post("/buy/:pid/:lid",function(req,res){
