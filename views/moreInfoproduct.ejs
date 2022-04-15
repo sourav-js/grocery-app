@@ -743,10 +743,6 @@ footer .boxh3{
 
 
 
-
-
-
-
 <div class="" id="onel">
 
 <div style="padding-top:200px;padding-left:20px;padding-bottom:50px">
@@ -1028,19 +1024,23 @@ footer .boxh3{
 
 </div>
 
-<%if(prod.key=="mustards" || prod.key=="soyabeans"){%>
 
- <%=prod.totalOne%>
- <%=prod.ones.length%>
- <%=prod.totalTwo%>
- <%=prod.twos.length%>
-<%}else{%>
+<%if(currentUser){%>
+   <%if(selecfound==""){%> 
+    <div  class="btn btn-block btn-success">
+    <a href="/selectproduct/<%=currentUser._id%>/<%=prod._id%>"><button class="btn btn-success"><i class="fas fa-rupee-sign"></i> <b>Autobuy After 1 Month</b></button></a>
+    </div>
+  <%}else if(selecfound=="found"){%>
+  
+     <div  class="btn btn-block btn-warning">
+    <a href="/selectproduct/<%=currentUser._id%>/<%=prod._id%>"><button class="btn btn-warning"> <b>Remove From Autobuy</b></button></a>
+    </div>
 
- <%=prod.stocking%>
- <%=prod.stock.length%>
- 
-
+  <%}%>
 <%}%>
+
+
+<br>
 
 <div class="half">
 

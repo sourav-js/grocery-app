@@ -832,8 +832,40 @@ user.findById(primary).populate("pops").exec(function(err,users){
   })
 })
 
+app.get("/selectproduct/:uid/:pid",function(req,res){
 
+   product.findById(req.params.pid,function(err,prods){
+     user.findById(req.params.uid).populate("selection").exec(function(err,users){
 
+         var flag=true
+         for(var i=0;i<users.selection.length;i++){
+
+             if (users.selection[i].id==prods._id){
+
+                 flag=false
+                 selects.findByIdAndDelete(users.selection[i]._id,function(err,info){
+
+                    req.flash("success","product is removed from auto order")
+                    res.redirect("back")
+                 })
+                 break
+             }
+         }
+         if(flag==true){
+
+             selects.create({id:prods._id},function(err,selec){
+
+                 users.selection.push(selec)
+                 users.save()
+                 req.flash("success","product will be auto ordered after every 1 month")
+                 res.redirect("back")
+             })
+         }
+         
+     })
+
+ })
+})
 
 app.get("/moreinfo/:id",function(req,res){
   var prods=[]
@@ -849,7 +881,31 @@ app.get("/moreinfo/:id",function(req,res){
     var primary="333"
   }
   user.findById(primary).populate("pops").populate("selection").populate("cart").populate("suggetions").exec(function(err,users){
-  product.findOne({_id:req.params.id}).populate("stock").populate("notify").populate("ones").populate("twos").exec(function(err,prod){
+   product.findOne({_id:req.params.id}).populate("stock").populate("notify").populate("ones").populate("twos").exec(function(err,prod){
+        
+        if(req.user){
+             var sflag=true 
+             for(var i=0;i<users.selection.length;i++){
+
+                  if(users.selection[i].id==prod._id){
+                        
+                         sflag=false
+                         var selecfound="found"                    
+                         break
+                  } 
+
+             }
+             if (sflag==true){
+
+                 var selecfound=""
+             }
+        }
+        else{
+
+            var selecfound=""
+        }
+
+
         if(req.user){
          if(req.query.sugg){
           var smark=true
@@ -1027,7 +1083,7 @@ app.get("/moreinfo/:id",function(req,res){
               
                 if(wishd[p].pid==prod._id){
                  console.log(mark)
-                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:wishd,users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo})
+                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:wishd,users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo,selecfound:selecfound})
                 
                  flags=false
                  break  
@@ -1036,7 +1092,7 @@ app.get("/moreinfo/:id",function(req,res){
             
             if (flags==true){
 
-                                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo})
+                                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo,selecfound:selecfound})
 
             }
 
@@ -1045,7 +1101,7 @@ app.get("/moreinfo/:id",function(req,res){
        
       else{
 
-                        res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:"",cart:"no",calc:calc,actualPrice:actualPrice,carttwo:"no"})
+                        res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:"",cart:"no",calc:calc,actualPrice:actualPrice,carttwo:"no",selecfound:selecfound})
 
 
       }
@@ -3161,6 +3217,7 @@ app.post("/buy/:pid/:lid",function(req,res){
  var d=new Date() 
 
 
+ 
  location.findById(req.params.lid,function(err,loc){ 
    user.findById(req.user._id).populate("cart").populate("pops").exec(function(err,users){
         
@@ -4963,6 +5020,15 @@ app.get("/review",function(req,res){
      })
      res.send("all updated")
 })
+
+
+
+
+
+
+
+
+
 
 app.get("/data/:product",function(req,res){
     request(`https://www.flipkart.com/search?q=${req.params.product}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off`,function(error,response,html){
