@@ -937,7 +937,7 @@ app.post("/selectproduct/:uid/:pid",isLoggedin,function(req,res){
          else{
 
              
-              req.flash("error","product quantity is more tahn stock")
+              req.flash("error","product quantity is more than stock")
                      res.redirect("back")
 
 
