@@ -148,6 +148,9 @@ var pop=mongoose.model("pop",popSchema)
 var selectSchema=new mongoose.Schema({
 
     id:String,
+    qty:Number,
+    size:String,
+
     date:{type:Date,default:Date.now()}    
 })
 
@@ -521,6 +524,15 @@ cron.schedule("*/5 * * * *",function(){
     })
 })
 
+cron.schedule("*/5 * * * *",function(){
+
+    request("https://grocery-ji.herokuapp.com/autoremove",function(error,response,data){
+
+
+    })
+})
+
+
 app.get("/autoremove",function(req,res){
 
      console.log("autoremove hitting")
@@ -832,9 +844,12 @@ user.findById(primary).populate("pops").exec(function(err,users){
   })
 })
 
-app.get("/selectproduct/:uid/:pid",function(req,res){
 
-   product.findById(req.params.pid,function(err,prods){
+
+
+app.post("/selectproduct/:uid/:pid",isLoggedin,function(req,res){
+
+   product.findById(req.params.pid).populate("ones").populate("twos").populate("stock").exec(function(err,prods){
      user.findById(req.params.uid).populate("selection").exec(function(err,users){
 
          var flag=true
@@ -853,7 +868,12 @@ app.get("/selectproduct/:uid/:pid",function(req,res){
          }
          if(flag==true){
 
-             selects.create({id:prods._id},function(err,selec){
+         if(prods.key=="mustards" || prods.key=="soyabeans"){ 
+
+           if(req.body.sizeones=="one"){
+             
+            if(req.body.qty<=prods.ones.length){
+             selects.create({id:prods._id,qty:req.body.qty,size:"one"},function(err,selec){
 
                  users.selection.push(selec)
                  users.save()
@@ -861,7 +881,71 @@ app.get("/selectproduct/:uid/:pid",function(req,res){
                  res.redirect("back")
              })
          }
-         
+         else{
+
+
+            req.flash("error","product quantity is more than stock")
+                     res.redirect("back")
+         }
+         }
+        else if(req.body.sizeones=="two"){
+              
+            
+            if(req.body.qty<=prods.twos.length){
+
+                  
+                  selects.create({id:prods._id,qty:req.body.qty,size:"two"},function(err,selec){
+
+                     users.selection.push(selec)
+                     users.save()
+                     req.flash("success","product will be auto ordered after every 1 month")
+                     res.redirect("back")
+             })
+
+          }
+         else{
+
+             
+              req.flash("error","product quantity is more than stock")
+                     res.redirect("back")
+
+
+
+         }
+        }
+        }
+      
+      
+     
+      else{
+        
+        if(req.body.qty<=prods.stock.length){
+
+                  console.log(req.body.qty)
+                  console.log(prods.stock.length)
+                  selects.create({id:prods._id,qty:req.body.qty},function(err,selecs){
+
+                     users.selection.push(selecs)
+                     users.save()
+                     req.flash("success","product will be auto ordereddddddd after every 1 month")
+                     res.redirect("back")
+             })
+
+
+
+          }
+         else{
+
+             
+              req.flash("error","product quantity is more tahn stock")
+                     res.redirect("back")
+
+
+
+         }
+
+      }
+       }
      })
 
  })

@@ -1027,14 +1027,30 @@ footer .boxh3{
 
 <%if(currentUser){%>
    <%if(selecfound==""){%> 
+   <form action="/selectproduct/<%=currentUser._id%>/<%=prod._id%>" method="POST">
+              <%if(prod.key=="mustards" || prod.key=="soyabeans"){%> 
+                <input type="text" id="inputsizesforone" name="sizeones">
+               
+              <%}%>
+                <input type="hidden" id="inputforone" name="qty">
+
     <div  class="btn btn-block btn-success">
-    <a href="/selectproduct/<%=currentUser._id%>/<%=prod._id%>"><button class="btn btn-success"><i class="fas fa-rupee-sign"></i> <b>Autobuy After 1 Month</b></button></a>
-    </div>
+
+      <button class="btn btn-success"><i class="fas fa-rupee-sign"></i> <b>Autobuy After 1 Month</b></button></a>
+     </div>
+   </form>
   <%}else if(selecfound=="found"){%>
   
+    
+<form action="/selectproduct/<%=currentUser._id%>/<%=prod._id%>" method="POST">
+             
+
      <div  class="btn btn-block btn-warning">
-    <a href="/selectproduct/<%=currentUser._id%>/<%=prod._id%>"><button class="btn btn-warning"> <b>Remove From Autobuy</b></button></a>
-    </div>
+
+     <button class="btn btn-warning"> <b>Remove From Autobuy</b></button>     
+
+</div>
+   </form>
 
   <%}%>
 <%}%>
@@ -1250,12 +1266,15 @@ $("#inputs").val(1)
 $("#inputb").val(1)
 $(".inputs").val(1)
 $(".inputb").val(1)
+    $("#inputsizesforone").val("one")
+$("#inputforone").val(1)
 
 $("#one").click(function(){
 	$("#inputs").val(1)
 		$("#qty").text(1)
 
 	$("#inputb").val(1)
+
 
 })
 
@@ -1272,6 +1291,8 @@ $("#one").click(function(){
 
     $("#inputb").val(1)
 
+    $("#inputforone").val(1)
+
 })
 
 $("#two").click(function(){
@@ -1279,6 +1300,7 @@ $("#two").click(function(){
             $("#qty").text(2)
 
     $("#inputb").val(2)
+    $("#inputforone").val(2)
 
 })
 $("#three").click(function(){
@@ -1286,6 +1308,7 @@ $("#three").click(function(){
         $("#qty").text(3)
 
     $("#inputb").val(3)
+    $("#inputforone").val(3)
 
 })
 $("#four").click(function(){
@@ -1293,6 +1316,7 @@ $("#four").click(function(){
         $("#qty").text(4)
 
         $("#inputb").val(4)
+    $("#inputforone").val(4)
 
 })
 $("#five").click(function(){
@@ -1300,6 +1324,7 @@ $("#five").click(function(){
             $("#qty").text(5)
 
         $("#inputb").val(5)
+    $("#inputforone").val(5)
 
 })
 $(".sizetwo").click(function(){
@@ -1308,7 +1333,8 @@ $(".sizetwo").click(function(){
     $(".sizede").text("2L") 
     $("#twol").removeClass("hidecart")
     $("#onel").addClass("hidecart")
-    
+    $("#inputsizesforone").val("two")
+    $("#inputforone").val(1)
        
 })
 $(".sizeone").click(function(){
@@ -1317,7 +1343,9 @@ $(".sizeone").click(function(){
     $(".sizede").text("1L") 
     $("#twol").addClass("hidecart")
     $("#onel").removeClass("hidecart")
-    
+        $("#inputsizesforone").val("one")
+    $("#inputforone").val(1)
+
        
 })
 $("#three").click(function(){
@@ -1346,6 +1374,8 @@ $(".one").click(function(){
         $(".qty").text(1)
 
     $(".inputb").val(1)
+       $("#inputforone").val(1)
+ 
 
 })
 
@@ -1354,6 +1384,8 @@ $(".two").click(function(){
             $(".qty").text(2)
 
     $(".inputb").val(2)
+    $("#inputforone").val(2)
+
 
 })
 $(".three").click(function(){
@@ -1361,6 +1393,7 @@ $(".three").click(function(){
         $(".qty").text(3)
 
     $(".inputb").val(3)
+    $("#inputforone").val(3)
 
 })
 $(".four").click(function(){
@@ -1368,6 +1401,7 @@ $(".four").click(function(){
         $(".qty").text(4)
 
         $(".inputb").val(4)
+    $("#inputforone").val(4)
 
 })
 $(".five").click(function(){
@@ -1375,6 +1409,7 @@ $(".five").click(function(){
             $(".qty").text(5)
 
         $(".inputb").val(5)
+    $("#inputforone").val(5)
 
 })
 $(".modin").click(function(){
