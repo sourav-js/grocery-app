@@ -149,7 +149,23 @@ var selectSchema=new mongoose.Schema({
 
     id:String,
     qty:Number,
+    first:String,
+    last:String,
+    name:String,
     size:String,
+    month:String,
+    method:String,
+   locality:String,
+
+   city:String,
+
+   phone:Number,
+
+   roadNumber:String,
+
+   landmark:String,
+
+   mainuser:String,
 
     date:{type:Date,default:Date.now()}    
 })
@@ -524,6 +540,213 @@ cron.schedule("*/5 * * * *",function(){
     })
 })
 
+app.get("/autobuy/:id",function(req,res){
+user.findById(req.user._id,function(err,users){
+   product.findById(req.params.id).populate("ones").populate("twos").populate("stock").exec(function(err,prod){
+                    console.log("here entered")
+
+           if(prod.key=="mustards" || prod.key=="soyabeans"){
+                    console.log("here entered")
+
+              if(req.query.sizeones=="one"){
+                    if (users.offerHold==true){
+
+                     var amounts=(req.query.qty*prod.Price)
+                     for(var i=0;i<req.query.qty;i++){
+
+                         amounts=amounts-20
+                     }  
+                   }
+                   else if(users.offerHold==false){
+
+                          var amounts=req.query.qty*prod.Price
+
+                  
+
+                   }
+                  if(req.query.qty<=prod.ones.length){ 
+
+                    if(!req.query.new){
+
+                          location.find({mainuser:req.user.username},function(err,preord){
+                               
+                               if(preord.length>0){     
+                                                          
+                                    res.render("auto.ejs",{qty:req.query.qty,size:req.query.sizeones,preord:preord,prod:prod,key:public_key,amount:amounts})
+                               }
+                             else{
+
+                                                        res.render("newauto.ejs",{qty:req.query.qty,size:req.query.sizeones,prod:prod,key:public_key,amount:amounts})
+
+                             }
+                          })
+                    }
+                    
+                    else{
+
+                        res.render("newauto.ejs",{qty:req.query.qty,size:req.query.sizeones,prod:prod,key:public_key,amount:amounts})
+                    }
+              
+                 }  
+                 else{
+
+                    req.flash("error","quantity is out of stock")
+                    res.redirect("back")
+
+                 }             
+ 
+              }
+
+
+             
+               else if(req.query.sizeones=="two"){
+                     if (users.offerHold==true){
+
+                             var amounts=(req.query.qty*(prod.Price*2))
+                             for(var i=0;i<req.query.qty;i++){
+
+                                 amounts=amounts-20
+                             }  
+                           }
+                           else if(users.offerHold==false){
+
+                                  var amounts=req.query.qty*(prod.Price*2)
+
+                          
+
+                           }
+
+                     if(req.query.qty<=prod.twos.length){       
+
+                              
+                              if(!req.query.new){
+
+                          location.find({mainuser:req.user.username},function(err,preord){
+                               
+                               if(preord.length>0){     
+                                    res.render("auto.ejs",{qty:req.query.qty,size:req.query.sizeones,preord:preord,prod:prod,key:public_key,amount:amounts})
+                               }
+                             else{
+
+                                                        res.render("newauto.ejs",{qty:req.query.qty,size:req.query.sizeones,prod:prod,key:public_key,amount:amounts})
+
+                             }
+                          })
+                    }
+                    
+                    else{
+
+                        res.render("newauto.ejs",{qty:req.query.qty,size:req.query.sizeones,prod:prod,key:public_key,amount:amounts})
+                    }
+
+               }
+               else{
+                    
+                   req.flash("error","quantity is out of stock") 
+                   res.redirect("back") 
+
+               }
+                }
+
+
+           }     
+           
+           else if(prod.key!=="mustards" || prod.key!=="soyabeans"){
+                       
+                    if (users.offerHold==true){
+
+                                var amounts=(req.query.qty*prod.Price)
+                                for(var i=0;i<req.query.qty;i++){
+
+                                     amounts=amounts-20
+                                }
+                           }
+                           else if(users.offerHold==false){
+
+                                  var amounts=req.query.qty*prod.Price
+
+                          
+
+                }
+
+                    if(req.query.qty<=prod.stock.length){       
+
+                              
+                              if(!req.query.new){
+
+                          location.find({mainuser:req.user.username},function(err,preord){
+                               
+                               if(preord.length>0){     
+                                    res.render("auto.ejs",{qty:req.query.qty,preord:preord,prod:prod,key:public_key,amount:amounts})
+                               }
+                             else{
+
+                                                        res.render("newauto.ejs",{qty:req.query.qty,prod:prod,key:public_key,amount:amounts})
+
+                             }
+                          })
+                    }
+                    
+                    else{
+
+                        res.render("newauto.ejs",{qty:req.query.qty,prod:prod,key:public_key,amount:amounts})
+                    }
+
+               }
+               else{
+                    
+                   req.flash("error","quantity is out of stock") 
+                   res.redirect("back") 
+
+               }
+
+
+
+           }
+
+
+   })
+     
+})
+})
+
+
+app.get("/Autodebit",function(req,res){
+
+    
+   user.find({},function(err,user){
+
+      for (var i=0;i<users.length;i++){
+
+          user.findById(users[i]._id).populate("selection").exec(function(err,alluser){
+              
+                    for (var j=0;j<users.selection.length;j++){
+
+                           
+
+                                
+                          product.findById(users.selection[j].id).populate("ones").populate("twos").populate("stock").exec(function(err,prods){
+
+                                
+                                  
+
+
+
+                          })
+
+
+
+                 }
+          })
+      }
+   })
+
+
+
+})
+
+
+
 cron.schedule("*/5 * * * *",function(){
 
     request("https://grocery-ji.herokuapp.com/autoremove",function(error,response,data){
@@ -847,10 +1070,11 @@ user.findById(primary).populate("pops").exec(function(err,users){
 
 
 
-app.post("/selectproduct/:uid/:pid",isLoggedin,function(req,res){
-
+app.post("/selectproduct/:pid/:lid",isLoggedin,function(req,res){
+const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  location.findById(req.params.lid,function(err,locate){                      
    product.findById(req.params.pid).populate("ones").populate("twos").populate("stock").exec(function(err,prods){
-     user.findById(req.params.uid).populate("selection").exec(function(err,users){
+     user.findById(req.user._id).populate("selection").exec(function(err,users){
 
          var flag=true
          for(var i=0;i<users.selection.length;i++){
@@ -861,25 +1085,52 @@ app.post("/selectproduct/:uid/:pid",isLoggedin,function(req,res){
                  selects.findByIdAndDelete(users.selection[i]._id,function(err,info){
 
                     req.flash("success","product is removed from auto order")
-                    res.redirect("back")
+                    res.redirect("/moreinfo/"+prods._id)
                  })
                  break
              }
          }
          if(flag==true){
 
+        if (req.body.method=="Cash-On-Delivery"){
+
+             var method="Cash-On-Delivery"
+        }
+        else {
+
+             var method="Online"
+        }
+       
          if(prods.key=="mustards" || prods.key=="soyabeans"){ 
 
-           if(req.body.sizeones=="one"){
+           if(req.body.size=="one"){
+
              
             if(req.body.qty<=prods.ones.length){
-             selects.create({id:prods._id,qty:req.body.qty,size:"one"},function(err,selec){
-
+             var date=new Date()
+             if(locate){
+              var names=locate.first + " " + locate.last  
+              selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
+                 
                  users.selection.push(selec)
                  users.save()
                  req.flash("success","product will be auto ordered after every 1 month")
-                 res.redirect("back")
-             })
+                    res.redirect("/moreinfo/"+prods._id)
+              })
+            }
+
+            else{
+               
+               selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
+                 
+                 users.selection.push(selec)
+                 users.save()
+                 req.flash("success","product will be auto ordered after every 1 month")
+                    res.redirect("/moreinfo/"+prods._id)
+              })
+                  
+
+            }
          }
          else{
 
@@ -888,26 +1139,44 @@ app.post("/selectproduct/:uid/:pid",isLoggedin,function(req,res){
                      res.redirect("back")
          }
          }
-        else if(req.body.sizeones=="two"){
+        else if(req.body.size=="two"){
               
             
             if(req.body.qty<=prods.twos.length){
 
                   
-                  selects.create({id:prods._id,qty:req.body.qty,size:"two"},function(err,selec){
+                  var date=new Date()
+             if(locate){
+              var names=locate.first + " " + locate.last  
+ 
+              selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
+                 
+                 users.selection.push(selec)
+                 users.save()
+                 req.flash("success","product will be auto ordered after every 1 month")
+                    res.redirect("/moreinfo/"+prods._id)
+              })
+            }
 
-                     users.selection.push(selec)
-                     users.save()
-                     req.flash("success","product will be auto ordered after every 1 month")
-                     res.redirect("back")
-             })
+            else{
+               
+               selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
+                 
+                 users.selection.push(selec)
+                 users.save()
+                 req.flash("success","product will be auto ordered after every 1 month")
+                    res.redirect("/moreinfo/"+prods._id)
+              })
+                  
+
+            }
 
           }
          else{
 
              
               req.flash("error","product quantity is more than stock")
-                     res.redirect("back")
+                    res.redirect("/moreinfo/"+prods._id)
 
 
 
@@ -921,15 +1190,31 @@ app.post("/selectproduct/:uid/:pid",isLoggedin,function(req,res){
         
         if(req.body.qty<=prods.stock.length){
 
-                  console.log(req.body.qty)
-                  console.log(prods.stock.length)
-                  selects.create({id:prods._id,qty:req.body.qty},function(err,selecs){
+                  var date=new Date()
+             if(locate){
+              var names=locate.first + " " + locate.last  
 
-                     users.selection.push(selecs)
-                     users.save()
-                     req.flash("success","product will be auto ordereddddddd after every 1 month")
-                     res.redirect("back")
-             })
+              selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
+                 
+                 users.selection.push(selec)
+                 users.save()
+                 req.flash("success","product will be auto ordered after every 1 month")
+                    res.redirect("/moreinfo/"+prods._id)
+              })
+            }
+
+            else{
+               
+               selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
+                 
+                 users.selection.push(selec)
+                 users.save()
+                 req.flash("success","product will be auto ordered after every 1 month")
+                    res.redirect("/moreinfo/"+prods._id)
+              })
+                  
+
+            }
 
 
 
@@ -938,7 +1223,7 @@ app.post("/selectproduct/:uid/:pid",isLoggedin,function(req,res){
 
              
               req.flash("error","product quantity is more than stock")
-                     res.redirect("back")
+                    res.redirect("/moreinfo/"+prods._id)
 
 
 
@@ -950,7 +1235,7 @@ app.post("/selectproduct/:uid/:pid",isLoggedin,function(req,res){
 
  })
 })
-
+})
 app.get("/moreinfo/:id",function(req,res){
   var prods=[]
   var flag=true

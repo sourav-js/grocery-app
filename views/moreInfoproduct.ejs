@@ -1027,7 +1027,7 @@ footer .boxh3{
 
 <%if(currentUser){%>
    <%if(selecfound==""){%> 
-   <form action="/selectproduct/<%=currentUser._id%>/<%=prod._id%>" method="POST">
+   <form action="/autobuy/<%=prod._id%>" method="GET">
               <%if(prod.key=="mustards" || prod.key=="soyabeans"){%> 
                 <input type="text" id="inputsizesforone" name="sizeones">
                
@@ -1042,7 +1042,7 @@ footer .boxh3{
   <%}else if(selecfound=="found"){%>
   
     
-<form action="/selectproduct/<%=currentUser._id%>/<%=prod._id%>" method="POST">
+<form action="/selectproduct/<%=prod._id%>/<%=currentUser._id%>" method="POST">
              
 
      <div  class="btn btn-block btn-warning">
