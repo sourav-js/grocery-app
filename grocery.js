@@ -156,7 +156,7 @@ var selectSchema=new mongoose.Schema({
     month:String,
     method:String,
    locality:String,
-
+    lid:String,
    city:String,
 
    phone:Number,
@@ -1110,7 +1110,7 @@ const month = ["January","February","March","April","May","June","July","August"
              var date=new Date()
              if(locate){
               var names=locate.first + " " + locate.last  
-              selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
+              selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method,lid:locate._id},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1121,7 +1121,7 @@ const month = ["January","February","March","April","May","June","July","August"
 
             else{
                
-               selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
+               selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method,lid:"3e44r"},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1149,7 +1149,7 @@ const month = ["January","February","March","April","May","June","July","August"
              if(locate){
               var names=locate.first + " " + locate.last  
  
-              selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
+              selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method,lid:locate._id},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1160,7 +1160,7 @@ const month = ["January","February","March","April","May","June","July","August"
 
             else{
                
-               selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
+               selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method,lid:"3e4ee"},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1194,7 +1194,7 @@ const month = ["January","February","March","April","May","June","July","August"
              if(locate){
               var names=locate.first + " " + locate.last  
 
-              selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
+              selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method,lid:locate._id},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1205,7 +1205,7 @@ const month = ["January","February","March","April","May","June","July","August"
 
             else{
                
-               selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
+               selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method,lid:"4r4ee"},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
