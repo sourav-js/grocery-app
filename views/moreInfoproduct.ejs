@@ -737,7 +737,7 @@ footer .boxh3{
    <%if(addedtwo=="no"){%> 
    <form action="/autobuy/<%=prod._id%>" method="GET">
               <%if(prod.key=="mustards" || prod.key=="soyabeans"){%> 
-                <input type="text" class="inputsizesforone" name="sizeones">
+                <input type="hidden" class="inputsizesforone" name="sizeones">
                
               <%}%>
                 <input type="hidden" class="inputforone" name="qty">
@@ -1054,7 +1054,7 @@ footer .boxh3{
    <%if(addedone=="no"){%> 
    <form action="/autobuy/<%=prod._id%>" method="GET">
               <%if(prod.key=="mustards" || prod.key=="soyabeans"){%> 
-                <input type="text" class="inputsizesforone" name="sizeones">
+                <input type="hidden" class="inputsizesforone" name="sizeones">
                
               <%}%>
                 <input type="hidden" class="inputforone" name="qty">
