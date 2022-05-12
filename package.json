@@ -1,5 +1,5 @@
 {
-  "name": "grocery-app",
+  "name": "groceryji-app",
   "version": "1.0.0",
   "description": "this is a gupta app",
   "main": "grocery.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sourav-js/grocery-app.git"
+    "url": "git+https://github.com/sourav-js/groceryji-app.git"
   },
   "author": "sourav",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sourav-js/grocery-app/issues"
+    "url": "https://github.com/sourav-js/groceryji-app/issues"
   },
-  "homepage": "https://github.com/sourav-js/grocery-app#readme",
+  "homepage": "https://github.com/sourav-js/groceryji-app#readme",
   "dependencies": {
     "body-parser": "^1.19.1",
     "cheerio": "^1.0.0-rc.10",
