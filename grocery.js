@@ -13,7 +13,7 @@ https = require("https"),
 qs = require("querystring"),
 
 
-
+api  =require("./domain.js"),
 flash                   =require("connect-flash"),
 // flashs                  =require("express-flash"),
 nodemailer              =require("nodemailer"),
@@ -156,7 +156,7 @@ var selectSchema=new mongoose.Schema({
     month:String,
     method:String,
    locality:String,
-    lid:String,
+
    city:String,
 
    phone:Number,
@@ -1110,7 +1110,7 @@ const month = ["January","February","March","April","May","June","July","August"
              var date=new Date()
              if(locate){
               var names=locate.first + " " + locate.last  
-              selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method,lid:locate._id},function(err,selec){
+              selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1121,7 +1121,7 @@ const month = ["January","February","March","April","May","June","July","August"
 
             else{
                
-               selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method,lid:"3e44r"},function(err,selec){
+               selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1149,7 +1149,7 @@ const month = ["January","February","March","April","May","June","July","August"
              if(locate){
               var names=locate.first + " " + locate.last  
  
-              selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method,lid:locate._id},function(err,selec){
+              selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1160,7 +1160,7 @@ const month = ["January","February","March","April","May","June","July","August"
 
             else{
                
-               selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method,lid:"3e4ee"},function(err,selec){
+               selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1194,7 +1194,7 @@ const month = ["January","February","March","April","May","June","July","August"
              if(locate){
               var names=locate.first + " " + locate.last  
 
-              selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method,lid:locate._id},function(err,selec){
+              selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1205,7 +1205,7 @@ const month = ["January","February","March","April","May","June","July","August"
 
             else{
                
-               selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method,lid:"4r4ee"},function(err,selec){
+               selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1252,28 +1252,72 @@ app.get("/moreinfo/:id",function(req,res){
   user.findById(primary).populate("pops").populate("selection").populate("cart").populate("suggetions").exec(function(err,users){
    product.findOne({_id:req.params.id}).populate("stock").populate("notify").populate("ones").populate("twos").exec(function(err,prod){
         
-        if(req.user){
-             var sflag=true 
-             for(var i=0;i<users.selection.length;i++){
+       if(req.user){
 
-                  if(users.selection[i].id==prod._id){
-                        
-                         sflag=false
-                         var selecfound="found"                    
-                         break
+      
+              if(prod.key=="mustards" || prod.key=="soyabeans"){
+                         var point=true
+                        for (var i=0;i<users.selection.length;i++){
+                       
+                           if (users.selection[i].id==prod._id && users.selection[i].size=="one"){
+
+                             point=false
+                             var addedone="yes"
+                             break
+                           }
+
+                      }   
+                      if (point==true){
+
+                          var addedone="no"
+                      }
+                  
+
+                           var pointselect=true
+                        for (var i=0;i<users.selection.length;i++){
+                       
+                           if (users.selection[i].id==prod._id && users.selection[i].size=="two"){
+
+                             pointselect=false
+                             var addedtwo="yes"
+                             break
+                           }
+
+                      }   
+                      if (pointselect==true){
+
+                          var addedtwo="no"
+                      }
+                                
+
+                  }
+                  else if(prod.key!=="mustards" && prod.key!=="soyabeans"){
+                    var pointso=true 
+                    for (var i=0;i<users.selection.length;i++){
+                            
+                            if(users.selection[i].id==prod._id){
+
+                                pointso=false
+                                var addedone="yes"
+                                break
+                            }
+
+                    }
+                  
+                    if (pointso==true){
+
+                        var addedone="no"
+                    }
+
                   } 
 
-             }
-             if (sflag==true){
 
-                 var selecfound=""
-             }
-        }
-        else{
+       }        
+       else{
 
-            var selecfound=""
-        }
-
+       	  var addedone=""
+       	  var addedtwo=""
+       }
 
         if(req.user){
          if(req.query.sugg){
@@ -1335,21 +1379,7 @@ app.get("/moreinfo/:id",function(req,res){
       // console.log(prods)
             if(req.user){
            
-                        var point=true
-                        for (var i=0;i<users.selection.length;i++){
-                       
-                           if (users.selection[i].id==prod._id){
-
-                             point=false
-                             var added="yes"
-                             break
-                           }
-
-                      }   
-                      if (point==true){
-
-                          var added="no"
-                      }
+                   
 
               if(prod.key!=="mustards" && prod.key!=="soyabeans"){
                var points=true
@@ -1374,7 +1404,7 @@ app.get("/moreinfo/:id",function(req,res){
 
                   }
                   else if(prod.key=="mustards" || prod.key=="soyabeans"){
-                          
+                           
                            var points=true
                         for (var i=0;i<users.cart.length;i++){
                        
@@ -1452,8 +1482,8 @@ app.get("/moreinfo/:id",function(req,res){
               
                 if(wishd[p].pid==prod._id){
                  console.log(mark)
-                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:wishd,users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo,selecfound:selecfound})
-                
+                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:wishd,users:users,addedone:addedone,addedtwo:addedtwo,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo})
+                 con
                  flags=false
                  break  
              }
@@ -1461,7 +1491,7 @@ app.get("/moreinfo/:id",function(req,res){
             
             if (flags==true){
 
-                                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:added,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo,selecfound:selecfound})
+                                 res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,addedone:addedone,addedtwo:addedtwo,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo})
 
             }
 
@@ -1470,7 +1500,7 @@ app.get("/moreinfo/:id",function(req,res){
        
       else{
 
-                        res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,added:"",cart:"no",calc:calc,actualPrice:actualPrice,carttwo:"no",selecfound:selecfound})
+                        res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:"",users:users,addedone:"",addedtwo:"",cart:"no",calc:calc,actualPrice:actualPrice,carttwo:"no"})
 
 
       }
@@ -2235,7 +2265,7 @@ app.get("/updateCustomersStatus/:id/:mon",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/"><button style=color:green>GroceryJi</button></a>                       
+                                            <a href=${api.domain}/><button style=color:green>GroceryJi</button></a>                       
                                                           
                                                         `
                                     } 
@@ -3304,7 +3334,7 @@ app.post("/allbuy/:id",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/orders"<button style=color:green>Check Your Order</button></a>                       
+                                            <a href=${api.domain}/orders<button style=color:green>Check Your Order</button></a>                       
                                                           
                                                           </form>
                                                              `
@@ -4082,7 +4112,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/orders/${order._id}"<button style=color:green>Check Your Order</button></a>                       
+                                            <a href=${api.domain}/orders/${order._id}<button style=color:green>Check Your Order</button></a>                       
                                                           
                                                           </form>
                                                              `
@@ -4166,7 +4196,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/orders/${order._id}"<button style=color:green>Check Your Order</button></a>                       
+                                            <a href=${api.domain}/orders/${order._id}<button style=color:green>Check Your Order</button></a>                       
                                                           
                                                           </form>
                                                              `
@@ -4551,7 +4581,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/orders/${order._id}"<button style=color:green>Check Your Order</button></a>                      
+                                            <a href=${api.domain}/orders/${order._id}<button style=color:green>Check Your Order</button></a>                      
                                                           
                                                           </form>
                                                              `
@@ -4626,7 +4656,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/orders/${order._id}"<button style=color:green>Check Your Order</button></a>                      
+                                            <a href=${api.domain}/orders/${order._id}<button style=color:green>Check Your Order</button></a>                      
                                                           
                                                           </form>
                                                              `
@@ -4964,7 +4994,7 @@ app.post("/cancel/:id",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                       
                                                           
                                                           </form>`
                                     } 
@@ -5054,7 +5084,7 @@ app.post("/cancel/:id",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                       
                                                           
                                                           </form>`
                                     } 
@@ -5147,7 +5177,7 @@ app.post("/cancel/:id",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                      
+                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                      
                                                           
                                                           </form>`
                                     } 
@@ -5321,7 +5351,7 @@ app.post("/cancel/:id",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/orders/${orders._id}"<button style=color:green>Check Your Order</button></a>                     
+                                            <a href=${api.domain}/orders/${orders._id}<button style=color:green>Check Your Order</button></a>                     
                                                           
                                                           </form>`
                                     } 
@@ -5744,7 +5774,7 @@ app.get("/increaseStockOne/:id/:stock",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                       
                                                           
                                                           </form>`
             }
@@ -5854,7 +5884,7 @@ app.get("/increaseStockTwo/:id/:stock",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                       
                                                           
                                                           </form>`
             }
@@ -5963,7 +5993,7 @@ app.get("/increaseStock/:id/:stock",function(req,res){
                                                        
                         
                         
-                                            <a href="https://groceryji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                      
+                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                      
                                                           
                                                           </form>`
             }
@@ -6167,7 +6197,7 @@ app.post("/addProduct",function(req,res){
                 bcc:`${users[i].username}`,
                 subject:"GroceryJi",
                 html:`<div align=center><b>Hi,${users[i].first}</b><br><b>${prod.Name} New Product Added<br></b>
-                        <a href=https://groceryji.herokuapp.com/moreinfo/${prod._id}><b>Check It Out</b></b></a></div>
+                        <a href=${api.domain}/moreinfo/${prod._id}><b>Check It Out</b></b></a></div>
                         
                         
                        
@@ -6365,7 +6395,7 @@ user.findOne({username:req.body.username},function(err,user){
                 bcc:`${req.body.username}`,
                 subject:"GroceryJi",
                 html:`Hi,${user.first},welcome to GroceryJi<br>Reset Your Password<br>
-                        <a href="https://groceryji.herokuapp.com/set/${user._id}">Change Password</a>
+                        <a href=${api.domain}/set/${user._id}>Change Password</a>
                         
                         
                         </form>
@@ -6650,7 +6680,7 @@ app.get("/statusChange/:id/:key",function(req,res){
                                                                        
                                         
                                         
-                                                            <a href="https://groceryji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                       
                                                                           
                                                                           </form>`
                             }
@@ -6760,7 +6790,7 @@ app.get("/statusChange/:id/:key",function(req,res){
                                                                        
                                         
                                         
-                                                            <a href="https://groceryji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                       
                                                                           
                                                                           </form>`
                             }
@@ -6874,7 +6904,7 @@ app.get("/statusChange/:id/:key",function(req,res){
                                                                        
                                         
                                         
-                                                            <a href="https://groceryji.herokuapp.com/moreinfo/${prods._id}"<button style=color:green>Check Your product Details</button></a>                       
+                                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                       
                                                                           
                                                                           </form>`
                             }
@@ -7049,6 +7079,15 @@ function isLoggedin(req,res,next){
         res.redirect("/login");
     
 }
+
+app.get("/passwords",function(req,res){
+
+   var username={
+
+     data:"Gath@123"
+   }
+   res.json(username)
+})
 
 app.listen(port,function(){
 
