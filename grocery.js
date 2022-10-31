@@ -9,7 +9,6 @@ mongoose                =require("mongoose"),
 body                    =require("body-parser"),
 session                 =require("express-session"),
 method                  =require("method-override"),
-https = require("https"),
 qs = require("querystring"),
 
 
@@ -72,8 +71,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 let instance = new Razorpay({
-  key_id: 'rzp_test_fEiizHFA6gj75D', // your `KEY_ID`
-  key_secret: 'S7HnMrnoaUOMcqqgQTTSt4mf' // your `KEY_SECRET`
+  key_id: 'rzp_test_7Cv3rsZcdapyEv', // your `KEY_ID`
+  key_secret: 'rAL4zctz2E3oI70b2LpiT11U' // your `KEY_SECRET`
 });
  var cartSchema=new mongoose.Schema({
     Name:String,
@@ -464,6 +463,12 @@ twos:[{
 
 })
  var coproduct=mongoose.model("coproduct",coproductSchema)
+var tokenSchema=new mongoose.Schema({
+    code:Number
+
+
+})
+ var token=mongoose.model("token",tokenSchema)
  // var checksum_lib = require('./checksum.js'),
  userSchema.plugin(passportlocalmongoose)
  var user=mongoose.model("user",userSchema)
@@ -996,6 +1001,9 @@ app.get("/wishlist/:id",isLoggedin,function(req,res){
 
 
 app.get("/allProduct",function(req,res){
+ 
+  
+
  if(req.user){
 
     var primary=req.user._id
@@ -1003,10 +1011,10 @@ app.get("/allProduct",function(req,res){
 else{
     var primary="4444"
 }
-  
 user.findById(primary).populate("pops").exec(function(err,users){
   if (!req.query.query){
    product.find({},function(err,prod){
+          
         res.render("products.ejs",{prod:prod,users:users})
 
    })
@@ -1110,7 +1118,7 @@ const month = ["January","February","March","April","May","June","July","August"
              var date=new Date()
              if(locate){
               var names=locate.first + " " + locate.last  
-              selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
+              selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method,lid:locate._id},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1121,7 +1129,7 @@ const month = ["January","February","March","April","May","June","July","August"
 
             else{
                
-               selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
+               selects.create({id:prods._id,qty:req.body.qty,size:"one",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method,lid:"rrtfff"},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1149,7 +1157,7 @@ const month = ["January","February","March","April","May","June","July","August"
              if(locate){
               var names=locate.first + " " + locate.last  
  
-              selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
+              selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method,lid:locate._id},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1160,7 +1168,7 @@ const month = ["January","February","March","April","May","June","July","August"
 
             else{
                
-               selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
+               selects.create({id:prods._id,qty:req.body.qty,size:"two",month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method,lid:"ryytuu"},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1194,7 +1202,7 @@ const month = ["January","February","March","April","May","June","July","August"
              if(locate){
               var names=locate.first + " " + locate.last  
 
-              selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method},function(err,selec){
+              selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:locate.city,landmark:locate.landmark,roadNumber:locate.roadNumber,locality:locate.locality,phone:locate.phone,first:locate.first,last:locate.last,name:names,method:method,lid:locate._id},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1205,7 +1213,7 @@ const month = ["January","February","March","April","May","June","July","August"
 
             else{
                
-               selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method},function(err,selec){
+               selects.create({id:prods._id,qty:req.body.qty,month:month[date.getMonth()],date:Date.now(),city:req.body.city,landmark:req.body.landmark,roadNumber:req.body.road,locality:req.body.locality,phone:req.body.phone,first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,method:method,lid:"ghfytth"},function(err,selec){
                  
                  users.selection.push(selec)
                  users.save()
@@ -1315,8 +1323,8 @@ app.get("/moreinfo/:id",function(req,res){
        }        
        else{
 
-       	  var addedone=""
-       	  var addedtwo=""
+          var addedone=""
+          var addedtwo=""
        }
 
         if(req.user){
@@ -2245,16 +2253,21 @@ app.get("/updateCustomersStatus/:id/:mon",function(req,res){
       req.flash("success",users.name + " is now VIP Customer")
       res.redirect("back")  
    
- var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
+   const transport = nodemailer.createTransport(smtpTransport({
+                host:'gathbandhanmatrimony.com',
+                secureConnection: false,
+                tls: {
+                  rejectUnauthorized: false  
+                },
+                port:587,
+                auth: {
+                    user: "support@groceryji.com",
+                    pass: api.passwords,
+              }
+             })) 
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${users.username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,welcome to GroceryJi<br>
@@ -3312,17 +3325,21 @@ app.post("/allbuy/:id",function(req,res){
                                        
                                
 
-                              var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
-
+                                const transport = nodemailer.createTransport(smtpTransport({
+                    host:'gathbandhanmatrimony.com',
+                    secureConnection: false,
+                    tls: {
+                      rejectUnauthorized: false  
+                    },
+                    port:587,
+                    auth: {
+                        user: "support@groceryji.com",
+                        pass: api.passwords,
+                  }
+             })) 
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${req.user.username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,${req.body.first},welcome to GroceryjI<br>
@@ -3627,7 +3644,6 @@ app.post("/buy/:pid/:lid",function(req,res){
         if(!users.offerHold){
 
              users.offerHold=false
-             users.save()
         } 
 
             
@@ -3769,7 +3785,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                             if (car.qty==req.body.qty){
                                                 
                                                 users.sum=users.sum-car.Price
-                                                users.save() 
+                                                
                                                 car.deleteOne({_id:car._id},function(err,info){
 
                                                 })
@@ -3780,7 +3796,7 @@ app.post("/buy/:pid/:lid",function(req,res){
                                            else if(car.qty<req.body.qty){
                                                
                                                 users.sum=users.sum-car.Price
-                                                users.save() 
+                                                 
                                                 car.deleteOne({_id:car._id},function(err,info){
 
                                                 })
@@ -3800,13 +3816,13 @@ app.post("/buy/:pid/:lid",function(req,res){
                                                          
                                                          }                                                         
                                                          users.sum=users.sum-amounts
-                                                         users.save()
+                                                         
                                                   
                                                    })
 
                                            }
                                            
-                                      
+                                      users.save()
                                        
 
                                                         
@@ -4088,17 +4104,22 @@ app.post("/buy/:pid/:lid",function(req,res){
                            
  
                                                      
-                                         var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
+                                          const transport = nodemailer.createTransport(smtpTransport({
+                        host:'gathbandhanmatrimony.com',
+                        secureConnection: false,
+                        tls: {
+                          rejectUnauthorized: false  
+                        },
+                        port:587,
+                        auth: {
+                            user: "support@groceryji.com",
+                            pass: api.passwords,
+                      }
+             }))   
 
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${req.user.username}`,
                                            subject:"GroceryjI",
                                            html:`Hi,${req.user.first},welcome to GroceryjI<br>
@@ -4172,17 +4193,22 @@ app.post("/buy/:pid/:lid",function(req,res){
                            
  
                                                      
-                                         var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
+                                           const transport = nodemailer.createTransport(smtpTransport({
+                        host:'gathbandhanmatrimony.com',
+                        secureConnection: false,
+                        tls: {
+                          rejectUnauthorized: false  
+                        },
+                        port:587,
+                        auth: {
+                            user: "support@groceryji.com",
+                            pass: api.passwords,
+                      }
+             }))  
 
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${req.user.username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,${req.user.first},welcome to GroceryJi<br>
@@ -4559,17 +4585,22 @@ app.post("/buy/:pid/:lid",function(req,res){
                            
  
                                                      
-                                         var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
+                                           const transport = nodemailer.createTransport(smtpTransport({
+                        host:'gathbandhanmatrimony.com',
+                        secureConnection: false,
+                        tls: {
+                          rejectUnauthorized: false  
+                        },
+                        port:587,
+                        auth: {
+                            user: "support@groceryji.com",
+                            pass: api.passwords,
+                      }
+             }))   
 
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${req.user.username}`,
                                            subject:"GroceryjI",
                                            html:`Hi,${req.user.first},welcome to GroceryjI<br>
@@ -4634,17 +4665,22 @@ app.post("/buy/:pid/:lid",function(req,res){
                            
  
                                                      
-                                         var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
+                                          const transport = nodemailer.createTransport(smtpTransport({
+                        host:'gathbandhanmatrimony.com',
+                        secureConnection: false,
+                        tls: {
+                          rejectUnauthorized: false  
+                        },
+                        port:587,
+                        auth: {
+                            user: "support@groceryji.com",
+                            pass: api.passwords,
+                      }
+             }))  
 
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${req.user.username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,${req.user.first},welcome to GroceryJi<br>
@@ -4973,16 +5009,21 @@ app.post("/cancel/:id",function(req,res){
             for( var n=0;n<prods.notify.length;n++){
 
 
-                    var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
+                      const transport = nodemailer.createTransport(smtpTransport({
+                    host:'gathbandhanmatrimony.com',
+                    secureConnection: false,
+                    tls: {
+                      rejectUnauthorized: false  
+                    },
+                    port:587,
+                    auth: {
+                        user: "support@groceryji.com",
+                        pass: api.passwords,
+                  }
+             }))  
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${prods.notify[n].username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,welcome to GroceryJi<br>
@@ -5063,16 +5104,21 @@ app.post("/cancel/:id",function(req,res){
             for( var n=0;n<prods.notify.length;n++){
 
 
-                    var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
+                     const transport = nodemailer.createTransport(smtpTransport({
+                host:'gathbandhanmatrimony.com',
+                secureConnection: false,
+                tls: {
+                  rejectUnauthorized: false  
+                },
+                port:587,
+                auth: {
+                    user: "support@groceryji.com",
+                    pass: api.passwords,
+              }
+             }))   
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${prods.notify[n].username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,welcome to GroceryJi<br>
@@ -5156,16 +5202,21 @@ app.post("/cancel/:id",function(req,res){
             for( var n=0;n<prods.notify.length;n++){
 
 
-                    var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
+                     const transport = nodemailer.createTransport(smtpTransport({
+                host:'gathbandhanmatrimony.com',
+                secureConnection: false,
+                tls: {
+                  rejectUnauthorized: false  
+                },
+                port:587,
+                auth: {
+                    user: "support@groceryji.com",
+                    pass: api.passwords,
+              }
+             }))  
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${prods.notify[n].username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,welcome to GroceryJi<br>
@@ -5330,16 +5381,21 @@ app.post("/cancel/:id",function(req,res){
                 var status="Refundable"
             }
 
-            var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
+              const transport = nodemailer.createTransport(smtpTransport({
+                host:'gathbandhanmatrimony.com',
+                secureConnection: false,
+                tls: {
+                  rejectUnauthorized: false  
+                },
+                port:587,
+                auth: {
+                    user: "support@groceryji.com",
+                    pass: api.passwords,
+              }
+             }))  
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${req.user.username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,${req.user.first},welcome to GroceryJi<br>
@@ -5425,9 +5481,150 @@ app.get("/review",function(req,res){
 
 
 
+app.get("/webmail",function(req,res){
+
+   const transport = nodemailer.createTransport(smtpTransport({
+    host:'gathbandhanmatrimony.com',
+    secureConnection: true,
+    tls: {
+      rejectUnauthorized: true
+    },
+    port:2096,
+    auth: {
+        user: "neha.agarwal@gathbandhanmatrimony.com",
+        pass: "neha.agarwal321",
+  }
+}));
+                              
+                             
+                             var mailoptions={
+                from:"neha.agarwal@gathbandhanmatrimony.com",
+                to:"grocery.ofc@gmail.com",
+                subject:"GroceryJi",
+                html:"this is a testing mail"
+                                         
+            }      
+ 
+                                      
+                              console.log("hmmmmm")
+                               transport.sendMail(mailoptions,function(err,info){
+                                    if(err)
+                                    {
+                                        console.log(err.message)
+                                    }
+                                        else{
+                                            console.log("here")
+
+                                        }
 
 
+                                })
+})
 
+app.get("/registerings",function(req,res){
+  
+  
+ 
+
+                
+             
+
+                 var code=Math.floor(Math.random()*11223)
+                 // var datas=JSON.parse(data)
+                          var key="gmail"
+                          var adress="neha.agarwal@gathbandhanmatrimony.com"
+                          var ad=[]
+                          for (var i=0;i<adress.length;i++){
+
+                              var flag=true
+                              k=i
+                              for(var j=0;j<key.length;j++){
+
+                                  if (key[j]!==adress[k]){
+                                         
+
+                                         flag=false
+                                         break
+
+                                  }
+                                  k=k+1
+                              }
+                              
+                              if(flag==true){
+
+                                       ad.push(0)    
+                                       console.log("here")
+                                       var transport=nodemailer.createTransport({
+                                      service:"gmail",
+                                     auth:{
+                                        user: "support@gathbandhanmatrimony.com",
+                                        pass:"support"
+                                        }
+                                  }); 
+                                    
+                                  break    
+
+                              } 
+                            } 
+                            if (ad.length==0){
+
+                                         var transport = nodemailer.createTransport(smtpTransport({
+                                service:"webmail",
+                                host:'gathbandhanmatrimony.com',
+                                secureConnection: true,
+                                tls: {
+                                  rejectUnauthorized: false  
+                                },
+                                port:587,
+                                auth: {
+                                    user: "support@gathbandhanmatrimony.com",
+                                    pass: "support",
+                              }
+                      }));
+                  
+               
+                         }
+
+                                  
+     
+           var mailOptions={
+
+                 from:"support@gathbandhanmatrimony.com",
+                
+                to:`neha.agarwal@gathbandhanmatrimony.com`,
+                subject:"Gathbandhanmatrimony",
+                html:`Hi,sourav welcome to Gathbandhan<br>A personalized offline matrimony service</br><br>please activate your account<br>
+                        Your activation code is <b>222222</b>
+                        
+                        
+                        <br>
+                        <b>Thank You from</b>
+                        <br>
+                        <b>Gathbandhan Matrimony</b>
+                        `
+           } 
+     
+           transport.sendMail(mailOptions,function(err,info){
+
+              if(err){
+                                res.send(err.message)
+
+               
+
+              }
+              
+              else{
+
+                 res.send("sent")
+              }
+            })
+     
+          
+   
+    
+
+    
+})
 
 app.get("/data/:product",function(req,res){
     request(`https://www.flipkart.com/search?q=${req.params.product}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off`,function(error,response,html){
@@ -5752,17 +5949,22 @@ app.get("/increaseStockOne/:id/:stock",function(req,res){
   })
          for(var i=0;i<prods.notify.length;i++){
 
-              var transport=nodemailer.createTransport({
-            service:"gmail",
-            auth:{
-                user:"grocery.ofc@gmail.com",
-                pass:process.env.password
-            }
-        }); 
+               const transport = nodemailer.createTransport(smtpTransport({
+                host:'gathbandhanmatrimony.com',
+                secureConnection: false,
+                tls: {
+                  rejectUnauthorized: false  
+                },
+                port:587,
+                auth: {
+                    user: "support@groceryji.com",
+                    pass: api.passwords,
+              }
+             })) 
 
 
             var mailoptions={
-                from:"grocery.ofc@gmail.com",
+                from:"support@groceryji.com",
                 bcc:`${prods.notify[i].username}`,
                 subject:"GroceryJi",
                 html:`Hi,welcome to GroceryJi<br>
@@ -5862,17 +6064,21 @@ app.get("/increaseStockTwo/:id/:stock",function(req,res){
   })
          for(var i=0;i<prods.notify.length;i++){
 
-              var transport=nodemailer.createTransport({
-            service:"gmail",
-            auth:{
-                user:"grocery.ofc@gmail.com",
-                pass:process.env.password
-            }
-        }); 
-
-
+             const transport = nodemailer.createTransport(smtpTransport({
+          host:'gathbandhanmatrimony.com',
+          secureConnection: false,
+          tls: {
+            rejectUnauthorized: false  
+          },
+          port:587,
+          auth: {
+              user: "support@groceryji.com",
+              pass: api.passwords,
+        }
+             }))
+ 
             var mailoptions={
-                from:"grocery.ofc@gmail.com",
+                from:"support@groceryji.com",
                 bcc:`${prods.notify[i].username}`,
                 subject:"GroceryJi",
                 html:`Hi,welcome to GroceryJi<br>
@@ -5971,17 +6177,21 @@ app.get("/increaseStock/:id/:stock",function(req,res){
   })
          for(var i=0;i<prods.notify.length;i++){
 
-              var transport=nodemailer.createTransport({
-            service:"gmail",
-            auth:{
-                user:"grocery.ofc@gmail.com",
-                pass:process.env.password
-            }
-        }); 
-
+              const transport = nodemailer.createTransport(smtpTransport({
+            host:'gathbandhanmatrimony.com',
+            secureConnection: false,
+            tls: {
+              rejectUnauthorized: false  
+            },
+            port:587,
+            auth: {
+                user: "support@groceryji.com",
+                pass: api.passwords,
+          }
+}))
 
             var mailoptions={
-                from:"grocery.ofc@gmail.com",
+                from:"support@groceryji.com",
                 bcc:`${prods.notify[i].username}`,
                 subject:"GroceryJi",
                 html:`Hi,welcome to GroceryJi<br>
@@ -6183,17 +6393,22 @@ app.post("/addProduct",function(req,res){
 
           }) 
         })   
-         var transport=nodemailer.createTransport({
-            service:"gmail",
-            auth:{
-                user:"grocery.ofc@gmail.com",
-                pass:process.env.password
-            }
-        }); 
+          const transport = nodemailer.createTransport(smtpTransport({
+            host:'gathbandhanmatrimony.com',
+            secureConnection: false,
+            tls: {
+              rejectUnauthorized: false  
+            },
+            port:587,
+            auth: {
+                user: "support@groceryji.com",
+                pass: api.passwords,
+          }
+})) 
 
 
             var mailoptions={
-                from:"grocery.ofc@gmail.com",
+                from:"support@groceryji.com",
                 bcc:`${users[i].username}`,
                 subject:"GroceryJi",
                 html:`<div align=center><b>Hi,${users[i].first}</b><br><b>${prod.Name} New Product Added<br></b>
@@ -6238,6 +6453,14 @@ else{
 }
 })
 
+
+
+
+app.post("/testers",function(req,res){
+
+  console.log(req.body.ra)
+  console.log(req.body.ch)
+})
 
 app.get("/groceryProduct",function(req,res){
    if(!req.query.search){
@@ -6332,44 +6555,19 @@ app.post("/registering",function(req,res){
   else{
     console.log("here")
     var code=Math.floor(Math.random()*11223)
-    var transport=nodemailer.createTransport({
-            service:"gmail",
-            auth:{
-                user:"grocery.ofc@gmail.com",
-                pass:process.env.password
-            }
-        }); 
+     token.create({code:code},function(err,info){
+
+     })
+      
 
 
-            var mailoptions={
-                from:"grocery.ofc@gmail.com",
-                bcc:`${req.body.username}`,
-                subject:"GroceryJi",
-                html:`Hi,${req.body.first},welcome to GroceryJi<br>please activate your account<br>
-                        Your activation code is <b>${code}</b>
+            
+                            res.render("active.ejs",{first:req.body.first,username:req.body.username,last:req.body.last,password:req.body.password,code:code})
+
                         
-                        
-                        </form>
-                        `
-            }
-                console.log("hmmmmm")
-                transport.sendMail(mailoptions,function(err,info){
-                    if(err)
-                    {
-                        req.flash("error","something went wrong...");
-
-                        res.redirect("/login");
-                    }
-                        else{
-                            console.log("here")
-                            res.render("active.ejs",{first:req.body.first,username:req.body.username,last:req.body.last,password:req.body.password,number:code})
-
-                        }
-
-
                 
 
-})
+
 
 }
 })
@@ -6382,51 +6580,21 @@ app.get("/forgot",function(req,res){
 app.post("/forgot",function(req,res){
 user.findOne({username:req.body.username},function(err,user){
   if (user){    
-    var transport=nodemailer.createTransport({
-        service:"gmail",
-        auth:{
-            user:"grocery.ofc@gmail.com",
-            pass:process.env.password
-        }
-    })
- 
-    var mailoptions={
-                from:"grocery.ofc@gmail.com",
-                bcc:`${req.body.username}`,
-                subject:"GroceryJi",
-                html:`Hi,${user.first},welcome to GroceryJi<br>Reset Your Password<br>
-                        <a href=${api.domain}/set/${user._id}>Change Password</a>
-                        
-                        
-                        </form>
-                        `
-            } 
+   
+            res.render("set.ejs",{user:user})
 
- 
-             transport.sendMail(mailoptions,function(err,info){
-                  if(err){
-                     req.flash("error","cant send the mail")
-                     res.redirect("back")
-                }
-                else{
 
-                     req.flash("success","mail sent")
-                     res.redirect("back")
-                 }
-  })
-}
-else{
-    req.flash("error","No user found")
-    res.redirect("back")
-}
+
+  }
+  else{
+
+     req.flash("error","No user found with that username")
+     res.redirect("back")
+  }
 })
 })
-app.get("/set/:id",function(req,res){
 
-    user.findById(req.params.id,function(err,user){
-        res.render("set.ejs",{user:user})
-    })
-})
+
 app.post("/setPassword",function(req,res){
     user.findOne({username:req.body.username},function(err,user){
  
@@ -6457,16 +6625,20 @@ app.post("/registered",function(req,res){
             // }
             if(req.body.two)
             {
-            if(req.body.one!==req.body.two)
+              
+              token.findOne({code:req.body.two},function(err,info){
+              if (!info)
             {
-                 req.flash("error","Your code was wrong,it's destroyed,try again...")
-                 res.redirect("/login")
+                      
+                  req.flash("error","Your code was wrong,it's destroyed,try again...")
+                  res.redirect("/login")
             }
-            
+              
             
             
             else{
-            user.register(new user({first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,username:req.body.username,offerHold:false}),req.body.password,function(err,user){
+            token.findByIdAndDelete(info._id,function(err,datas){
+             user.register(new user({first:req.body.first,last:req.body.last,name:req.body.first + " " + req.body.last,username:req.body.username,offerHold:false}),req.body.password,function(err,user){
                     
         if(err)
         {
@@ -6484,9 +6656,10 @@ app.post("/registered",function(req,res){
                 res.redirect("/");
             });
         
-
+    })
 }); 
 }
+ })
 }
 else{
         req.flash("error","Please give the code as input...")
@@ -6656,19 +6829,22 @@ app.get("/statusChange/:id/:key",function(req,res){
                                          infos.save()
                                        
                                        })
-                                var transport=nodemailer.createTransport({
-                       service:"gmail",
-                      auth:{
-                         user:"grocery.ofc@gmail.com",
-                         pass:process.env.password
-                    }
-              
-               
-                     });    
+                                const transport = nodemailer.createTransport(smtpTransport({
+                    host:'gathbandhanmatrimony.com',
+                    secureConnection: false,
+                    tls: {
+                      rejectUnauthorized: false  
+                    },
+                    port:587,
+                    auth: {
+                        user: "support@groceryji.com",
+                        pass: api.passwords,
+                  }
+             })) 
 
 
                             var mailoptions={
-                                from:"grocery.ofc@gmail.com",
+                                from:"support@groceryji.com",
                                 bcc:`${infos.username}`,
                                 subject:"GroceryJi",
                                 html:`Hi,welcome to GroceryJi<br>
@@ -6766,19 +6942,22 @@ app.get("/statusChange/:id/:key",function(req,res){
                                          infos.save()
                                        
                                        })
-                                var transport=nodemailer.createTransport({
-                       service:"gmail",
-                      auth:{
-                         user:"grocery.ofc@gmail.com",
-                         pass:process.env.password
-                    }
-              
-               
-                     });    
+                              const transport = nodemailer.createTransport(smtpTransport({
+                host:'gathbandhanmatrimony.com',
+                secureConnection: false,
+                tls: {
+                  rejectUnauthorized: false  
+                },
+                port:587,
+                auth: {
+                    user: "support@groceryji.com",
+                    pass: api.passwords,
+              }
+             })) 
 
 
                             var mailoptions={
-                                from:"grocery.ofc@gmail.com",
+                                from:"support@groceryji.com",
                                 bcc:`${infos.username}`,
                                 subject:"GroceryJi",
                                 html:`Hi,welcome to GroceryJi<br>
@@ -6880,19 +7059,22 @@ app.get("/statusChange/:id/:key",function(req,res){
                                        })
                                       
                                    
-                                 var transport=nodemailer.createTransport({
-                       service:"gmail",
-                      auth:{
-                         user:"grocery.ofc@gmail.com",
-                         pass:process.env.password
-                    }
-              
-               
-                     });    
+                            const transport = nodemailer.createTransport(smtpTransport({
+                    host:'gathbandhanmatrimony.com',
+                    secureConnection: false,
+                    tls: {
+                      rejectUnauthorized: false  
+                    },
+                    port:587,
+                    auth: {
+                        user: "support@groceryji.com",
+                        pass: api.passwords,
+                  }
+             })) 
 
 
                             var mailoptions={
-                                from:"grocery.ofc@gmail.com",
+                                from:"support@groceryji.com",
                                 bcc:`${infos.username}`,
                                 subject:"GroceryJi",
                                 html:`Hi,welcome to GroceryJi<br>
@@ -6987,17 +7169,21 @@ app.get("/statusChange/:id/:key",function(req,res){
 
                      var amount=""
                    }
-                     var transport=nodemailer.createTransport({
-                                              service:"gmail",
-                                              auth:{
-                                               user:"grocery.ofc@gmail.com",
-                                               pass:process.env.password
-                                              }
-                                               });  
-
+                       const transport = nodemailer.createTransport(smtpTransport({
+                  host:'gathbandhanmatrimony.com',
+                  secureConnection: false,
+                  tls: {
+                    rejectUnauthorized: false  
+                  },
+                  port:587,
+                  auth: {
+                      user: "support@groceryji.com",
+                      pass: api.passwords,
+                }
+             })) 
 
                                          var mailoptions={
-                                           from:"grocery.ofc@gmail.com",
+                                           from:"support@groceryji.com",
                                            bcc:`${orders.author.username}`,
                                            subject:"GroceryJi",
                                            html:`Hi,we have canceled your order for ${orders.productD}<br>
