@@ -12,6 +12,7 @@ method                  =require("method-override"),
 qs = require("querystring"),
 smtpTransport = require('nodemailer-smtp-transport'),
 
+smtpTransport = require('nodemailer-smtp-transport'),
 
 
 api  =require("./domain.js"),
@@ -539,13 +540,7 @@ app.get("/time",function(req,res){
 })
 
 
-cron.schedule("*/5 * * * *",function(){
 
-    request("https://grocery-ji.herokuapp.com/autoremove",function(error,response,data){
-
-
-    })
-})
 
 app.get("/autobuy/:id",function(req,res){
 user.findById(req.user._id,function(err,users){
@@ -718,6 +713,37 @@ user.findById(req.user._id,function(err,users){
 })
 
 
+
+app.get("/allsession",function(req,res){
+ console.log(req.session)
+})
+app.get("/session",function(req,res){
+   res.render("page.ejs",{req:req})
+ })
+
+app.post("/value",function(req,res){
+ if(req.body.value=="blocked"){    
+  req.session.noti="blocked"
+  
+}
+else if(req.body.value=="allow"){
+
+  req.session.noti="allow"
+
+
+}
+res.redirect("/session")
+})
+
+app.get("/loginsession",function(req,res){
+
+  req.session.passport.user="it.service@gathbandhanmatrimony.com"
+  console.log(req.user)
+  res.redirect("/")
+})
+
+
+
 app.get("/Autodebit",function(req,res){
 
     
@@ -754,13 +780,6 @@ app.get("/Autodebit",function(req,res){
 
 
 
-cron.schedule("*/5 * * * *",function(){
-
-    request("https://grocery-ji.herokuapp.com/autoremove",function(error,response,data){
-
-
-    })
-})
 
 
 app.get("/autoremove",function(req,res){
@@ -797,7 +816,7 @@ app.get("/autoremove",function(req,res){
 })
 
 
-
+// Log in page will load //
 
 app.get("/login",function(req,res){
 
@@ -940,6 +959,8 @@ app.get("/wishlist",isLoggedin,function(req,res){
     })
 })
 })
+
+// Delete a product from user's wishlist //
 app.get("/deleteWish/:id/:aid",function(req,res){
 
 if(req.params.aid=="off"){
@@ -980,6 +1001,8 @@ product.findById(req.params.aid,function(err,prod){
         
 
 })
+
+//To add a product to the wishlist //
 app.get("/wishlist/:id",isLoggedin,function(req,res){
 
  user.findById(req.user._id,function(err,users){ 
@@ -1002,6 +1025,7 @@ app.get("/wishlist/:id",isLoggedin,function(req,res){
 })
 
 
+// all product will be fetched from database //
 app.get("/allProduct",function(req,res){
  
   
@@ -1493,7 +1517,7 @@ app.get("/moreinfo/:id",function(req,res){
                 if(wishd[p].pid==prod._id){
                  console.log(mark)
                  res.render("moreInfoproduct.ejs",{prod:prod,prods:prods,mark:mark,wishes:wishd,users:users,addedone:addedone,addedtwo:addedtwo,cart:cart,calc:calc,actualPrice:actualPrice,carttwo:carttwo})
-                 con
+                
                  flags=false
                  break  
              }
@@ -1581,7 +1605,7 @@ app.get("/cart",isLoggedin,function(req,res){
     })
 }) 
 
-
+// Increase the quantity of the product in user's cart//
 app.get("/carti/:cid/:pid",function(req,res){
   user.findById(req.user._id,function(err,users){
     carts.findById(req.params.cid,function(err,cart){
@@ -1693,6 +1717,7 @@ app.get("/carti/:cid/:pid",function(req,res){
 })
 })
 
+//To delete a product from the user's cart //
 app.get("/cartd/:cid/:pid",function(req,res){
   user.findById(req.user._id).populate("cart").exec(function(err,users){ 
     product.findById(req.params.pid,function(err,prod){
@@ -1788,7 +1813,7 @@ app.get("/cartd/:cid/:pid",function(req,res){
 })
 
 
-
+//To add a product to the user's cart //
 app.post("/cart/:id",isLoggedin,function(req,res){
  user.findById(req.user._id).populate("cart").exec(function(err,users){ 
   product.findById(req.params.id).populate("stock").populate("ones").populate("twos").exec(function(err,prod){
@@ -2529,6 +2554,7 @@ app.get("/buy/:pid",isLoggedin,function(req,res){
  })
 })
 
+//To buy all the products from the user's cart//
 app.get("/allbuy",function(req,res){
 
    location.find({mainuser:req.user.username},function(err,preord){
@@ -3630,6 +3656,7 @@ app.get("/invoice/:id",function(req,res){
      })
 })
 
+//To buy a product this api will help//
 app.post("/buy/:pid/:lid",function(req,res){
  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
  var d=new Date() 
@@ -6596,7 +6623,7 @@ user.findOne({username:req.body.username},function(err,user){
 })
 })
 
-
+// To update a password of a user //
 app.post("/setPassword",function(req,res){
     user.findOne({username:req.body.username},function(err,user){
  
@@ -6618,6 +6645,8 @@ app.post("/setPassword",function(req,res){
  
     })
 })
+
+//A new user will register //
 app.post("/registered",function(req,res){
             // if(req.files)
             // {
@@ -6669,7 +6698,7 @@ else{
 
 }
 });
-
+// A user will be logged out //
 app.get("/logout",function(req,res){
 
     req.logout()
@@ -6678,6 +6707,7 @@ app.get("/logout",function(req,res){
 
 })
 
+// User will log in //
 app.post("/login",passport.authenticate("local",{
 successRedirect:"/", 
 failureRedirect:"/login"
