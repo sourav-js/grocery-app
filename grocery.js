@@ -10,6 +10,8 @@ body                    =require("body-parser"),
 session                 =require("express-session"),
 method                  =require("method-override"),
 qs = require("querystring"),
+smtpTransport = require('nodemailer-smtp-transport'),
+
 
 
 api  =require("./domain.js"),
