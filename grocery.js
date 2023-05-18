@@ -1072,7 +1072,7 @@ user.findById(primary).populate("pops").exec(function(err,users){
 
                 flag=false
                 C.push(0)
-                product.find({key:{$regex:produ[p].key,$options:"$i"}},function(err,prod){
+                product.find({key:produ[p].key},function(err,prod){
                          
                          res.render("products.ejs",{prod:prod,users:users})
                     
@@ -1408,7 +1408,7 @@ app.get("/moreinfo/:id",function(req,res){
 
     } 
 
-     product.find({key:{$regex:prod.key,$options:"$i"}},function(err,prods){
+     product.find({key:prod.key},function(err,prods){
       // prods.push(prods)      
       // console.log(prods)
             if(req.user){
@@ -3702,7 +3702,7 @@ app.post("/buy/:pid/:lid",function(req,res){
            
            if(users.offerHold==true){
 
-                 if(req.body.size=="one"){     
+                 if(req.bqody.size=="one"){     
                  var amounts=(req.body.qty*prod.Price)-20
                 }
                 else if(req.body.size=="two"){
@@ -5005,14 +5005,11 @@ app.post("/cancel/:id",function(req,res){
                       
                        prods.totalOne=0
             prods.save()
-                user.find({},function(err,alluser){
 
-                   for (var i=0;i<alluser.length;i++){
                       
-                     user.findById(alluser[i]._id,function(err,infos){ 
                       for(var j=0;j<prods.notify.length;j++){
 
-                          if (infos.username==prods.notify[j].username){
+                     user.findOne({username:prods.notify[j].username},function(err,infos){ 
 
 
                                       pop.create({id:prods._id,text:prods.Name + "1L",image:prods.image,urls:prods.urls,view:""},function(err,pups){
@@ -5022,75 +5019,17 @@ app.post("/cancel/:id",function(req,res){
                                        })
                                       
                                    
-                              break
-                          }
-                           {
-
-                           }
+                          })
+                           
                       }
 
                     
                  
-                  })
-                 }                    
-                }) 
-
-            for( var n=0;n<prods.notify.length;n++){
-
-
-                      const transport = nodemailer.createTransport(smtpTransport({
-                    host:'gathbandhanmatrimony.com',
-                    secureConnection: false,
-                    tls: {
-                      rejectUnauthorized: false  
-                    },
-                    port:587,
-                    auth: {
-                        user: "support@groceryji.com",
-                        pass: api.passwords,
-                  }
-             }))  
-
-                                         var mailoptions={
-                                           from:"support@groceryji.com",
-                                           bcc:`${prods.notify[n].username}`,
-                                           subject:"GroceryJi",
-                                           html:`Hi,welcome to GroceryJi<br>
-                                           Your requested  product ${prods.Name}, Price: ${prods.Price},Size:${orders.size} is available
-                                           in stock..
-                                           <br>
-                                           
-                                            <br>
-                                                       
-                        
-                        
-                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                       
-                                                          
-                                                          </form>`
-                                    } 
-                              
-                             
+                  
                                    
- 
-                                      
-                              console.log("hmmmmm")
-                               transport.sendMail(mailoptions,function(err,info){
-                                    if(err)
-                                    {
-                                        req.flash("error","something went wrong...");
+                
 
-                                        res.redirect("/login");
-                                    }
-                                        else{
-                                            console.log("here")
-
-                                        }
-
-
-                                })
-
-
-            }
+            
 
                  }
           }  
@@ -5100,14 +5039,11 @@ app.post("/cancel/:id",function(req,res){
                       
                        prods.totalTwo=0
             prods.save()
-                user.find({},function(err,alluser){
 
-                   for (var i=0;i<alluser.length;i++){
                       
-                     user.findById(alluser[i]._id,function(err,infos){ 
                       for(var j=0;j<prods.notify.length;j++){
 
-                          if (infos.username==prods.notify[j].username){
+                     user.findOne({username:prods.notify[j].username},function(err,infos){ 
 
 
                                       pop.create({id:prods._id,text:prods.Name + "2L",image:prods.image,urls:prods.urls,view:""},function(err,pups){
@@ -5117,75 +5053,17 @@ app.post("/cancel/:id",function(req,res){
                                        })
                                       
                                    
-                              break
-                          }
-                           {
-
-                           }
+                          })
+                           
                       }
 
                     
                  
-                  })
-                 }                    
-                }) 
+                  
+                                    
+                
 
-            for( var n=0;n<prods.notify.length;n++){
-
-
-                     const transport = nodemailer.createTransport(smtpTransport({
-                host:'gathbandhanmatrimony.com',
-                secureConnection: false,
-                tls: {
-                  rejectUnauthorized: false  
-                },
-                port:587,
-                auth: {
-                    user: "support@groceryji.com",
-                    pass: api.passwords,
-              }
-             }))   
-
-                                         var mailoptions={
-                                           from:"support@groceryji.com",
-                                           bcc:`${prods.notify[n].username}`,
-                                           subject:"GroceryJi",
-                                           html:`Hi,welcome to GroceryJi<br>
-                                           Your requested  product ${prods.Name}, Price: ${prods.Price},Size:${orders.size} is available
-                                           in stock..
-                                           <br>
-                                           
-                                            <br>
-                                                       
-                        
-                        
-                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                       
-                                                          
-                                                          </form>`
-                                    } 
-                              
-                             
-                                   
- 
-                                      
-                              console.log("hmmmmm")
-                               transport.sendMail(mailoptions,function(err,info){
-                                    if(err)
-                                    {
-                                        req.flash("error","something went wrong...");
-
-                                        res.redirect("/login");
-                                    }
-                                        else{
-                                            console.log("here")
-
-                                        }
-
-
-                                })
-
-
-            }
+           
 
 
            }
@@ -5198,14 +5076,11 @@ app.post("/cancel/:id",function(req,res){
 
             prods.stocking=0
             prods.save()
-                user.find({},function(err,alluser){
 
-                   for (var i=0;i<alluser.length;i++){
                       
-                     user.findById(alluser[i]._id,function(err,infos){ 
                       for(var j=0;j<prods.notify.length;j++){
 
-                          if (infos.username==prods.notify[j].username){
+                     user.findOne({username:prods.notify[j].username},function(err,infos){ 
 
 
                                       pop.create({id:prods._id,text:prods.Name,image:prods.image,urls:prods.urls,view:""},function(err,pups){
@@ -5215,75 +5090,17 @@ app.post("/cancel/:id",function(req,res){
                                        })
                                       
                                    
-                              break
-                          }
-                           {
-
-                           }
+                          })
+                           
                       }
 
                     
                  
-                  })
-                 }                    
-                }) 
+                  
+                                     
+                
 
-            for( var n=0;n<prods.notify.length;n++){
-
-
-                     const transport = nodemailer.createTransport(smtpTransport({
-                host:'gathbandhanmatrimony.com',
-                secureConnection: false,
-                tls: {
-                  rejectUnauthorized: false  
-                },
-                port:587,
-                auth: {
-                    user: "support@groceryji.com",
-                    pass: api.passwords,
-              }
-             }))  
-
-                                         var mailoptions={
-                                           from:"support@groceryji.com",
-                                           bcc:`${prods.notify[n].username}`,
-                                           subject:"GroceryJi",
-                                           html:`Hi,welcome to GroceryJi<br>
-                                           Your requested  product ${prods.Name}, Price: ${prods.Price} is available
-                                           in stock..
-                                           <br>
-                                           
-                                            <br>
-                                                       
-                        
-                        
-                                            <a href=${api.domain}/moreinfo/${prods._id}<button style=color:green>Check Your product Details</button></a>                      
-                                                          
-                                                          </form>`
-                                    } 
-                              
-                             
-                                   
- 
-                                      
-                              console.log("hmmmmm")
-                               transport.sendMail(mailoptions,function(err,info){
-                                    if(err)
-                                    {
-                                        req.flash("error","something went wrong...");
-
-                                        res.redirect("/login");
-                                    }
-                                        else{
-                                            console.log("here")
-
-                                        }
-
-
-                                })
-
-
-            }
+            
 }
 
 }
@@ -5401,65 +5218,7 @@ app.post("/cancel/:id",function(req,res){
 
 
 
-            if(orders.pay=="Cash-On-Delivery"){
-
-                var status=""
-            }
-            else{
-
-                var status="Refundable"
-            }
-
-              const transport = nodemailer.createTransport(smtpTransport({
-                host:'gathbandhanmatrimony.com',
-                secureConnection: false,
-                tls: {
-                  rejectUnauthorized: false  
-                },
-                port:587,
-                auth: {
-                    user: "support@groceryji.com",
-                    pass: api.passwords,
-              }
-             }))  
-
-                                         var mailoptions={
-                                           from:"support@groceryji.com",
-                                           bcc:`${req.user.username}`,
-                                           subject:"GroceryJi",
-                                           html:`Hi,${req.user.first},welcome to GroceryJi<br>
-                                           Your Cancellation request ${prods.Name}, Price: ${prods.Price},Qty:${orders.qty} is successfully
-                                           submitted..
-                                           <br>
-                                           Amount ${status}:${orders.Price}
-                                            <br>
-                                                       
-                        
-                        
-                                            <a href=${api.domain}/orders/${orders._id}<button style=color:green>Check Your Order</button></a>                     
-                                                          
-                                                          </form>`
-                                    } 
-                              
-                             
-                                   
- 
-                                      
-                              console.log("hmmmmm")
-                               transport.sendMail(mailoptions,function(err,info){
-                                    if(err)
-                                    {
-                                        req.flash("error","something went wrong...");
-
-                                        res.redirect("/login");
-                                    }
-                                        else{
-                                            console.log("here")
-
-                                        }
-
-
-                                })    
+                
                                 
                                 req.flash("success","Request submitted successfully")
                                 res.redirect("/orders/"+orders._id)  
