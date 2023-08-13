@@ -908,7 +908,7 @@ app.get("/api",function(req,res)
 
 app.get("/product",function(req,res){
 
-  product.find({Name:{$regex:"eggs",$options:"$i"}},function(err,prod){
+  product.find({Name:{$regex:"eggs",$options:"i"}},function(err,prod){
     console.log(prod)
   })
 
@@ -933,7 +933,7 @@ app.get("/catproduct/:keys",function(req,res){
   }
 
   user.findById(primary).populate("pops").exec(function(err,users){
-    product.find({key:{$regex:req.params.keys,$options:"$i"}},function(err,prod){
+    product.find({key:{$regex:req.params.keys,$options:"i"}},function(err,prod){
                
                          res.render("products.ejs",{prod:prod,users:users})
                     
@@ -2106,7 +2106,7 @@ if (!req.query.search){
                     if (flag==true){
                         console.log(orders[i].name)
                         find.push(0)
-                      order.find({name:{$regex:orders[i].name,$options:"$i"}},function(err,orderf){
+                      order.find({name:{$regex:orders[i].name,$options:"i"}},function(err,orderf){
                          for (var i=0;i<orderf.length;i++){
 
                           if(orderf[i].update!=="Canceled" && orderf[i].month==req.params.id){
@@ -2192,7 +2192,7 @@ app.get("/vip",function(req,res){
                      p=p+1
                  }
                  if(flag==true){
-                     user.find({name:{$regex:users[i].name,$options:"$i"}},function(err,found){
+                     user.find({name:{$regex:users[i].name,$options:"i"}},function(err,found){
 
                                   res.render("vip.ejs",{users:found,search:req.query.search})
 
