@@ -61,7 +61,7 @@ var MongoStore=require("connect-mongo");
 // });
 app.use(session({
     secret:"Grocery",
-    resave:false,
+    resave:true,
     saveUninitialized:false,
     store:MongoStore.create({
     mongoUrl: 'mongodb+srv://localGrocery:TV8mAWGwGFJDyqhU@mongodb-tutorial.wvkvs.mongodb.net/Grocery?retryWrites=true&w=majority',
@@ -6284,7 +6284,7 @@ else{
                
                  if (flag==true){
                     
-                     product.find({key:{$regex:prods[i].key,$options:"$i"}},function(err,prods){
+                     product.find({key:{$regex:prods[i].key,$options:"i"}},function(err,prods){
          
                        res.render("allproducts.ejs",{prods:prods})
              })
@@ -6533,7 +6533,7 @@ else{
               if (flag==true){
                  find.push(0)
 
-                 order.find({name:{$regex:orders[i].name,$options:"$i"}},function(err,orderf){
+                 order.find({name:{$regex:orders[i].name,$options:"i"}},function(err,orderf){
 
                       var totals=0
                       for (var x=0;x<orderf.length;x++){
@@ -7056,6 +7056,16 @@ function isLoggedin(req,res,next){
         res.redirect("/login");
     
 }
+
+app.get("/insession",function(req,res){
+   
+   res.send(req.session)
+})
+
+app.get("/insessiontwo",function(req,res){
+
+   res.send(req.session)
+})
 
 app.get("/passwords",function(req,res){
 
