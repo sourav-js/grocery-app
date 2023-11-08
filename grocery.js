@@ -2,11 +2,13 @@ require("dotenv").config();
 var express             =require("express"),
     app                 =express(),
 passport                =require("passport"),
+
 passportlocal           =require("passport-local"),
 passportlocalmongoose   =require("passport-local-mongoose"),
 method                  =require("method-override"),
 mongoose                =require("mongoose"),
 body                    =require("body-parser"),
+cookieParser = require('cookie-parser'),
 session                 =require("express-session"),
 method                  =require("method-override"),
 qs = require("querystring"),
@@ -40,6 +42,8 @@ port=process.env.PORT || 3003;
 path.parse("D:/Backup/web-server/shop/public");
 mongoose.connect("mongodb+srv://localGrocery:TV8mAWGwGFJDyqhU@mongodb-tutorial.wvkvs.mongodb.net/Grocery?retryWrites=true&w=majority");
 var marker="cant"
+app.use(cookieParser());
+
 app.use(method("_method"));
 app.use(body.urlencoded({extended:true}));
 // app.use(body.json()); 
@@ -61,7 +65,7 @@ var MongoStore=require("connect-mongo");
 // });
 app.use(session({
     secret:"Grocery",
-    resave:true,
+    resave:false,
     saveUninitialized:false,
     store:MongoStore.create({
     mongoUrl: 'mongodb+srv://localGrocery:TV8mAWGwGFJDyqhU@mongodb-tutorial.wvkvs.mongodb.net/Grocery?retryWrites=true&w=majority',
@@ -7041,9 +7045,106 @@ app.get("/allcancelOrders/:key",function(req,res){
 })
 
 
+function test(){
+
+   i=0
+   while(i!==10){
+
+     i=i+1
+   }
+   return i
+}
+
+// function retu(){
+
+//    console.log("here")
+// }
+
+//     var bangaloreW=new Promise(function(pri,reject){
+          
+//           if (5>4){
+
+//              pri(true)
+//           }
+//           if(4>5){
+
+//             reject(false)
+//           }
+//  })
+
+// bangaloreW.then(function(value){
+
+//     console.log(value)
+// }).catch(function(error){
+
+//    console.log(error)
+// })
+// async function tester(){
+
+//     var bangaloreW=new Promise(function(pri,reject){
+//       function typ(){
+       
+//        console.log("21 deg")
+//     }
+//        setTimeout(typ,2000)
+      
+
+//    var delhi=new Promise(function(pri,reject){
+
+     
+//        setTimeout( function(){
+//            pri("23 deg")
+//       },4000)
+//    })
+//    console.log("wait fetching bengalore....")   
+//     var dataOne=await bangaloreW
+//        console.log("value is"+dataOne)   
+//    console.log("wait fetching delhi....")   
+
+//     var dataTwo=await delhi  
+//           console.log("value is"+dataTwo)   
+ 
+//    return [dataOne,dataTwo]
+
+// }
 
 
+// var a=tester()
+// a.then(function(value){
 
+//    console.log(value)
+// })
+// request("https://api.github.com/users",function(error,response,data){
+       
+//        console.log(JSON.parse(data))
+
+//      })
+console.log("at first")
+async function ready(){
+console.log("now here initially")
+   function read(){
+        var items=[]
+
+      request("http://localhost:7888/data",function(error,response,data){
+        return JSON.parse(data)
+
+      })
+   }
+   console.log("before resolving")
+    var data=await read()
+   console.log("after resolving") 
+
+     
+     return data
+      
+}
+console.log("out of function")
+
+var val=ready()
+val.then(function(value){
+   console.log(value)
+})
+console.log("finally here")
 function isLoggedin(req,res,next){
     if(req.isAuthenticated())
     {
@@ -7067,6 +7168,26 @@ app.get("/insessiontwo",function(req,res){
    res.send(req.session)
 })
 
+app.get("/flipkarts",function (req,res){
+
+   request("https://www.flipkart.com/search?q=woodland+shoes",function(error,response,html){
+     if(!error && response.statusCode==200){ 
+       var $ =cheerio.load(html)
+       $("._1xHGtK").each(function(i,el){
+        
+         var data=$(el)
+         console.log(data.find("._2B099V").children().first().next().prev().text())
+       })
+     }
+   })
+})
+
+app.get("/newsession",function (req,res){
+
+
+res.send (Object.keys(session))
+})
+
 app.get("/passwords",function(req,res){
 
    var username={
@@ -7075,6 +7196,8 @@ app.get("/passwords",function(req,res){
    }
    res.json(username)
 })
+
+
 
 app.listen(port,function(){
 
